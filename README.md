@@ -12,7 +12,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 Prerequisites
 
-What things you need to install the software and how to install them
+Project uses Python 3.6.2. See requirements.txt for the list of packages to install in your environment.
 
 Give examples
 Installing
