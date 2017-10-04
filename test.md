@@ -66,9 +66,7 @@ Add additional notes about how to deploy this on a live system
 
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* [Django](http://www.djangoproject.com) - The web framework used
 
 ## Contributing
 
@@ -84,7 +82,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Tom Setliffe** - *Initial work* - [toms3t](https://github.com/toms3t)
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
@@ -94,6 +92,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Hat tip to anyone who's code was used
+* Thanks [PurpleTooth] for the readme template!
 * Inspiration
 * etc
