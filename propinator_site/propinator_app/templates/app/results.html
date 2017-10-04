@@ -1,0 +1,72 @@
+{% extends "app/layout.html" %}
+
+{% block content %}
+<h1> Property Information </h1>
+<p style="font-size:20px;color:blue"><u><b>Address = {{ address }}</b></p></u>
+
+<p>Created: {{ pub_date }}</p>
+
+<div class="row">
+     <div class="col-md-4">
+        <h2> General </h2>
+        <p>Square Feet = {{ sqft }}</p>
+         <p>Bedrooms/Bathrooms = {{ beds }}/{{ baths }}</p>
+        <p>Year Built = {{ year_built }}</p>
+        <p>County = {{ county }}</p>
+        <p>Schools = {{ schools }}</p>
+        <p>School Scores = {{ school_scores }}</p>
+        <p>Area Crime Level = {{ crime_level }}</p>
+        <p>Area Natural Disasters = {{ nat_disasters }}</p>
+        <p><b><mark>Cost Per SQFT = {{ cost_per_sqft }}</mark></b></p>
+               <p>Interest Rate = {{ interest_rate }}</p>
+        <p>Mortgage Amount = {{ total_mortgage }}</p><br />
+         <h2> Initial Cash Invested </h2>
+        <p><b><mark>Zestimate = {{ curr_value }}</mark></b></p>
+        <p>Down Payment = {{ down_payment_percentage }}</p>
+        <p>Down Payment = {{ down_payment }}</p>
+        <p>Closing Costs = {{ closing_costs }}</p>
+        <p>Initial Improvements = {{ initial_improvements }}</p>
+        <p><b><mark>Initial Cash Invested = {{ init_cash_invest }}</mark></b></p><br />
+        <a class="btn btn-primary" href="{% url 'edit' pk=pkey %}">EDIT</a>
+        </div>
+    <div class="col-md-4">
+        <h2> Operating Income </h2>
+        <p>Rent Zestimate = {{ rent }}</p>
+        <p>Vacancy (8%) = {{ vacancy }}</p>
+        <p><b>Operating Income = {{ oper_income }}</b></p><br />
+        <h2> Operating Expenses </h2>
+        <p style="color:black">** <span style="color:red">indicates expenses amortized monthly</span></p>
+        <p>Taxes** = {{ taxes }}</p>
+        <p>Insurance** = {{ insurance }}</p>
+        <p>HOA** = {{ hoa }}</p>
+        <p>Property Management Expense** = {{ property_management_fee }}</p>
+        <p>Tenant Placement** = {{ tenant_placement_fee }}</p>
+        <p>Lease Resign Fee**= {{ resign_fee }}</p>
+        <p>Maintenance** = {{ maintenance }}</p>
+        <p>Utilities = {{ utilities }}</p>
+        <p><b>Operating Expenses = {{ oper_exp }}</b></p><br />
+        <h2> Cash Flow Calculation </h2>
+        <p>Net Operating Income = {{ net_oper_income }}</p>
+        <p>Monthly Mortgage Payment = {{ mort_payment }}</p>
+        <p><b><mark>Cash Flow = {{ cash_flow }} per month </mark></b></p><br />
+    </div>
+    <div class="col-md-4">
+        <h2> Ratios </h2>
+        <p>Operating Expense Ratio = {{ oper_exp_ratio }} (Typical 25-35%)</p>
+        <p>Debt Coverage Ratio = {{ debt_coverage_ratio }}</p>
+        <p>Capitalization Rate = {{ cap_rate }}</p>
+        <p><b><mark>Cash on Cash Return = {{ cash_on_cash }}</mark></b></p>
+        <p>Rent-to-Value Ratio = {{ rtv }}</p><br>
+        <h2>Notes</h2>
+        <textarea rows="10" cols="50">{{ notes }}</textarea>
+        <br /><br />
+
+    </div>
+</div>
+<a href="http://zillow.com">
+    <img src="http://www.zillow.com/widgets/GetVersionedResource.htm?path=/static/logos/Zillowlogo_200x50.gif" width="200" height="50" alt="Zillow Real Estate Search" id="yui_3_18_1_1_1506979974705_333">
+</a>
+<a href="{{ listing_url }}">
+    <p style="font-size:12px;color:black"><u><b>See more details for {{ address }} on Zillow</b></p>
+</a>
+{% endblock %}

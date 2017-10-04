@@ -1,0 +1,16 @@
+{% extends "app/layout.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}   
+
+<h2>Edit Property Details</h2>
+<p> DISCLAIMER: Some of the values below were pulled from Zillow.com and homefacts.com. The information from these sites may, at times, be inaccurate. <br>Please validate all information below before seriously considering an investment property.</p><br>
+<p> * indicates required fields</p>
+
+		   <form method="post">
+			{% csrf_token %}
+			{{ form|crispy }}
+			<button type="submit">Save</button>
+		</form>
+
+{% endblock %}

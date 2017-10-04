@@ -1,0 +1,58 @@
+{% extends "app/layout.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row">
+	 <div class="col-md-5">
+
+		<h2>Start Here...</h2>
+		<p> Enter the property address to get the following details:
+		<ul> 
+			<li> Zestimate </li>
+			<li> Year Built </li>
+			<li> Square Feet </li>
+			<li> Rent Zestimate </li>
+			<li> Taxes </li>
+			<li> School Information </li>
+			<li> County </li>
+			<li> Area Crime </li>
+			<li> Area Natural Disasters </li>
+		</ul><br>
+		<p>  </p>
+		   <form method="POST">
+			{% csrf_token %}
+			{{ form|crispy }}
+			<br>
+			<?button type="submit" style="width:150px;height:50px;color:green;font-size:30px"?><?/button?>
+			<input type='submit' value='SUBMIT' class='btn-lg btn-primary' />
+		</form>
+	</div>
+	<div class="col-md-7">
+		<h2>Owned Properties</h2>
+		{% if owned_property_list %}
+			<ul>
+			{% for property in owned_property_list %}
+				<li><a href="/propinator/{{ property.id }}/">{{ property.address }}   &nbsp    (Created: {{ property.pub_date }})</a></li>
+			{% endfor %}
+			</ul>
+		
+		{% else %}
+			<p>No properties</p>
+		{% endif %}
+		<p><b><mark>TOTAL MONTHLY CASH FLOW FROM OWNED PROPERTIES = ${{ cash_flow_sum }} </mark></b></p>
+		<br><br>
+		<h2>Researched Properties</h2>
+		{% if researched_property_list %}
+			<ul>
+			{% for property in researched_property_list %}
+				<li><a href="/propinator/{{ property.id }}/">{{ property.address }}   &nbsp    (Created: {{ property.pub_date }})</a></li>
+			{% endfor %}
+			</ul>
+		{% else %}
+			<p>No properties</p>
+		{% endif %}
+	</div>
+ 
+</div>
+{% endblock %}
+
