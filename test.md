@@ -13,10 +13,10 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-Install Python 3.6.2
-Create virtualenv 
-Create local git repo
-Install packages from requirements.txt file
+- Install Python 3.6.2
+- Create virtualenv 
+- Create local git repo
+- Install packages from requirements.txt file
 
 ```
 Give examples
@@ -92,6 +92,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Thanks [PurpleTooth] for the readme template!
+* Thanks [PurpleTooth](https://github.com/PurpleTooth) for the readme template!
 * Inspiration
 * etc
