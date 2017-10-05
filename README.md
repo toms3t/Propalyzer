@@ -28,7 +28,6 @@ $ mkdir [directory name]
 $ pip install virtualenv
 $ cd [directory name]
 $ virtualenv -p /Library/Frameworks/Python.framework/Versions/3.6/bin/python3.6 env
-
 ```
 - Git dialed in! 
 ```
@@ -42,7 +41,6 @@ $ git clone https://github.com/toms3t/Propinator.git
 ```
 $ source env/bin/activate (run this from the directory you created to activate the virtual environment)
 $ pip install -r Propinator/requirements.txt
-
 ```
 - Enter secret key in your /Users/[your username]/[directory name]/propinator_site/propinator_site/settings.py file
 ```
