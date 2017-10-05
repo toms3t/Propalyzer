@@ -67,7 +67,8 @@ $ python manage.py createsuperuser
 ```
 $ python manage.py runserver
 ```
-Test that the site homepage appears when you browse to http://127.0.0.1:8000/propinator
+Test that the site homepage appears when you browse to http://127.0.0.1:8000/propinator.
+
 Log in with your superuser credentials
 
 ## Deployment
