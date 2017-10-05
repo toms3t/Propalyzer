@@ -61,7 +61,6 @@ $ python manage.py migrate
 
 - Run local webserver and test the home page
 ```
-$ cd Propinator/propinator_site
 $ python manage.py runserver
 ```
 Test that the site homepage appears when you browse to http://127.0.0.1:8000/propinator
