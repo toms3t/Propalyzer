@@ -11,7 +11,7 @@ Web app that helps investors evaluate investment property opportunities. The use
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-### Prerequisites
+### Get dialed in!
 
 - Install Python 3.6.2
 ```
@@ -29,54 +29,29 @@ $ cd [directory name]
 $ git init
 $ git config --global user.name "John Doe"
 $ git config --global user.email johndoe@example.com
+$ git clone https://github.com/toms3t/Propinator.git
 ```
 - Install packages from requirements.txt file
 
 ```
+$ source bin/activate (run this from the directory you created to activate the virtual environment)
 $ pip install -r requirements.txt
 ```
-
-### Installing
-
-A step by step series of examples that tell you have to get a development env running
-
-Say what the step will be
-
+- Enter secret key in your /Users/[your username]/[directory name]/Propinator/propinator_site/propinator_site/settings.py file
 ```
-Give the example
+secret_key = '[enter new key here without the brackets - keep your key private]'
+[save settings.py file]
 ```
-
-And repeat
-
+- Run local webserver and test the home page
 ```
-until finished
+$ cd /Users/[your username]/[directory name]/Propinator/propinator_site
+$ python manage.py runserver
 ```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
+Test that the site homepage appears when you browse to http://127.0.0.1:8000/propinator
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
+This web app uses a SQLite database which is installed by Django by default.
 
 ## Built With
 
