@@ -44,7 +44,7 @@ $ pip install -r Propinator/requirements.txt
 ```
 - Enter secret key in your /Users/[your username]/[directory name]/propinator_site/propinator_site/settings.py file
 ```
-secret_key = '[enter new key here without the brackets - keep your key private]'
+secret_key = '[enter new key here without the brackets - you can make the key whatever you want]'
 [save settings.py file]
 ```
 - Enter your ZWSID into the '/Users/[username]/[directory name]/propinator_site/propinator_app/views.py' file
