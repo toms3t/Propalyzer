@@ -14,19 +14,21 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 
 - Install Python 3.6.2
+```
+https://www.python.org/downloads/
+```
 - Create and configure virtualenv 
 ```
-$ mkdir propinator
+$ mkdir [directory name]
 $ pip install virtualenv
-$ virtualenv -p /Library/Frameworks/Python.framework/Versions/3.6/bin propinator
+$ virtualenv -p /Library/Frameworks/Python.framework/Versions/3.6/bin [directory name]
 ```
 - Create local git repo
 ```
-$ cd propinator
+$ cd [directory name]
+$ git init
 $ git config --global user.name "John Doe"
 $ git config --global user.email johndoe@example.com
-$ pip install virtualenv
-$ virtualenv -p /Library/Frameworks/Python.framework/Versions/3.6/bin propinator
 ```
 - Install packages from requirements.txt file
 
