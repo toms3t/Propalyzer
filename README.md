@@ -58,6 +58,10 @@ $ cd Propinator/propinator_site
 $ python manage.py makemigrations propinator_app
 $ python manage.py migrate
 ```
+- Create superuser
+```
+$ python manage.py createsuperuser
+```
 
 - Run local webserver and test the home page
 ```
