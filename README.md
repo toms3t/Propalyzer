@@ -32,7 +32,6 @@ $ virtualenv -p /Library/Frameworks/Python.framework/Versions/3.6/bin/python3.6 
 ```
 - Git dialed in! 
 ```
-$ cd [directory name]
 $ git init
 $ git config --global user.name "John Doe"
 $ git config --global user.email johndoe@example.com
@@ -64,7 +63,6 @@ $ python manage.py migrate
 
 - Run local webserver and test the home page
 ```
-
 $ python manage.py runserver
 ```
 Test that the site homepage appears when you browse to http://127.0.0.1:8000/propinator
