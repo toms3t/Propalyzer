@@ -42,7 +42,7 @@ $ git clone https://github.com/toms3t/Propinator.git
 $ source bin/activate (run this from the directory you created to activate the virtual environment)
 $ pip install -r requirements.txt
 ```
-- Enter secret key in your /Users/[your username]/[directory name]/Propinator/propinator_site/propinator_site/settings.py file
+- Enter secret key in your /Users/[your username]/[directory name]/propinator_site/propinator_site/settings.py file
 ```
 secret_key = '[enter new key here without the brackets - keep your key private]'
 [save settings.py file]
