@@ -21,7 +21,7 @@ https://www.python.org/downloads/
 ```
 $ mkdir [directory name]
 $ pip install virtualenv
-$ virtualenv -p /Library/Frameworks/Python.framework/Versions/3.6/bin [directory name]
+$ virtualenv -p /Library/Frameworks/Python.framework/Versions/3.6/bin/python3.6 [directory name]
 ```
 - Create local git repo
 ```
