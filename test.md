@@ -11,19 +11,24 @@ Web app that helps investors evaluate investment property opportunities. The use
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-### Get dialed in!
+### Prerequisites
 
 - Install Python 3.6.2
 ```
 https://www.python.org/downloads/
 ```
+- Obtain a Zillow account and Zillow API Key (ZWS-ID)
+```
+https://www.zillow.com/webservice/Registration.htm
+```
+
 - Create and configure virtualenv 
 ```
 $ mkdir [directory name]
 $ pip install virtualenv
 $ virtualenv -p /Library/Frameworks/Python.framework/Versions/3.6/bin/python3.6 [directory name]
 ```
-- Create local git repo
+- Git dialed in! 
 ```
 $ cd [directory name]
 $ git init
@@ -42,6 +47,11 @@ $ pip install -r requirements.txt
 secret_key = '[enter new key here without the brackets - keep your key private]'
 [save settings.py file]
 ```
+- Enter your ZWSID into the '/Users/[username]/[directory name]/propinator_site/propinator_app/views.py' file
+```
+ZWSID = '[enter your key here without brackets]'
+```
+
 - Run local webserver and test the home page
 ```
 $ cd /Users/[your username]/[directory name]/Propinator/propinator_site
@@ -65,10 +75,6 @@ This web app uses a SQLite database which is installed by Django by default.
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
 
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
 ## Authors
 
 * **Tom Setliffe** - *Initial work* - [toms3t](https://github.com/toms3t)
@@ -82,5 +88,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments
 
 * Thanks [PurpleTooth](https://github.com/PurpleTooth) for the readme template!
-* Inspiration
-* etc
+* Zillow for their outstanding API
