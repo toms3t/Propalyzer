@@ -11,7 +11,7 @@ Web app that helps investors evaluate investment property opportunities. The use
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-### Prerequisites
+### Prerequisites (Non-Windows Users)
 
 - Install Python 3.6.2
 ```
@@ -66,6 +66,66 @@ $ python manage.py createsuperuser
 - Run local webserver and test the home page
 ```
 $ python manage.py runserver
+```
+Test that the site homepage appears when you browse to http://127.0.0.1:8000/propinator.
+
+Log in with your superuser credentials
+
+### Prerequisites (Windows Users)
+
+- Install Miniconda
+```
+https://conda.io/miniconda.html
+```
+- Obtain a Zillow account and Zillow API Key (ZWS-ID)
+```
+https://www.zillow.com/webservice/Registration.htm
+```
+
+- Create and configure virtualenv (Use Windows PowerShell, Command Prompt, or a Terminal Emulator such as ConEmu)
+```
+> mkdir [directory name]
+> cd [directory name]
+> conda create --name [virtual environment name]
+> activate [virtual environment name]
+```
+- Git dialed in! 
+```
+> git init
+> git config --global user.name "John Doe"
+> git config --global user.email johndoe@example.com
+> git clone https://github.com/toms3t/Propinator.git
+```
+- Install packages from requirements.txt file
+
+```
+> pip install -r Propinator/requirements.txt
+```
+- Enter secret key in your /Users/[your username]/[directory name]/propinator_site/propinator_site/settings.py file and save the settings.py file
+- If you have trouble finding your directory, type "pwd" (without the quotation marks) into your terminal application
+```
+secret_key = '[enter new key here without the brackets - you can make the key whatever you want]'
+[save settings.py file]
+```
+- Enter your ZWSID into the '/Users/[username]/[directory name]/propinator_site/propinator_app/views.py' file
+```
+ZWSID = '[enter your key here without brackets]'
+```
+
+- Prep the SQLite database
+```
+> cd Propinator/propinator_site
+> python manage.py makemigrations propinator_app
+> python manage.py migrate
+```
+- Create superuser
+```
+> python manage.py createsuperuser
+```
+
+- Run local webserver and test the home page
+```
+> python manage.py runserver
 ```
 Test that the site homepage appears when you browse to http://127.0.0.1:8000/propinator.
 
