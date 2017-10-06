@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }} - Propinator </title>
+    <title>{{ title }} - Propalyzer </title>
     {% load staticfiles %}
     <link rel="stylesheet" type="text/css" href="{% static 'app/content/bootstrap.min.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'app/content/site.css' %}" />
@@ -20,13 +20,15 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="/propalyzer" class="navbar-brand">Propinator</a>
+              
+                <a href="/propalyzer" class="navbar-brand">Propalyzer</a>
+
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="/propinator/address">Home</a></li>
-                    <li><a href="/propinator/disclaimer">Disclaimer</a></li>
-                    <li><a href="/propinator/logout">Logout</a></li>
+                    <li><a href="/propalyzer/address">Home</a></li>
+                    <li><a href="/propalyzer/disclaimer">Disclaimer</a></li>
+                    <li><a href="/propalyzer/logout">Logout</a></li>
 
                 </ul>
 
@@ -38,7 +40,7 @@
 {% block content %}{% endblock %}
         <hr/>
         <footer>
-            <p>&copy; {{ year }} - Propinator </p>
+            <p>&copy; {{ year }} - Propalyzer </p>
 
             <p> © Zillow, Inc., 2006-2016. Use is subject to <a href="https://www.zillow.com/howto/api/APITerms.htm">Terms of Use</a><br><a href="https://www.zillow.com/zestimate/">What's a Zestimate?</a></p>
         </footer>

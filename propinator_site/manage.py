@@ -3,7 +3,7 @@ import os
 import sys
 
 if __name__ == "__main__":
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "propinator_site.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "propalyzer_site.settings")
     try:
         from django.core.management import execute_from_command_line
     except ImportError:
