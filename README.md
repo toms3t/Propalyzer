@@ -94,28 +94,28 @@ https://www.zillow.com/webservice/Registration.htm
 > git init
 > git config --global user.name "John Doe"
 > git config --global user.email johndoe@example.com
-> git clone https://github.com/toms3t/Propinator.git
+> git clone https://github.com/toms3t/Propalyzer.git
 ```
 - Install packages from requirements.txt file
 
 ```
-> pip install -r Propinator/requirements.txt
+> pip install -r Propalyzer/requirements.txt
 ```
-- Enter secret key in your /Users/[your username]/[directory name]/propinator_site/propinator_site/settings.py file and save the settings.py file
+- Enter secret key in your /Users/[your username]/[directory name]/propalyzer_site/propalyzer_site/settings.py file and save the settings.py file
 - If you have trouble finding your directory, type "pwd" (without the quotation marks) into your terminal application
 ```
 secret_key = '[enter new key here without the brackets - you can make the key whatever you want]'
 [save settings.py file]
 ```
-- Enter your ZWSID into the '/Users/[username]/[directory name]/propinator_site/propinator_app/views.py' file
+- Enter your ZWSID into the '/Users/[username]/[directory name]/propalyzer_site/propalyzer_app/views.py' file
 ```
 ZWSID = '[enter your key here without brackets]'
 ```
 
 - Prep the SQLite database
 ```
-> cd Propinator/propinator_site
-> python manage.py makemigrations propinator_app
+> cd Propalyzer/propalyzer_site
+> python manage.py makemigrations propalyzer_app
 > python manage.py migrate
 ```
 - Create superuser
@@ -127,7 +127,7 @@ ZWSID = '[enter your key here without brackets]'
 ```
 > python manage.py runserver
 ```
-Test that the site homepage appears when you browse to http://127.0.0.1:8000/propinator.
+Test that the site homepage appears when you browse to http://127.0.0.1:8000/propalyzer.
 
 Log in with your superuser credentials
 
