@@ -20,6 +20,7 @@ from django.contrib import admin
 # from ..propalyzer_app.forms import BootstrapAuthenticationForm
 
 urlpatterns = [
+	url(r'^$', include('propalyzer_app.urls')),
 	url(r'^propalyzer/', include('propalyzer_app.urls')),
 	url(r'^admin/', admin.site.urls),
 	url(r'^accounts/', include('propalyzer_app.urls'))
