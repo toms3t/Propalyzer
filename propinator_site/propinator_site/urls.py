@@ -1,4 +1,4 @@
-"""propinator_site URL Configuration
+"""propalyzer_site URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.11/topics/http/urls/
@@ -17,10 +17,10 @@ from django.conf.urls import include, url
 from django.contrib import admin
 # from django.contrib.auth import views
 # from datetime import datetime
-# from ..propinator_app.forms import BootstrapAuthenticationForm
+# from ..propalyzer_app.forms import BootstrapAuthenticationForm
 
 urlpatterns = [
-	url(r'^propinator/', include('propinator_app.urls')),
+	url(r'^propalyzer/', include('propalyzer_app.urls')),
 	url(r'^admin/', admin.site.urls),
-	url(r'^accounts/', include('propinator_app.urls'))
+	url(r'^accounts/', include('propalyzer_app.urls'))
 ]
