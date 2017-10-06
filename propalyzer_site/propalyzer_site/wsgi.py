@@ -1,5 +1,5 @@
 """
-WSGI config for propinator_site project.
+WSGI config for propalyzer_site project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

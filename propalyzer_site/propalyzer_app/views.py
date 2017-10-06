@@ -59,7 +59,7 @@ def address(request):
 		new_prop = Property(
 			address=address, sqft=sqft, rent=rent_zest, rent_low = rent_low, rent_high = rent_high, curr_value=curr_value,
 			value_low = value_low, value_high = value_high, year_built=year_built, interest_rate=4.75, county=county,
-			crime_level='pass', nat_disasters='pass', lot_sqft=lot_sqft, neighborhood=neighborhood, listing_url=listing_url,
+			crime_level='Unknown', nat_disasters='Unknown', lot_sqft=lot_sqft, neighborhood=neighborhood, listing_url=listing_url,
 			beds=beds, baths=baths
 		)
 		new_prop.property_management_fee = int(.09 * int(new_prop.rent))
