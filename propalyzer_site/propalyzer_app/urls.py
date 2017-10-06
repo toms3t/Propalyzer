@@ -26,7 +26,7 @@ urlpatterns = [
 	url(r'^logout$',
 					contrib.auth.views.logout,
 					{
-						'next_page': '/propinator',
+						'next_page': '/propalyzer',
 					},
 					name='logout'),
 ]

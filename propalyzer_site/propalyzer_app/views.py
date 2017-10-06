@@ -59,7 +59,7 @@ def address(request):
 		new_prop = Property(
 			address=address, sqft=sqft, rent=rent_zest, rent_low = rent_low, rent_high = rent_high, curr_value=curr_value,
 			value_low = value_low, value_high = value_high, year_built=year_built, interest_rate=4.75, county=county,
-			crime_level='pass', nat_disasters='pass', lot_sqft=lot_sqft, neighborhood=neighborhood, listing_url=listing_url,
+			crime_level='Unknown', nat_disasters='Unknown', lot_sqft=lot_sqft, neighborhood=neighborhood, listing_url=listing_url,
 			beds=beds, baths=baths
 		)
 		new_prop.property_management_fee = int(.09 * int(new_prop.rent))
@@ -155,7 +155,7 @@ def edit(request, pk):
 
 
 @login_required
-def results(request,pk):
+def results(request, pk):
 	'''
 	This view renders the results page which displays listing information, operating income/expense, cash flow, and
 	investment ratios.
@@ -164,62 +164,62 @@ def results(request,pk):
 	:return: 'app/results.html' page
 	'''
 	post = get_object_or_404(Property,pk=pk)
-	id = Property.objects.get(pk=pk)
-	pkey = id.pk
-	pub_date = id.pub_date
+	prop = Property.objects.get(pk=pk)
+	pkey = prop.pk
+	pub_date = prop.pub_date
 	if request.method == 'POST':
 		form = PropertyForm(request.POST, instance=instance)
-	address = id.address
-	beds = id.beds
-	baths = id.baths
-	listing_url = id.listing_url
-	year_built = id.year_built
-	county = id.county
-	sqft = id.sqft
-	schools = 'test'
-	school_scores = '9,5,5'
-	crime_level = id.crime_level
-	nat_disasters = id.nat_disasters
-	notes = id.notes
-	cost_per_sqft = '$'+str(Property.cost_per_sqft_calc(id))
-	taxes = '$'+str(int(Property.taxes_calc(id)/12))
-	insurance = '$'+str(int(Property.insurance_calc(id)/12))
-	hoa = '$'+str(int(id.hoa/12))
-	maintenance = '$'+str(int(Property.maint_calc(id)/12))
-	resign_fee = '$'+str(int(Property.resign_calc(id)/12))
-	property_management_fee = '$'+str(id.property_management_fee)
-	initial_improvements = '$'+str(id.initial_improvements)
-	utilities = '$'+str(id.utilities)
-	tenant_placement_fee = '$'+str(int(Property.tenant_place_calc(id)/12))
-	rent = '$'+str(id.rent)
-	curr_value = '$'+str(id.curr_value)
-	interest_rate = str(id.interest_rate)+'%'
-	closing_costs = '$'+str(id.closing_costs)
-	vacancy = '$'+str(Property.vacancy_calc(id))
-	oper_income = '$'+str(Property.oper_inc_calc(id))
-	down_payment_percentage = str(id.down_payment_percentage)+str('%')
-	down_payment = '$'+str(Property.down_payment_calc(id))
-	total_mortgage = '$'+str(Property.total_mortgage_calc(id))
-	mort_payment = '$'+str(Property.mort_payment_calc(id))
-	init_cash_invest = '$'+str(Property.init_cash_invested_calc(id))
-	oper_exp = '$'+str(Property.oper_exp_calc(id))
-	net_oper_income = '$'+str(Property.net_oper_income_calc(id))
-	cash_flow = '$'+str(Property.cash_flow_calc(id))
-	oper_exp_ratio = Property.oper_exp_ratio_calc(id)*100
+	address = prop.address
+	beds = prop.beds
+	baths = prop.baths
+	listing_url = prop.listing_url
+	year_built = prop.year_built
+	county = prop.county
+	sqft = prop.sqft
+	schools = 'Unknown'
+	school_scores = '0,0,0'
+	crime_level = prop.crime_level
+	nat_disasters = prop.nat_disasters
+	notes = prop.notes
+	cost_per_sqft = '$'+str(Property.cost_per_sqft_calc(prop))
+	taxes = '$'+str(int(Property.taxes_calc(prop)/12))
+	insurance = '$'+str(int(Property.insurance_calc(prop)/12))
+	hoa = '$'+str(int(prop.hoa/12))
+	maintenance = '$'+str(int(Property.maint_calc(prop)/12))
+	resign_fee = '$'+str(int(Property.resign_calc(prop)/12))
+	property_management_fee = '$'+str(prop.property_management_fee)
+	initial_improvements = '$'+str(prop.initial_improvements)
+	utilities = '$'+str(prop.utilities)
+	tenant_placement_fee = '$'+str(int(Property.tenant_place_calc(prop)/12))
+	rent = '$'+str(prop.rent)
+	curr_value = '$'+str(prop.curr_value)
+	interest_rate = str(prop.interest_rate)+'%'
+	closing_costs = '$'+str(prop.closing_costs)
+	vacancy = '$'+str(Property.vacancy_calc(prop))
+	oper_income = '$'+str(Property.oper_inc_calc(prop))
+	down_payment_percentage = str(prop.down_payment_percentage)+str('%')
+	down_payment = '$'+str(Property.down_payment_calc(prop))
+	total_mortgage = '$'+str(Property.total_mortgage_calc(prop))
+	mort_payment = '$'+str(Property.mort_payment_calc(prop))
+	init_cash_invest = '$'+str(Property.init_cash_invested_calc(prop))
+	oper_exp = '$'+str(Property.oper_exp_calc(prop))
+	net_oper_income = '$'+str(Property.net_oper_income_calc(prop))
+	cash_flow = '$'+str(Property.cash_flow_calc(prop))
+	oper_exp_ratio = Property.oper_exp_ratio_calc(prop)*100
 	oper_exp_ratio = str('%.1f' % oper_exp_ratio)+'%'
-	debt_coverage_ratio = Property.debt_coverage_ratio_calc(id)
-	cap_rate = Property.cap_rate(id)*100
+	debt_coverage_ratio = Property.debt_coverage_ratio_calc(prop)
+	cap_rate = Property.cap_rate(prop)*100
 	cap_rate = str('%.2f' % cap_rate)+'%'
-	initial_market_value = '$'+str(id.curr_value)
-	cash_on_cash = Property.cash_on_cash(id)*100
+	initial_market_value = '$'+str(prop.curr_value)
+	cash_on_cash = Property.cash_on_cash(prop)*100
 	cash_on_cash = str('%.2f' % cash_on_cash)+'%'
-	rtv = Property.rtv_calc(id)*100
+	rtv = Property.rtv_calc(prop)*100
 	rtv = str('%.2f' % rtv)+'%'
-	id.save()
+	prop.save()
 	template = loader.get_template('app/results.html')
 	context = {
-		'id': id,
-		'pkey':pkey,
+		'prop': prop,
+		'pkey': pkey,
 		'address':address,
 		'taxes': taxes,
 		'hoa': hoa,

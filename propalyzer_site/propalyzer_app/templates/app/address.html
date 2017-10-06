@@ -32,7 +32,7 @@
 		{% if owned_property_list %}
 			<ul>
 			{% for property in owned_property_list %}
-				<li><a href="/propinator/{{ property.id }}/">{{ property.address }}   &nbsp    (Created: {{ property.pub_date }})</a></li>
+				<li><a href="/propalyzer/{{ property.id }}/">{{ property.address }}   &nbsp    (Created: {{ property.pub_date }})</a></li>
 			{% endfor %}
 			</ul>
 		
@@ -45,7 +45,7 @@
 		{% if researched_property_list %}
 			<ul>
 			{% for property in researched_property_list %}
-				<li><a href="/propinator/{{ property.id }}/">{{ property.address }}   &nbsp    (Created: {{ property.pub_date }})</a></li>
+				<li><a href="/propalyzer/{{ property.id }}/">{{ property.address }}   &nbsp    (Created: {{ property.pub_date }})</a></li>
 			{% endfor %}
 			</ul>
 		{% else %}

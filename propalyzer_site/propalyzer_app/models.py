@@ -112,9 +112,11 @@ class Property(models.Model):
 
     def debt_coverage_ratio_calc(self):
         getcontext().prec = 2
-        self.debt_cover_ratio = float(Decimal(self.net_oper_income) / Decimal(self.mort_payment))
-        self.debt_cover_ratio = self.debt_cover_ratio + 0
-        return self.debt_cover_ratio
+        if self.mort_payment:
+            self.debt_cover_ratio = float(Decimal(self.net_oper_income) / Decimal(self.mort_payment))
+            return self.debt_cover_ratio
+        else:
+            return None
 
     def cap_rate(self):
         getcontext().prec = 2
