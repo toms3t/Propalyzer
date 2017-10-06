@@ -114,7 +114,7 @@ ZWSID = '[enter your key here without brackets]'
 
 - Prep the SQLite database
 ```
-> cd Propinator/propalyzer_site
+> cd Propalyzer/propalyzer_site
 > python manage.py makemigrations propalyzer_app
 > python manage.py migrate
 ```
