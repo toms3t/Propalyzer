@@ -163,107 +163,56 @@ def results(request, pk):
 	:param pk: Primary Key - identifies the specific database record that corresponds with the listing details
 	:return: 'app/results.html' page
 	'''
-	post = get_object_or_404(Property,pk=pk)
 	prop = Property.objects.get(pk=pk)
-	pkey = prop.pk
-	pub_date = prop.pub_date
-	if request.method == 'POST':
-		form = PropertyForm(request.POST, instance=instance)
-	address = prop.address
-	beds = prop.beds
-	baths = prop.baths
-	listing_url = prop.listing_url
-	year_built = prop.year_built
-	county = prop.county
-	sqft = prop.sqft
-	schools = 'Unknown'
-	school_scores = '0,0,0'
-	crime_level = prop.crime_level
-	nat_disasters = prop.nat_disasters
-	notes = prop.notes
-	cost_per_sqft = '$'+str(Property.cost_per_sqft_calc(prop))
-	taxes = '$'+str(int(Property.taxes_calc(prop)/12))
-	insurance = '$'+str(int(Property.insurance_calc(prop)/12))
-	hoa = '$'+str(int(prop.hoa/12))
-	maintenance = '$'+str(int(Property.maint_calc(prop)/12))
-	resign_fee = '$'+str(int(Property.resign_calc(prop)/12))
-	property_management_fee = '$'+str(prop.property_management_fee)
-	initial_improvements = '$'+str(prop.initial_improvements)
-	utilities = '$'+str(prop.utilities)
-	tenant_placement_fee = '$'+str(int(Property.tenant_place_calc(prop)/12))
-	rent = '$'+str(prop.rent)
-	curr_value = '$'+str(prop.curr_value)
-	interest_rate = str(prop.interest_rate)+'%'
-	closing_costs = '$'+str(prop.closing_costs)
-	vacancy = '$'+str(Property.vacancy_calc(prop))
-	oper_income = '$'+str(Property.oper_inc_calc(prop))
-	down_payment_percentage = str(prop.down_payment_percentage)+str('%')
-	down_payment = '$'+str(Property.down_payment_calc(prop))
-	total_mortgage = '$'+str(Property.total_mortgage_calc(prop))
-	mort_payment = '$'+str(Property.mort_payment_calc(prop))
-	init_cash_invest = '$'+str(Property.init_cash_invested_calc(prop))
-	oper_exp = '$'+str(Property.oper_exp_calc(prop))
-	net_oper_income = '$'+str(Property.net_oper_income_calc(prop))
-	cash_flow = '$'+str(Property.cash_flow_calc(prop))
-	oper_exp_ratio = Property.oper_exp_ratio_calc(prop)*100
-	oper_exp_ratio = str('%.1f' % oper_exp_ratio)+'%'
-	debt_coverage_ratio = Property.debt_coverage_ratio_calc(prop)
-	cap_rate = Property.cap_rate(prop)*100
-	cap_rate = str('%.2f' % cap_rate)+'%'
-	initial_market_value = '$'+str(prop.curr_value)
-	cash_on_cash = Property.cash_on_cash(prop)*100
-	cash_on_cash = str('%.2f' % cash_on_cash)+'%'
-	rtv = Property.rtv_calc(prop)*100
-	rtv = str('%.2f' % rtv)+'%'
-	prop.save()
-	template = loader.get_template('app/results.html')
 	context = {
-		'prop': prop,
-		'pkey': pkey,
-		'address':address,
-		'taxes': taxes,
-		'hoa': hoa,
-		'rent': rent,
-		'vacancy': vacancy,
-		'oper_income': oper_income,
-		'total_mortgage': total_mortgage,
-		'down_payment_percentage': down_payment_percentage,
-		'down_payment': down_payment,
-		'curr_value': curr_value,
-		'init_cash_invest': init_cash_invest,
-		'oper_exp': oper_exp,
-		'net_oper_income': net_oper_income,
-		'cash_flow': cash_flow,
-		'oper_exp_ratio': oper_exp_ratio,
-		'debt_coverage_ratio': debt_coverage_ratio,
-		'cap_rate': cap_rate,
-		'initial_market_value': initial_market_value,
-		'cash_on_cash': cash_on_cash,
-		'interest_rate': interest_rate,
-		'mort_payment': mort_payment,
-		'sqft':sqft,
-		'closing_costs':closing_costs,
-		'initial_improvements':initial_improvements,
-		'cost_per_sqft':cost_per_sqft,
-		'insurance':insurance,
-		'maintenance':maintenance,
-		'property_management_fee':property_management_fee,
-		'utilities':utilities,
-		'tenant_placement_fee':tenant_placement_fee,
-		'resign_fee':resign_fee,
-		'notes':notes,
-		'pub_date':pub_date,
-		'rtv':rtv,
-		'schools':schools,
-		'school_scores':school_scores,
-		'year_built': year_built,
-		'county': county,
-		'crime_level':crime_level,
-		'nat_disasters':nat_disasters,
-		'listing_url':listing_url,
-		'beds':beds,
-		'baths':baths
+		'id': prop,
+		'pkey': prop.pk,
+		'address': prop.address,
+		'taxes': '$'+str(int(prop.taxes_calc()/12)),
+		'hoa': '$'+str(int(prop.hoa/12)),
+		'rent': '$'+str(prop.rent),
+		'vacancy': '$'+str(prop.vacancy_calc()),
+		'oper_income': '$'+str(prop.oper_inc_calc()),
+		'total_mortgage': '$'+str(prop.total_mortgage_calc()),
+		'down_payment_percentage': str(prop.down_payment_percentage)+'%',
+		'down_payment': '$'+str(prop.down_payment_calc()),
+		'curr_value': '$'+str(prop.curr_value),
+		'init_cash_invest': '$'+str(prop.init_cash_invested_calc()),
+		'oper_exp': '$'+str(prop.oper_exp_calc()),
+		'net_oper_income': '$'+str(prop.net_oper_income_calc()),
+		'cash_flow': '$'+str(prop.cash_flow_calc()),
+		'oper_exp_ratio': '{0:.1f}'.format(prop.oper_exp_ratio_calc()*100),
+		'debt_coverage_ratio': prop.debt_coverage_ratio_calc(),
+		'cap_rate': '{0:.1f}%'.format(prop.cap_rate()*100),
+		'initial_market_value': '$'+str(prop.curr_value),
+		'cash_on_cash': '{0:.2f}%'.format(prop.cash_on_cash()*100),
+		'interest_rate': str(prop.interest_rate)+'%',
+		'mort_payment': '$'+str(prop.mort_payment_calc()),
+		'sqft': prop.sqft,
+		'closing_costs': '$'+str(prop.closing_costs),
+		'initial_improvements': '$'+str(prop.initial_improvements),
+		'cost_per_sqft': '$'+str(prop.cost_per_sqft_calc()),
+		'insurance': '$'+str(int(prop.insurance_calc()/12)),
+		'maintenance': '$'+str(int(prop.maint_calc()/12)),
+		'property_management_fee': '$'+str(prop.property_management_fee),
+		'utilities': '$'+str(prop.utilities),
+		'tenant_placement_fee': '$'+str(int(prop.tenant_place_calc()/12)),
+		'resign_fee': '$'+str(int(prop.resign_calc()/12)),
+		'notes': prop.notes,
+		'pub_date': prop.pub_date,
+		'rtv': '{0:.2f}%'.format(prop.rtv_calc()*100),
+		'schools': 'test',
+		'school_scores': '9,5,5',
+		'year_built': prop.year_built,
+		'county': prop.county,
+		'crime_level': prop.crime_level,
+		'nat_disasters': prop.nat_disasters,
+		'listing_url': prop.listing_url,
+		'beds': prop.beds,
+		'baths': prop.baths
 		}
+
+	template = loader.get_template('app/results.html')
 	return HttpResponse(template.render(context))
 
 
