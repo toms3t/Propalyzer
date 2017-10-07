@@ -77,39 +77,48 @@ class Property(models.Model):
     def __str__(self):
         return self.address
 
+    @property
     def oper_inc_calc(self):
         self.oper_income = int(self.rent - self.vacancy)
         return self.oper_income
 
+    @property
     def init_cash_invested_calc(self):
         self.init_cash_invest = int(self.down_payment + self.closing_costs + self.initial_improvements)
         return self.init_cash_invest
 
+    @property
     def vacancy_calc(self):
         self.vacancy_rate = .08
         self.vacancy = int(self.vacancy_rate * self.rent)
         return self.vacancy
 
+    @property
     def oper_exp_calc(self):
         self.oper_exp = int(((self.resign_fee / 12) + (self.taxes / 12) + (
         self.hoa / 12) + self.utilities + self.property_management_fee + (self.insurance / 12)
         + (self.maintenance / 12) + (self.tenant_placement_fee / 12)))
         return self.oper_exp
 
+    @property
     def net_oper_income_calc(self):
         self.net_oper_income = int(self.oper_income - self.oper_exp)
         return self.net_oper_income
 
+    @property
     def cash_flow_calc(self):
+        print (self.net_oper_income, self.mort_payment)
         self.cash_flow = int(self.net_oper_income - self.mort_payment)
         return self.cash_flow
 
+    @property
     def oper_exp_ratio_calc(self):
         getcontext().prec = 2
         self.oper_exp_ratio = float(Decimal(self.oper_exp) / Decimal(self.oper_income))
         self.oper_exp_ratio = self.oper_exp_ratio + 0
         return self.oper_exp_ratio
 
+    @property
     def debt_coverage_ratio_calc(self):
         getcontext().prec = 2
         if self.mort_payment:
@@ -131,22 +140,29 @@ class Property(models.Model):
         self.cash_on_cash_return = self.cash_on_cash_return + 0
         return self.cash_on_cash_return
 
+    @property
     def total_mortgage_calc(self):
         getcontext().prec = 8
         self.total_mortgage = self.curr_value - self.down_payment
         return self.total_mortgage
 
+    @property
     def mort_payment_calc(self):
         i = (self.interest_rate / 100) / 12
+        print ('int rate',self.interest_rate)
         n = 360
         p = self.total_mortgage
+        print ('totalmort',self.total_mortgage)
         self.mort_payment = int(p * (i * (1 + i) ** n) / ((1 + i) ** n - 1))
+        print ('mort_payment',self.mort_payment)
         return self.mort_payment
 
+    @property
     def cost_per_sqft_calc(self):
         self.cost_per_sqft = int(self.curr_value / self.sqft)
         return self.cost_per_sqft
 
+    @property
     def taxes_calc(self):
         if self.taxes > 200:
             self.taxes = int(self.taxes)
@@ -154,10 +170,12 @@ class Property(models.Model):
         else:
             return self.taxes
 
+    @property
     def insurance_calc(self):
-        self.insurance = float(self.curr_value)*.0022
+        self.insurance = float(self.curr_value)*.0075
         return self.insurance
 
+    @property
     def resign_calc(self):
         if self.resign_fee > 80:
             self.resign_fee = int(self.resign_fee)
@@ -165,6 +183,7 @@ class Property(models.Model):
         else:
             return self.resign_fee
 
+    @property
     def tenant_place_calc(self):
         if self.tenant_placement_fee > 300:
             self.tenant_placement_fee = int(self.tenant_placement_fee)
@@ -172,6 +191,7 @@ class Property(models.Model):
         else:
             return self.tenant_placement_fee
 
+    @property
     def maint_calc(self):
         if self.maintenance > 300:
             self.maintenance = int(self.maintenance)
@@ -179,22 +199,26 @@ class Property(models.Model):
         else:
             return self.maintenance
 
+    @property
     def rtv_calc(self):
         getcontext().prec = 2
         self.rtv = float(Decimal(self.rent) / Decimal(self.curr_value))
         self.rtv = self.rtv + 0
         return self.rtv
 
+    @property
     def down_payment_calc(self):
         getcontext().prec = 8
         dpp = self.down_payment_percentage / Decimal(100)
         self.down_payment = int((self.curr_value) * (dpp))
         return self.down_payment
 
+    @property
     def prop_mgmt_calc(self):
         self.property_management_fee = int(.09 * self.rent)
         return self.property_management_fee
 
+    @property
     def closing_costs_calc(self):
         self.closing_costs = int(.03 * self.curr_value)
         return self.closing_costs

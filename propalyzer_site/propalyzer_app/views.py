@@ -16,7 +16,7 @@ from decimal import Decimal
 import requests
 
 # GLOBALS
-ZWSID = ''
+ZWSID = 'X1-ZWz1f194i0l1xn_5rw5j'
 DETAILS_XML = ''
 
 
@@ -157,7 +157,7 @@ def edit(request, pk):
 @login_required
 def results(request, pk):
 	'''
-	This view renders the results page which displays listing information, operating income/expense, cash flow, and
+	Renders the results page which displays listing information, operating income/expense, cash flow, and
 	investment ratios.
 	:param request: HTTP request
 	:param pk: Primary Key - identifies the specific database record that corresponds with the listing details
@@ -168,41 +168,41 @@ def results(request, pk):
 		'id': prop,
 		'pkey': prop.pk,
 		'address': prop.address,
-		'taxes': '$'+str(int(prop.taxes_calc()/12)),
+		'taxes': '$'+str(int(prop.taxes_calc/12)),
 		'hoa': '$'+str(int(prop.hoa/12)),
 		'rent': '$'+str(prop.rent),
-		'vacancy': '$'+str(prop.vacancy_calc()),
-		'oper_income': '$'+str(prop.oper_inc_calc()),
-		'total_mortgage': '$'+str(prop.total_mortgage_calc()),
+		'vacancy': '$'+str(prop.vacancy_calc),
+		'oper_income': '$'+str(prop.oper_inc_calc),
+		'total_mortgage': '$'+str(prop.total_mortgage_calc),
 		'down_payment_percentage': str(prop.down_payment_percentage)+'%',
-		'down_payment': '$'+str(prop.down_payment_calc()),
+		'down_payment': '$'+str(prop.down_payment_calc),
 		'curr_value': '$'+str(prop.curr_value),
-		'init_cash_invest': '$'+str(prop.init_cash_invested_calc()),
-		'oper_exp': '$'+str(prop.oper_exp_calc()),
-		'net_oper_income': '$'+str(prop.net_oper_income_calc()),
-		'cash_flow': '$'+str(prop.cash_flow_calc()),
-		'oper_exp_ratio': '{0:.1f}'.format(prop.oper_exp_ratio_calc()*100),
-		'debt_coverage_ratio': prop.debt_coverage_ratio_calc(),
+		'init_cash_invest': '$'+str(prop.init_cash_invested_calc),
+		'oper_exp': '$'+str(prop.oper_exp_calc),
+		'net_oper_income': '$'+str(prop.net_oper_income_calc),
 		'cap_rate': '{0:.1f}%'.format(prop.cap_rate()*100),
 		'initial_market_value': '$'+str(prop.curr_value),
-		'cash_on_cash': '{0:.2f}%'.format(prop.cash_on_cash()*100),
 		'interest_rate': str(prop.interest_rate)+'%',
-		'mort_payment': '$'+str(prop.mort_payment_calc()),
+		'mort_payment': '$'+str(prop.mort_payment_calc),
+		'cash_flow': '$' + str(prop.cash_flow_calc),
 		'sqft': prop.sqft,
 		'closing_costs': '$'+str(prop.closing_costs),
 		'initial_improvements': '$'+str(prop.initial_improvements),
-		'cost_per_sqft': '$'+str(prop.cost_per_sqft_calc()),
-		'insurance': '$'+str(int(prop.insurance_calc()/12)),
-		'maintenance': '$'+str(int(prop.maint_calc()/12)),
+		'cost_per_sqft': '$'+str(prop.cost_per_sqft_calc),
+		'insurance': '$'+str(int(prop.insurance_calc/12)),
+		'maintenance': '$'+str(int(prop.maint_calc/12)),
 		'property_management_fee': '$'+str(prop.property_management_fee),
 		'utilities': '$'+str(prop.utilities),
-		'tenant_placement_fee': '$'+str(int(prop.tenant_place_calc()/12)),
-		'resign_fee': '$'+str(int(prop.resign_calc()/12)),
+		'tenant_placement_fee': '$'+str(int(prop.tenant_place_calc/12)),
+		'resign_fee': '$'+str(int(prop.resign_calc/12)),
+		'debt_coverage_ratio': prop.debt_coverage_ratio_calc,
+		'oper_exp_ratio': '{0:.1f}'.format(prop.oper_exp_ratio_calc * 100) + '%',
+		'cash_on_cash': '{0:.2f}%'.format(prop.cash_on_cash() * 100),
 		'notes': prop.notes,
 		'pub_date': prop.pub_date,
-		'rtv': '{0:.2f}%'.format(prop.rtv_calc()*100),
-		'schools': 'test',
-		'school_scores': '9,5,5',
+		'rtv': '{0:.2f}%'.format(prop.rtv_calc*100),
+		'schools': 'Unknown',
+		'school_scores': '0,0,0',
 		'year_built': prop.year_built,
 		'county': prop.county,
 		'crime_level': prop.crime_level,
@@ -211,7 +211,7 @@ def results(request, pk):
 		'beds': prop.beds,
 		'baths': prop.baths
 		}
-
+	prop.save()
 	template = loader.get_template('app/results.html')
 	return HttpResponse(template.render(context))
 
