@@ -42,7 +42,7 @@ class PropertyForm(forms.ModelForm):
 			'year_built': 'Pulled from Zillow',
 			'county': 'Pulled from Zillow',
 			'taxes': 'If modifying this value, enter annual amount.',
-			'insurance': 'Estimated at 2.2% of zestimate. \
+			'insurance': 'Estimated at .75% of zestimate. \
 			If modifying this value, enter annual amount',
 			'maintenance': 'Default value is an estimate for quick analysis purposes only. \
 			If modifying this value, enter annual amount',
