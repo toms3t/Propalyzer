@@ -133,7 +133,7 @@ Log in with your superuser credentials
 
 ## Deployment
 
-This web app uses a SQLite database which is installed by Django by default.
+Not yet deployed in a live environment.
 
 ## Built With
 
