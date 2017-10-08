@@ -151,7 +151,7 @@ Not yet deployed in a live environment.
 
 * **Tom Setliffe** - *Initial work* - [toms3t](https://github.com/toms3t)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/toms3t/Propalyzer/graphs/contributors) who participated in this project.
 
 ## License
 
