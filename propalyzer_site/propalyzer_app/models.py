@@ -205,7 +205,7 @@ class Property(models.Model):
     @property
     def down_payment_calc(self):
         getcontext().prec = 8
-        dpp = self.down_payment_percentage / Decimal(100)
+        dpp = self.down_payment_percentage / 100.0
         self.down_payment = int((self.curr_value) * (dpp))
         return self.down_payment
 
