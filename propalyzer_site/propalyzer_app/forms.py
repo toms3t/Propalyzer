@@ -41,14 +41,14 @@ class PropertyForm(forms.ModelForm):
 			'schools': 'Pulled from Zillow',
 			'year_built': 'Pulled from Zillow',
 			'county': 'Pulled from Zillow',
-			'taxes': 'If modifying this value, enter annual amount.',
-			'insurance': 'Estimated at 2.2% of zestimate. \
+			'taxes': 'Defaults to $2000. If modifying this value, enter annual amount.',
+			'insurance': 'Defaults to $1000. \
 			If modifying this value, enter annual amount',
 			'maintenance': 'Default value is an estimate for quick analysis purposes only. \
 			If modifying this value, enter annual amount',
 			'tenant_placement_fee': 'Enter annual amount',
 			'resign_fee': 'Enter annual amount',
-			'closing_costs': 'Estimated at 3% of purchase price',
+			'closing_costs': 'Estimated at 3% of zestimate',
 			'hoa': 'This value is not auto-populated, please verify - Enter annual amount',
 			'property_management_fee': 'Calculated at 9% of rent',
 			'utilities': 'Enter *MONTHLY* amount'

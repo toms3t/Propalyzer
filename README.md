@@ -133,7 +133,7 @@ Log in with your superuser credentials
 
 ## Deployment
 
-This web app uses a SQLite database which is installed by Django by default.
+Not yet deployed in a live environment.
 
 ## Built With
 
@@ -151,7 +151,7 @@ This web app uses a SQLite database which is installed by Django by default.
 
 * **Tom Setliffe** - *Initial work* - [toms3t](https://github.com/toms3t)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/toms3t/Propalyzer/graphs/contributors) who participated in this project.
 
 ## License
 
