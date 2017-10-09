@@ -3,7 +3,7 @@
 {% block content %}
 <h2>Property Information for: <b>{{ address }}</b></h2>
 <p><i>Information as of: {{ pub_date }}</i></p>
-<p>Check out this property's page on <a href="{{ listing_url }}">Zillow</a> for the latest details on this property</p>
+<p>Check out this property on <a href="{{ listing_url }}">Zillow</a> for the latest details</p>
 
 <div class="row">
     <div class="col-md-4">
@@ -85,14 +85,14 @@
         </div>
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h2 class="panel-title">Cash Flow Calculation</h2>
+                <h2 class="panel-title">Cash Flow</h2>
             </div>
             <div class="panel-body">
                 <table class="table table-bordered">
                     <tbody>
                         <tr><th scope="row">Net Operating Income</th><td>{{ net_oper_income }}</td></tr>
                         <tr><th scope="row">Monthly Mortgage Payment</th><td>{{ mort_payment }}</td></tr>
-                        <tr class="warning"><th scope="row">Cash Flow</th><td>{{ cash_flow }} per month</td></tr>
+                        <tr class="warning"><th scope="row">Monthly Cash Flow</th><td>{{ cash_flow }}</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -101,7 +101,7 @@
     <div class="col-md-4">
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h2 class="panel-title">Ratios</h2>
+                <h2 class="panel-title">Investment Ratios/Metrics</h2>
             </div>
             <div class="panel-body">
                 <table class="table table-bordered">
@@ -121,7 +121,8 @@
             </div>
             <div class="panel-body">
                 <div class="form-group">
-                    <input class="form-control input-lg" id="inputlg" type="text" disabled value="{{ notes }}">
+                    <label for="comment"></label>
+                    <textarea class="form-control" rows="10" id="comment">{{ notes }}</textarea>
                 </div>
             </div>
         </div>
