@@ -168,7 +168,7 @@ def results(request, pk):
 	context = {
 		'id': prop,
 		'pkey': prop.pk,
-		'address': prop.address,
+		'address': prop.address.replace("-", " "),
 		'taxes': '$'+str(int(prop.taxes/12)),
 		'hoa': '$'+str(int(prop.hoa/12)),
 		'rent': '$'+str(prop.rent),
@@ -224,4 +224,3 @@ def disclaimer(request):
 	:return: 'app/disclaimer.html' page
 	'''
 	return TemplateResponse(request, 'app/disclaimer.html')
-
