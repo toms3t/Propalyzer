@@ -1,72 +1,135 @@
-{% extends "app/layout.html" %}
+</td></tr>{% extends "app/layout.html" %}
 
 {% block content %}
-<h1> Property Information </h1>
-<p style="font-size:20px;color:blue"><u><b>Address = {{ address }}</b></p></u>
-
-<p>Created: {{ pub_date }}</p>
+<h2>Property Information for: <b>{{ address }}</b></h2>
+<p><i>Information as of: {{ pub_date }}</i></p>
+<p>Check out this property on <a href="{{ listing_url }}">Zillow</a> for the latest details</p>
 
 <div class="row">
-     <div class="col-md-4">
-        <h2> General </h2>
-        <p>Square Feet = {{ sqft }}</p>
-         <p>Bedrooms/Bathrooms = {{ beds }}/{{ baths }}</p>
-        <p>Year Built = {{ year_built }}</p>
-        <p>County = {{ county }}</p>
-        <p>Schools = {{ schools }}</p>
-        <p>School Scores = {{ school_scores }}</p>
-        <p>Area Crime Level = {{ crime_level }}</p>
-        <p>Area Natural Disasters = {{ nat_disasters }}</p>
-        <p><b><mark>Cost Per SQFT = {{ cost_per_sqft }}</mark></b></p>
-               <p>Interest Rate = {{ interest_rate }}</p>
-        <p>Mortgage Amount = {{ total_mortgage }}</p><br />
-         <h2> Initial Cash Invested </h2>
-        <p><b><mark>Zestimate = {{ curr_value }}</mark></b></p>
-        <p>Down Payment = {{ down_payment_percentage }}</p>
-        <p>Down Payment = {{ down_payment }}</p>
-        <p>Closing Costs = {{ closing_costs }}</p>
-        <p>Initial Improvements = {{ initial_improvements }}</p>
-        <p><b><mark>Initial Cash Invested = {{ init_cash_invest }}</mark></b></p><br />
-        <a class="btn btn-primary" href="{% url 'edit' pk=pkey %}">EDIT</a>
-        </div>
     <div class="col-md-4">
-        <h2> Operating Income </h2>
-        <p>Rent Zestimate = {{ rent }}</p>
-        <p>Vacancy (8%) = {{ vacancy }}</p>
-        <p><b>Operating Income = {{ oper_income }}</b></p><br />
-        <h2> Operating Expenses </h2>
-        <p style="color:black">** <span style="color:red">indicates expenses amortized monthly</span></p>
-        <p>Taxes** = {{ taxes }}</p>
-        <p>Insurance** = {{ insurance }}</p>
-        <p>HOA** = {{ hoa }}</p>
-        <p>Property Management Expense** = {{ property_management_fee }}</p>
-        <p>Tenant Placement** = {{ tenant_placement_fee }}</p>
-        <p>Lease Resign Fee**= {{ resign_fee }}</p>
-        <p>Maintenance** = {{ maintenance }}</p>
-        <p>Utilities = {{ utilities }}</p>
-        <p><b>Operating Expenses = {{ oper_exp }}</b></p><br />
-        <h2> Cash Flow Calculation </h2>
-        <p>Net Operating Income = {{ net_oper_income }}</p>
-        <p>Monthly Mortgage Payment = {{ mort_payment }}</p>
-        <p><b><mark>Cash Flow = {{ cash_flow }} per month </mark></b></p><br />
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2 class="panel-title">General</h2>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr><th scope="row">Square Feet</th><td>{{ sqft }}</td></tr>
+                        <tr><th scope="row">Bedrooms/Bathrooms</th><td>{{ beds }}/{{ baths }}</td></tr>
+                        <tr><th scope="row">Year Built</th><td>{{ year_built }}</td></tr>
+                        <tr><th scope="row">County</th><td>{{ county }}</td></tr>
+                        <tr><th scope="row">Schools</th><td>{{ schools }}</td></tr>
+                        <tr><th scope="row">School Scores</th><td>{{ school_scores }}</td></tr>
+                        <tr><th scope="row">Area Crime Level</th><td>{{ crime_level }}</td></tr>
+                        <tr><th scope="row">Area Natural Disasters</th><td>{{ nat_disasters }}</td></tr>
+                        <tr class="warning"><th scope="row">Cost Per SQFT</th><td>{{ cost_per_sqft }}</td></tr>
+                        <tr><th scope="row">Interest Rate</th><td>{{ interest_rate }}</td></tr>
+                        <tr><th scope="row">Mortgage Amount</th><td>{{ total_mortgage }}</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2 class="panel-title">Initial Cash Invested</h2>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr class="warning"><th scope="row">Zestimate</th><td>{{ curr_value }}</td></tr>
+                        <tr><th scope="row">Down Payment (%)</th><td>{{ down_payment_percentage }}</td></tr>
+                        <tr><th scope="row">Down Payment ($)</th><td>{{ down_payment }}</td></tr>
+                        <tr><th scope="row">Initial Improvements</th><td>{{ initial_improvements }}</td></tr>
+                        <tr><th scope="row">Closing Costs</th><td>{{ closing_costs }}</td></tr>
+                        <tr class="warning"><th scope="row">Initial Cash Invested</th><td>{{ init_cash_invest }}</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     <div class="col-md-4">
-        <h2> Ratios </h2>
-        <p>Operating Expense Ratio = {{ oper_exp_ratio }} (Typical 25-35%)</p>
-        <p>Debt Coverage Ratio = {{ debt_coverage_ratio }}</p>
-        <p>Capitalization Rate = {{ cap_rate }}</p>
-        <p><b><mark>Cash on Cash Return = {{ cash_on_cash }}</mark></b></p>
-        <p>Rent-to-Value Ratio = {{ rtv }}</p><br>
-        <h2>Notes</h2>
-        <textarea rows="10" cols="50">{{ notes }}</textarea>
-        <br /><br />
-
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2 class="panel-title">Operating Income</h2>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr><th scope="row">Rent Zestimate</th><td>{{ rent }}</td></tr>
+                        <tr><th scope="row">Vacancy (8%)</th><td>{{ vacancy }}</td></tr>
+                        <tr class="warning"><th scope="row">Operating Income</th><td>{{ oper_income }}</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2 class="panel-title">Operating Expenses</h2>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr><th scope="row">Taxes**</th><td>{{ taxes }}</td></tr>
+                        <tr><th scope="row">Insurance**</th><td>{{ insurance }}</td></tr>
+                        <tr><th scope="row">HOA**</th><td>{{ hoa }}</td></tr>
+                        <tr><th scope="row">Property Management Expense**</th><td>{{ property_management_fee }}</td></tr>
+                        <tr><th scope="row">Tenant Placement**</th><td>{{ tenant_placement_fee }}</td></tr>
+                        <tr><th scope="row">Lease Resign Fee**</th><td>{{ resign_fee }}</td></tr>
+                        <tr><th scope="row">Maintenance**</th><td>{{ maintenance }}</td></tr>
+                        <tr><th scope="row">Utilities</th><td>{{ utilities }}</td></tr>
+                        <tr class="warning"><th scope="row">Operating Expenses</th><td>{{ oper_exp }}</td></tr>
+                    </tbody>
+                </table>
+                <p><b>**</b> <i>indicates expenses amortized monthly</i></p>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2 class="panel-title">Cash Flow</h2>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr><th scope="row">Net Operating Income</th><td>{{ net_oper_income }}</td></tr>
+                        <tr><th scope="row">Monthly Mortgage Payment</th><td>{{ mort_payment }}</td></tr>
+                        <tr class="warning"><th scope="row">Monthly Cash Flow</th><td>{{ cash_flow }}</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2 class="panel-title">Investment Ratios/Metrics</h2>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr><th scope="row">Operating Expense Ratio</th><td>{{ oper_exp_ratio }} (Typical 25-35%)</td></tr>
+                        <tr><th scope="row">Debt Coverage Ratio</th><td>{{ debt_coverage_ratio }}</td></tr>
+                        <tr><th scope="row">Capitalization Rate</th><td>{{ cap_rate }}</td></tr>
+                        <tr class="warning"><th scope="row">Cash on Cash Return</th><td>{{ cash_on_cash }}</td></tr>
+                        <tr><th scope="row">Rent-to-Value Ratio</th><td>{{ rtv }}</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2 class="panel-title">Notes</h2>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="comment"></label>
+                    <textarea class="form-control" rows="10" id="comment">{{ notes }}</textarea>
+                </div>
+            </div>
+        </div>
+        <a class="btn btn-primary" href="{% url 'edit' pk=pkey %}">EDIT</a>
     </div>
 </div>
 <a href="http://zillow.com">
     <img src="http://www.zillow.com/widgets/GetVersionedResource.htm?path=/static/logos/Zillowlogo_200x50.gif" width="200" height="50" alt="Zillow Real Estate Search" id="yui_3_18_1_1_1506979974705_333">
-</a>
-<a href="{{ listing_url }}">
-    <p style="font-size:12px;color:black"><u><b>See more details for {{ address }} on Zillow</b></p>
 </a>
 {% endblock %}
