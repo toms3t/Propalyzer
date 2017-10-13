@@ -14,9 +14,14 @@ import usaddress
 from collections import defaultdict
 from decimal import Decimal
 import requests
+try:
+	from .secret import Secret
+except ImportError:
+	pass
+
 
 # GLOBALS
-ZWSID = ''
+ZWSID = Secret.ZWSID  ## REPLACE "Secret.ZWSID" WITH YOUR OWN ZWSID STRING ##
 DETAILS_XML = ''
 
 
