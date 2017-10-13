@@ -107,8 +107,14 @@ def get_listing_details(DETAILS_XML):
 	lot_sqft = re.findall('<lotSizeSqFt>(\d+)</lotSizeSqFt>',DETAILS_XML)[0]
 	baths = re.findall('<bathrooms>(.*?)</bathrooms>', DETAILS_XML)[0]
 	beds = re.findall('<bedrooms>(\d+)</bedrooms>', DETAILS_XML)[0]
-	curr_value = re.findall('<zestimate><amount currency="USD">(\d+)</amount>', DETAILS_XML)[0]
-	value_low, value_high = re.findall('>(\d+)</low><high currency="USD">(\d+)</high>.*?</zestimate>', DETAILS_XML)[0]
+	try:
+		curr_value = re.findall('<zestimate><amount currency="USD">(\d+)</amount>', DETAILS_XML)[0]
+	except IndexError:
+		curr_value = 0
+	try:
+		value_low, value_high = re.findall('>(\d+)</low><high currency="USD">(\d+)</high>.*?</zestimate>', DETAILS_XML)[0]
+	except:
+		value_low, value_high = [0, 1]
 	rent_zest = re.findall('<rentzestimate><amount currency="USD">(\d+)</amount>', DETAILS_XML)[0]
 	rent_low, rent_high = re.findall('<rentzestimate>.*?(\d+)</low><high currency="USD">(\d+)</high>.*?</rentzestimate>', DETAILS_XML)[0]
 	year_built = re.findall('<yearBuilt>(\d+)</yearBuilt>', DETAILS_XML)[0]
