@@ -23,6 +23,7 @@ except ImportError:
 # GLOBALS
 ZWSID = Secret.ZWSID  ## REPLACE "Secret.ZWSID" WITH YOUR OWN ZWSID STRING ##
 DETAILS_XML = ''
+ADDRESSDICT = {}
 
 
 @login_required
@@ -43,15 +44,16 @@ def address(request):
 	if request.method == "POST":
 		address_str = str(request.POST['address'])
 		address_parsed = usaddress.parse(address_str)
-		addressdict = defaultdict(str)
+		global ADDRESSDICT
+		ADDRESSDICT = defaultdict(str)
 		for item in address_parsed:
-			addressdict[item[1]] = item[0]
+			ADDRESSDICT[item[1]] = item[0]
 		api_url1 = 'http://www.zillow.com/webservice/GetDeepSearchResults.htm?'
 		api_url2 = 'zws-id={ZWSID}&address={num}+{dir}+{street}+{st_type}&citystatezip={city}%2C+{state}+{zip}&' \
-					'rentzestimate=true'.format(ZWSID=ZWSID, num=addressdict['AddressNumber'],
-					dir=addressdict['StreetNamePreDirectional'],
-					street=addressdict['StreetName'], st_type=addressdict['StreetNamePostType'],
-					city=addressdict['PlaceName'], state=addressdict['StateName'], zip=addressdict['ZipCode'])
+					'rentzestimate=true'.format(ZWSID=ZWSID, num=ADDRESSDICT['AddressNumber'],
+					dir=ADDRESSDICT['StreetNamePreDirectional'],
+					street=ADDRESSDICT['StreetName'], st_type=ADDRESSDICT['StreetNamePostType'],
+					city=ADDRESSDICT['PlaceName'], state=ADDRESSDICT['StateName'], zip=ADDRESSDICT['ZipCode'])
 		api_url = api_url1+api_url2
 		prop_data = requests.get(api_url)
 		global DETAILS_XML
@@ -138,6 +140,18 @@ def get_listing_details(DETAILS_XML):
 	]
 	return listing_details
 
+def get_latlong(ADDRESSDICT):
+	url1 = 'https://maps.googleapis.com/maps/api/geocode/json'
+	url2 = '?address={}+{}+{}+{}+{}+{}+{}&key={}'.format(ADDRESSDICT['AddressNumber'],
+	                                                  ADDRESSDICT['StreetNamePreDirectional'],
+	                                                  ADDRESSDICT['StreetName'],
+	                                                  ADDRESSDICT['StreetNamePostType'],
+	                                                  ADDRESSDICT['PlaceName'],
+	                                                  ADDRESSDICT['StateName'],
+	                                                  ADDRESSDICT['ZipCode'],
+	                                                  Secret.GMAPS_API_KEY)
+	api_url = url1+url2
+	return latlong
 
 @login_required
 def edit(request, pk):
