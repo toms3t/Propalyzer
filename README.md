@@ -1,11 +1,12 @@
 # Propalyzer
 
-Web app that helps investors evaluate investment property opportunities. The user inputs a US residential property address and the app uses Zillow's API to pull property details. The app presents the property details to the user for inspection and the ability to edit. With the details finalized, the app will crunch the data and return various financial metrics about the property including:
+Web app that helps investors evaluate investment property opportunities. The user inputs a US residential property address and the app uses Zillow's API to pull property details. The app presents the property details to the user for inspection and the ability to edit. With the details finalized, the app will crunch the data and return information about the property including:
 - Operating Income
 - Operating Expenses
 - Cash on Cash Return
 - Debt Coverage Ratio
 - Monthly Cash Flow
+- Scoring of area Livability, Crime, Cost of Living, Education, Employment, Housing, Weather relative to local and national averages
 
 ## Getting Started
 
@@ -108,15 +109,18 @@ https://www.zillow.com/webservice/Registration.htm
 ```
 > pip install -r Propalyzer/requirements.txt
 ```
-- Enter secret key in your /Users/[your username]/[directory name]/propalyzer_site/propalyzer_site/settings.py file and save the settings.py file
-- If you have trouble finding your directory, type "pwd" (without the quotation marks) into your terminal application
+- Create a secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_app' folder and enter the following:
 ```
-secret_key = '[enter new key here without the brackets - you can make the key whatever you want]'
-[save settings.py file]
+class Secret():
+  ZWSID = '[enter your Zillow key here without brackets]'
+  GMAPS_API_KEY = '[enter your Google Maps API key here without brackets]'
+## now save the file ##
 ```
-- Enter your ZWSID into the '/Users/[username]/[directory name]/propalyzer_site/propalyzer_app/views.py' file
+- Create a second secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_site' folder and enter the following:
 ```
-ZWSID = '[enter your key here without brackets]'
+class Secret():
+  SECRET_KEY = '[enter a secret key here without brackets]'
+## now save the file ##
 ```
 
 - Prep the SQLite database
