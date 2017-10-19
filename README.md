@@ -1,11 +1,12 @@
 # Propalyzer
 
-Web app that helps investors evaluate investment property opportunities. The user inputs a US residential property address and the app uses Zillow's API to pull property details. The app presents the property details to the user for inspection and the ability to edit. With the details finalized, the app will crunch the data and return various financial metrics about the property including:
+Web app that helps investors evaluate investment property opportunities. The user inputs a US residential property address and the app uses Zillow's API to pull property details. The app presents the property details to the user for inspection and the ability to edit. With the details finalized, the app will crunch the data and return information about the property including:
 - Operating Income
 - Operating Expenses
 - Cash on Cash Return
 - Debt Coverage Ratio
 - Monthly Cash Flow
+- Scoring of area Livability, Crime, Cost of Living, Education, Employment, Housing, Weather relative to local and national averages
 
 ## Getting Started
 
