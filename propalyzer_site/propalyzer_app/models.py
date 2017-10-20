@@ -73,17 +73,26 @@ class Property(models.Model):
     crime_level = models.CharField(max_length=200, blank=True)
     nat_disasters = models.CharField(max_length=200, blank=True)
     owned = models.BooleanField(default=False)
+    livability = models.IntegerField(default=0, blank=True)
+    crime = models.CharField(max_length=200, blank=True)
+    cost_of_living = models.CharField(max_length=200, blank=True)
+    education = models.CharField(max_length=200, blank=True)
+    employment = models.CharField(max_length=200, blank=True)
+    housing = models.CharField(max_length=200, blank=True)
+    weather = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
         return self.address
 
     @property
     def oper_inc_calc(self):
+        # self.vacancy = self.vacancy_calc
         self.oper_income = int(self.rent - self.vacancy)
         return self.oper_income
 
     @property
     def init_cash_invested_calc(self):
+        self.down_payment = self.down_payment_calc
         self.init_cash_invest = int(self.down_payment + self.closing_costs + self.initial_improvements)
         return self.init_cash_invest
 
@@ -113,7 +122,10 @@ class Property(models.Model):
     @property
     def oper_exp_ratio_calc(self):
         getcontext().prec = 2
-        self.oper_exp_ratio = float(Decimal(self.oper_exp) / Decimal(self.oper_income))
+        try:
+            self.oper_exp_ratio = float(Decimal(self.oper_exp) / Decimal(self.oper_income))
+        except ZeroDivisionError:
+            self.oper_exp_ratio = 0.00
         self.oper_exp_ratio = self.oper_exp_ratio + 0
         return self.oper_exp_ratio
 
@@ -121,7 +133,10 @@ class Property(models.Model):
     def debt_coverage_ratio_calc(self):
         getcontext().prec = 2
         if self.mort_payment:
-            self.debt_cover_ratio = float(Decimal(self.net_oper_income) / Decimal(self.mort_payment))
+            try:
+                self.debt_cover_ratio = float(Decimal(self.net_oper_income) / Decimal(self.mort_payment))
+            except ZeroDivisionError:
+                self.debt_cover_ratio = 0.00
             return self.debt_cover_ratio
         else:
             return None
@@ -129,15 +144,26 @@ class Property(models.Model):
     def cap_rate(self):
         getcontext().prec = 2
         self.initial_market_value = self.curr_value
-        self.cap_rate = float(Decimal((self.net_oper_income * 12) / Decimal(self.initial_market_value)))
+        try:
+            self.cap_rate = float(Decimal((self.net_oper_income * 12) / Decimal(self.initial_market_value)))
+        except ZeroDivisionError:
+            self.cap_rate = 0.00
         self.cap_rate = self.cap_rate + 0
         return self.cap_rate
 
     def cash_on_cash(self):
         getcontext().prec = 3
-        self.cash_on_cash_return = float(Decimal((self.cash_flow * 12) / Decimal(self.init_cash_invest)))
+        try:
+            self.cash_on_cash_return = float(Decimal((self.cash_flow * 12) / Decimal(self.init_cash_invest)))
+        except ZeroDivisionError:
+            self.cash_on_cash_return = 0.00
         self.cash_on_cash_return = self.cash_on_cash_return + 0
         return self.cash_on_cash_return
+
+    @property
+    def down_payment_calc(self):
+        self.down_payment = int((self.down_payment_percentage * self.curr_value) / 100)
+        return self.down_payment
 
     @property
     def total_mortgage_calc(self):
@@ -155,7 +181,10 @@ class Property(models.Model):
 
     @property
     def cost_per_sqft_calc(self):
-        self.cost_per_sqft = int(self.curr_value / self.sqft)
+        try:
+            self.cost_per_sqft = int(self.curr_value / self.sqft)
+        except ZeroDivisionError:
+            self.cost_per_sqft = 0
         return self.cost_per_sqft
 
     # @property
@@ -198,16 +227,13 @@ class Property(models.Model):
     @property
     def rtv_calc(self):
         getcontext().prec = 2
-        self.rtv = float(Decimal(self.rent) / Decimal(self.curr_value))
+        try:
+            self.rtv = float(Decimal(self.rent) / Decimal(self.curr_value))
+        except ZeroDivisionError:
+            self.rtv = 0.00
         self.rtv = self.rtv + 0
         return self.rtv
 
-    @property
-    def down_payment_calc(self):
-        getcontext().prec = 8
-        dpp = self.down_payment_percentage / Decimal(100.0)
-        self.down_payment = int((self.curr_value) * dpp)
-        return self.down_payment
 
     @property
     def prop_mgmt_calc(self):
