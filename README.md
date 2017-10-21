@@ -96,6 +96,7 @@ https://developers.google.com/maps/documentation/geocoding/start
 
 - Create and configure virtualenv (Use Windows PowerShell, Command Prompt, or a Terminal Emulator such as ConEmu)
 ```
+> Hit start and type "anaconda" to find the anaconda prompt -- launch the "anaconda prompt"
 > mkdir [directory name]
 > cd [directory name]
 > conda create --name [virtual environment name]
