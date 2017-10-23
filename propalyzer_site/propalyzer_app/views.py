@@ -1,6 +1,5 @@
 import json
 import re
-from collections import defaultdict
 from datetime import datetime
 from decimal import Decimal
 
@@ -19,13 +18,14 @@ from .models import Property
 from .zillow_api import ZillowSetup
 from .secret import Secret
 
+
 @login_required
 def address(request):
     """
-	Renders the starting page for entering a property address
-	:param request: HTTP Request
-	:return: app/address.html page
-	"""
+    Renders the starting page for entering a property address
+    :param request: HTTP Request
+    :return: app/address.html page
+    """
 
     researched_properties = Property.objects.filter(user=request.user)
     researched_property_list = researched_properties.order_by('-pub_date')
@@ -37,10 +37,12 @@ def address(request):
     form = AddressForm()
     if request.method == "POST":
         address_str = str(request.POST['address'])
+
         address_info = ZillowSetup(address_str)
         address_info.set_address()
         if address_info.error:
             return TemplateResponse(request, 'app/addressnotfound.html')
+
         address_info.set_zillow_url()
         if 'ConnectionError' in address_info.error:
             return TemplateResponse(request, 'app/connection_error.html')
@@ -49,6 +51,8 @@ def address(request):
 
         address_info.set_xml_data()
 
+        # TODO Consider adding this to the zillow API class or having its own separate file to prevent combining
+        # business logic within the view file
         areavibes_dict = get_areavibes_info(address_info.address_dict)
         livability = areavibes_dict['livability']
         crime = areavibes_dict['crime']
@@ -58,10 +62,9 @@ def address(request):
         housing = areavibes_dict['housing']
         weather = areavibes_dict['weather']
 
-
-
         new_prop = Property(
-            address=address_info.address_str, sqft=address_info.sqft, rent=address_info.rent_zest, rent_low=address_info.rent_low,
+            address=address_info.address_str, sqft=address_info.sqft, rent=address_info.rent_zest,
+            rent_low=address_info.rent_low,
             rent_high=address_info.rent_high, curr_value=address_info.curr_value,
             value_low=address_info.value_low, value_high=address_info.value_high, year_built=address_info.year_built,
             interest_rate=4.75, county=address_info.county,
@@ -101,14 +104,12 @@ def address(request):
         return TemplateResponse(request, 'app/address.html', context)
 
 
-
-
 def get_latlong(ADDRESSDICT):
     """
-	Method that takes the property address and crafts the API URL call into Google Maps Geocode API.
-	:param ADDRESSDICT: Identified components of the property address (i.e. street name, city, zip code, etc.)
-	:return: Returns the property's latitude and longitude.
-	"""
+    Method that takes the property address and crafts the API URL call into Google Maps Geocode API.
+    :param ADDRESSDICT: Identified components of the property address (i.e. street name, city, zip code, etc.)
+    :return: Returns the property's latitude and longitude.
+    """
     url1 = 'https://maps.googleapis.com/maps/api/geocode/json'
     url2 = '?address={}+{}+{}+{}+{}+{}+{}&key={}'.format(ADDRESSDICT['AddressNumber'],
                                                          ADDRESSDICT['StreetNamePreDirectional'],
@@ -146,18 +147,18 @@ def get_areavibes_url(ADDRESSDICT):
 
 def get_areavibes_info(ADDRESSDICT):
     """
-	Method that generates the areavibes dictionary with areavibes information for a given address.
-	:param ADDRESSDICT: Identified components of the property address (i.e. street name, city, zip code, etc.)
-	:return: areavibes_dict - Dictionary that contains ratings sourced from areavibes.com based on a given address
-	for the following categories:
-		- Livability
-		- Crime
-		- Cost of Living
-		- Education
-		- Employment
-		- Housing
-		- Weather
-	"""
+    Method that generates the areavibes dictionary with areavibes information for a given address.
+    :param ADDRESSDICT: Identified components of the property address (i.e. street name, city, zip code, etc.)
+    :return: areavibes_dict - Dictionary that contains ratings sourced from areavibes.com based on a given address
+    for the following categories:
+        - Livability
+        - Crime
+        - Cost of Living
+        - Education
+        - Employment
+        - Housing
+        - Weather
+    """
     url = get_areavibes_url(ADDRESSDICT)
     r = requests.get(url)
     soup = BeautifulSoup(r.content, 'html.parser')
@@ -208,12 +209,12 @@ def get_areavibes_info(ADDRESSDICT):
 
 @login_required
 def edit(request, pk):
-    '''
-	Renders the 'app/edit.html' page for editing listing values
-	:param request: HTTP Request
-	:param pk: Primary Key - identifies the specific database record that corresponds with the listing details
-	:return: 'app/edit.html' page
-	'''
+    """
+    Renders the 'app/edit.html' page for editing listing values
+    :param request: HTTP Request
+    :param pk: Primary Key - identifies the specific database record that corresponds with the listing details
+    :return: 'app/edit.html' page
+    """
     post = get_object_or_404(Property, pk=pk)
     if request.method == "POST":
         form = PropertyForm(request.POST, instance=post)
@@ -229,13 +230,13 @@ def edit(request, pk):
 
 @login_required
 def results(request, pk):
-    '''
-	Renders the results page which displays listing information, operating income/expense, cash flow, and
-	investment ratios.
-	:param request: HTTP request
-	:param pk: Primary Key - identifies the specific database record that corresponds with the listing details
-	:return: 'app/results.html' page
-	'''
+    """
+    Renders the results page which displays listing information, operating income/expense, cash flow, and
+    investment ratios.
+    :param request: HTTP request
+    :param pk: Primary Key - identifies the specific database record that corresponds with the listing details
+    :return: 'app/results.html' page
+    """
     prop = Property.objects.get(pk=pk)
     context = {
         'id': prop,
@@ -297,9 +298,9 @@ def results(request, pk):
 
 
 def disclaimer(request):
-    '''
-	Renders the disclaimer page with specific paragraphs taken from Zillow.com terms of use
-	:param request: HTTP Request
-	:return: 'app/disclaimer.html' page
-	'''
+    """
+    Renders the disclaimer page with specific paragraphs taken from Zillow.com terms of use
+    :param request: HTTP Request
+    :return: 'app/disclaimer.html' page
+    """
     return TemplateResponse(request, 'app/disclaimer.html')
