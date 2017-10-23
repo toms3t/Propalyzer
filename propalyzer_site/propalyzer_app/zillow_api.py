@@ -1,8 +1,8 @@
 import requests
-import untangle
 import usaddress
 from .county import County
 from .secret import Secret
+import xml.etree.cElementTree as ET
 
 ZWSID = Secret.ZWSID  ## REPLACE "Secret.ZWSID" WITH YOUR OWN ZWSID STRING ##
 
@@ -42,11 +42,45 @@ class ZillowSetup:
                              'USPSBoxID': '',
                              'USPSBoxType': '',
                              'ZipCode': ''}
+        self.zillow_dict = {'homedetails': '',
+                            'FIPScounty': '',
+                            'finishedSqFt': '',
+                            'lotSizeSqFt': '',
+                            'bathrooms': '',
+                            'bedrooms': '',
+                            'zestimate/amount': '',
+                            'zestimate/valuationRange/low': '',
+                            'zestimate/valuationRange/high': '',
+                            'rentzestimate/amount': '',
+                            'rentzestimate/valuationRange/low': '',
+                            'rentzestimate/valuationRange/high': '',
+                            'yearBuilt': '',
+                            'lastSoldDate': '',
+                            'localRealEstate': ''}
         self.street_address = ''
         self.city = ''
         self.state = ''
-        self.zip_code = ''
+        self.zip_code = 0
+        self.listing_url = ''
+        self.county_code = 0
+        self.sqft = 0
+        self.lot_sqft = 0
+        self.baths = 0
+        self.beds = 0
+        self.curr_value = 0
+        self.value_low = 0
+        self.value_high = 0
+        self.rent_zest = 0
+        self.rent_low = 0
+        self.rent_high = 0
+        self.year_built = 0
+        self.last_sold_date = ''
+        self.neighborhood = ''
+        self.county = ''
+
+        self.listing_details = ''
         self.xml_info = ''
+        self.url = ''
         self.error = ''
 
     def convert_address(self):
@@ -92,6 +126,7 @@ class ZillowSetup:
             prop_data = requests.get(self.url)
         except:
             self.error = 'ConnectionError'
+            return
 
         if 'no exact match' in prop_data.text:
             self.error = 'AddressNotFound'
@@ -99,29 +134,28 @@ class ZillowSetup:
         self.xml_info = prop_data.text
 
     def set_xml_data(self):
-        """
-        Method to parse listing details from the XML received from API Call
-        :param DETAILS_XML: XML document from Zillow API Call
-        :return: list of property details
-        """
-        xml_parse = untangle.parse(self.xml_info)
-        xml_result = xml_parse.SearchResults_searchresults.response.results.result
 
-        self.listing_url = xml_result.links.homedetails.cdata
-        self.county_code = xml_result.FIPScounty.cdata
-        self.sqft = xml_result.finishedSqFt.cdata
-        self.lot_sqft = xml_result.lotSizeSqFt.cdata
-        self.baths = xml_result.bathrooms.cdata
-        self.beds = xml_result.bedrooms.cdata
-        self.curr_value = mk_int(xml_result.zestimate.amount.cdata)
-        self.value_low = mk_int(xml_result.zestimate.valuationRange.low.cdata)
-        self.value_high = mk_int(xml_result.zestimate.valuationRange.high.cdata)
-        self.rent_zest = xml_result.rentzestimate.amount.cdata
-        self.rent_low = xml_result.rentzestimate.valuationRange.low.cdata
-        self.rent_high = xml_result.rentzestimate.valuationRange.high.cdata
-        self.year_built = xml_result.yearBuilt.cdata
-        self.last_sold_date = xml_result.lastSoldDate.cdata
-        self.neighborhood = xml_result.localRealEstate.cdata
+        tree = ET.fromstring(self.xml_info)
+        for tag in self.zillow_dict.keys():
+            for elem in tree.findall('.//' + tag):
+                if elem.text is not None:
+                    self.zillow_dict[tag] = elem.text
+
+        self.listing_url = self.zillow_dict['homedetails']
+        self.county_code = self.zillow_dict['FIPScounty']
+        self.sqft = self.zillow_dict['finishedSqFt']
+        self.lot_sqft = self.zillow_dict['lotSizeSqFt']
+        self.baths = self.zillow_dict['bathrooms']
+        self.beds = self.zillow_dict['bedrooms']
+        self.curr_value = mk_int(self.zillow_dict['zestimate/amount'])
+        self.value_low = mk_int(self.zillow_dict['zestimate/valuationRange/low'])
+        self.value_high = mk_int(self.zillow_dict['zestimate/valuationRange/high'])
+        self.rent_zest = self.zillow_dict['rentzestimate/amount']
+        self.rent_low = self.zillow_dict['rentzestimate/valuationRange/low']
+        self.rent_high = self.zillow_dict['rentzestimate/valuationRange/high']
+        self.year_built = self.zillow_dict['yearBuilt']
+        self.last_sold_date = self.zillow_dict['lastSoldDate']
+        self.neighborhood = self.zillow_dict['localRealEstate']
         self.county = County.county_finder(self.county_code)
 
         self.listing_details = [
