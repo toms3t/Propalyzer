@@ -1016,4 +1016,7 @@ class County():
 			return dict[code]
 		except KeyError:
 			code = '0'+code
-			return dict[code]
+			try:
+				return dict[code]
+			except KeyError:
+				return 'Unknown'
