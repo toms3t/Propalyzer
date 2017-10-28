@@ -4,7 +4,7 @@ from .county import County
 from .secret import Secret
 import xml.etree.cElementTree as ET
 
-ZWSID = Secret.ZWSID  ## REPLACE "Secret.ZWSID" WITH YOUR OWN ZWSID STRING ##
+ZWSID = Secret.ZWSID
 
 
 def mk_int(s):
