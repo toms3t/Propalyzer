@@ -144,7 +144,6 @@ class ZillowSetup:
                                                 city=self.city,
                                                 state=self.state,
                                                 zip=self.zip_code)
-
         try:
             prop_data = requests.get(self.url)
         except:
@@ -173,16 +172,16 @@ class ZillowSetup:
         self.listing_url = self.zillow_dict['homedetails']
         self.county_code = self.zillow_dict['FIPScounty']
         self.sqft = self.zillow_dict['finishedSqFt']
-        self.lot_sqft = self.zillow_dict['lotSizeSqFt']
+        self.lot_sqft = mk_int(self.zillow_dict['lotSizeSqFt'])
         self.baths = self.zillow_dict['bathrooms']
-        self.beds = self.zillow_dict['bedrooms']
+        self.beds = mk_int(self.zillow_dict['bedrooms'])
         self.curr_value = mk_int(self.zillow_dict['zestimate/amount'])
         self.value_low = mk_int(self.zillow_dict['zestimate/valuationRange/low'])
         self.value_high = mk_int(self.zillow_dict['zestimate/valuationRange/high'])
-        self.rent_zest = self.zillow_dict['rentzestimate/amount']
-        self.rent_low = self.zillow_dict['rentzestimate/valuationRange/low']
-        self.rent_high = self.zillow_dict['rentzestimate/valuationRange/high']
-        self.year_built = self.zillow_dict['yearBuilt']
+        self.rent_zest = mk_int(self.zillow_dict['rentzestimate/amount'])
+        self.rent_low = mk_int(self.zillow_dict['rentzestimate/valuationRange/low'])
+        self.rent_high = mk_int(self.zillow_dict['rentzestimate/valuationRange/high'])
+        self.year_built = mk_int(self.zillow_dict['yearBuilt'])
         self.last_sold_date = self.zillow_dict['lastSoldDate']
         self.neighborhood = self.zillow_dict['localRealEstate']
         self.county = County.county_finder(self.county_code)
