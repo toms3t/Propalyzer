@@ -41,17 +41,20 @@ $ git config --global user.name "John Doe"
 $ git config --global user.email johndoe@example.com
 $ git clone https://github.com/toms3t/Propalyzer.git
 ```
-- Create a secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_app' folder and enter the following:
+**The project includes two "secret.py" files - one for the API keys and the other for the settings.py secret key. 
+The secret.py files are included in the .gitignore file so don't worry about accidentally uploading your API keys**
+
+Open the secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_app' folder and enter the following:
 ```
 class Secret():
   ZWSID = '[enter your Zillow key here without brackets]'
   GMAPS_API_KEY = '[enter your Google Maps API key here without brackets]'
 ## now save the file ##
 ```
-- Create a second secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_site' folder and enter the following:
+- Open the second secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_site' folder and enter the following:
 ```
 class Secret():
-  SECRET_KEY = '[enter a secret key here without brackets]'
+  SECRET_KEY = '[enter a secret key here without brackets - any random string of characters will work!]'
 ## now save the file ##
 ```
 - Install packages from requirements.txt file
