@@ -41,7 +41,10 @@ $ git config --global user.name "John Doe"
 $ git config --global user.email johndoe@example.com
 $ git clone https://github.com/toms3t/Propalyzer.git
 ```
-- Open the secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_app' folder and enter the following:
+**The project includes two "secret.py" files - one for the API keys and the other for the settings.py secret key. 
+The secret.py files are included in the .gitignore file so don't worry about accidentally uploading your API keys**
+
+Open the secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_app' folder and enter the following:
 ```
 class Secret():
   ZWSID = '[enter your Zillow key here without brackets]'
