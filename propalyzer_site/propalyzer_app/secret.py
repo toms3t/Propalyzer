@@ -1,3 +1,3 @@
 class Secret():
-  ZWSID = ''
+	ZWSID = ''
 	GMAPS_API_KEY = ''
