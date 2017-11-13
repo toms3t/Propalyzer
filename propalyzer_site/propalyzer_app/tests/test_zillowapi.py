@@ -1,3 +1,8 @@
+from django.test import TestCase
+from ..zillow_api import ZillowSetup
+import requests
+
+
 class ZillowTest(TestCase):
 	def setUp(self):
 		self.addresses = [
