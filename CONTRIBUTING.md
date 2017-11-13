@@ -22,10 +22,6 @@ https://www.python.org/downloads/
 ```
 https://www.zillow.com/webservice/Registration.htm
 ```
-- Obtain a Google MAPs API Key. Go to the site below and click 'GET A KEY' at the top
-```
-https://developers.google.com/maps/documentation/geocoding/start
-```
 
 - Create and configure virtualenv 
 ```
@@ -91,10 +87,6 @@ https://conda.io/miniconda.html
 - Obtain a Zillow account and Zillow API Key (ZWS-ID)
 ```
 https://www.zillow.com/webservice/Registration.htm
-```
-- Obtain a Google MAPs API Key. Go to the site below and click 'GET A KEY' at the top
-```
-https://developers.google.com/maps/documentation/geocoding/start
 ```
 
 - Create and configure virtualenv (Use Windows PowerShell, Command Prompt, or a Terminal Emulator such as ConEmu)
