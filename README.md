@@ -44,7 +44,6 @@ The secret.py files are included in the .gitignore file so don't worry about acc
 ```
 class Secret():
   ZWSID = '[enter your Zillow key here without brackets]'
-  GMAPS_API_KEY = '[enter your Google Maps API key here without brackets]'
 ## now save the file ##
 ```
 - Create a second secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_site' folder and enter the following:
@@ -116,7 +115,6 @@ The secret.py files are included in the .gitignore file so don't worry about acc
 ```
 class Secret():
   ZWSID = '[enter your Zillow key here without brackets]'
-  GMAPS_API_KEY = '[enter your Google Maps API key here without brackets]'
 ## now save the file ##
 ```
 - Create a second secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_site' folder and enter the following:
