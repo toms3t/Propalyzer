@@ -66,7 +66,9 @@ class ZillowSetup:
                             'rentzestimate/valuationRange/high': '',
                             'yearBuilt': '',
                             'lastSoldDate': '',
-                            'localRealEstate': ''}
+                            'localRealEstate': '',
+                            'address/latitude': '',
+                            'address/longitude': ''}
 
         self.street_address = ''
         self.city = ''
@@ -92,6 +94,8 @@ class ZillowSetup:
         self.xml_info = ''
         self.url = ''
         self.error = ''
+        self.lat = ''
+        self.long = ''
 
     def convert_address(self):
         """
@@ -185,21 +189,5 @@ class ZillowSetup:
         self.last_sold_date = self.zillow_dict['lastSoldDate']
         self.neighborhood = self.zillow_dict['localRealEstate']
         self.county = County.county_finder(self.county_code)
-
-        self.listing_details = [
-            self.listing_url,
-            self.county_code,
-            self.sqft,
-            self.lot_sqft,
-            self.baths,
-            self.beds,
-            self.curr_value,
-            self.value_low,
-            self.value_high,
-            self.rent_zest,
-            self.rent_low,
-            self.rent_high,
-            self.year_built,
-            self.last_sold_date,
-            self.neighborhood
-        ]
+        self.lat = self.zillow_dict['address/latitude']
+        self.long = self.zillow_dict['address/longitude']

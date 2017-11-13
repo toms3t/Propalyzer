@@ -4,6 +4,7 @@ from datetime import datetime
 from decimal import Decimal
 
 import requests
+import logging
 from bs4 import BeautifulSoup
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
@@ -16,8 +17,8 @@ from .forms import AddressForm
 from .forms import PropertyForm
 from .models import Property
 from .zillow_api import ZillowSetup
-from .secret import Secret
 
+LOG = logging.getLogger(__name__)
 
 @login_required
 def address(request):
@@ -53,7 +54,7 @@ def address(request):
 
         # TODO Consider adding this to the zillow API class or having its own separate file to prevent combining
         # business logic within the view file
-        areavibes_dict = get_areavibes_info(address_info.address_dict)
+        areavibes_dict = get_areavibes_info(address_info.address_dict, address_info.lat, address_info.long)
         livability = areavibes_dict['livability']
         crime = areavibes_dict['crime']
         cost_of_living = areavibes_dict['cost_of_living']
@@ -62,6 +63,14 @@ def address(request):
         housing = areavibes_dict['housing']
         weather = areavibes_dict['weather']
 
+        # Loggers
+        LOG.debug('address_info.address_str --- {}'.format(address_info.address_str))
+        LOG.debug('address_info.address_dict --- {}'.format(address_info.address_dict))
+        LOG.debug('address_info.url --- {}'.format(address_info.url))
+        LOG.debug('address_info.zillow_dict --- {}'.format(address_info.zillow_dict))
+        LOG.debug('areavibes_dict--- {}'.format(areavibes_dict))
+
+        # Property object create and commit to DB
         new_prop = Property(
             address=address_info.address_str, sqft=address_info.sqft, rent=address_info.rent_zest,
             rent_low=address_info.rent_low,
@@ -104,34 +113,8 @@ def address(request):
         return TemplateResponse(request, 'app/address.html', context)
 
 
-def get_latlong(ADDRESSDICT):
-    """
-    Method that takes the property address and crafts the API URL call into Google Maps Geocode API.
-    :param ADDRESSDICT: Identified components of the property address (i.e. street name, city, zip code, etc.)
-    :return: Returns the property's latitude and longitude.
-    """
-    url1 = 'https://maps.googleapis.com/maps/api/geocode/json'
-    url2 = '?address={}+{}+{}+{}+{}+{}+{}&key={}'.format(ADDRESSDICT['AddressNumber'],
-                                                         ADDRESSDICT['StreetNamePreDirectional'],
-                                                         ADDRESSDICT['StreetName'],
-                                                         ADDRESSDICT['StreetNamePostType'],
-                                                         ADDRESSDICT['PlaceName'],
-                                                         ADDRESSDICT['StateName'],
-                                                         ADDRESSDICT['ZipCode'],
-                                                         Secret.GMAPS_API_KEY)
-    api_url = url1 + url2
-    api_response = requests.get(api_url)
-    api_json = json.loads(api_response.content)
-    try:
-        lat = '{0:.4f}'.format(api_json['results'][0]['geometry']['location']['lat'])
-        long = '{0:.4f}'.format(api_json['results'][0]['geometry']['location']['lng'])
-    except:
-        lat, long = 0, 0
-    return lat, long
-
-
-def get_areavibes_url(ADDRESSDICT):
-    lat, long = str(get_latlong(ADDRESSDICT)[0]), str(get_latlong(ADDRESSDICT)[1])
+def get_areavibes_url(ADDRESSDICT, lat, long):
+    lat, long = str(lat), str(long)
     areavibes_url1 = 'http://www.areavibes.com/{}-{}/livability/'.format(
         ADDRESSDICT['PlaceName'],
         ADDRESSDICT['StateName'])
@@ -145,7 +128,7 @@ def get_areavibes_url(ADDRESSDICT):
     return areavibes_url
 
 
-def get_areavibes_info(ADDRESSDICT):
+def get_areavibes_info(ADDRESSDICT, lat, long):
     """
     Method that generates the areavibes dictionary with areavibes information for a given address.
     :param ADDRESSDICT: Identified components of the property address (i.e. street name, city, zip code, etc.)
@@ -159,7 +142,7 @@ def get_areavibes_info(ADDRESSDICT):
         - Housing
         - Weather
     """
-    url = get_areavibes_url(ADDRESSDICT)
+    url = get_areavibes_url(ADDRESSDICT, lat, long)
     r = requests.get(url)
     soup = BeautifulSoup(r.content, 'html.parser')
     info_block = soup.find_all('nav', class_='category-menu')
