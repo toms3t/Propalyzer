@@ -51,6 +51,7 @@ coverage.xml
 
 # Django stuff:
 *.log
+debug.log*
 local_settings.py
 secret.py
 propalyzer_site/propalyzer_app/migrations

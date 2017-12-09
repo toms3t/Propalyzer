@@ -6,15 +6,13 @@ Definition of forms.
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
-from .models import Property
 from crispy_forms.layout import Layout, Submit, Field
 from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
 
 
 class AddressForm(forms.Form):
-	text_input = forms.CharField()
-
+	text_input = forms.CharField(label='Residential Address')
 	helper = FormHelper()
 	helper.form_class = 'form-horizontal'
 	helper.layout = Layout(
@@ -25,40 +23,41 @@ class AddressForm(forms.Form):
 		)
 	)
 
-class PropertyForm(forms.ModelForm):
-	class Meta:
-		model = Property
-		fields = [
-			'address', 'curr_value', 'rent', 'sqft', 'down_payment_percentage',
-			'interest_rate', 'closing_costs', 'initial_improvements', 'hoa', 'insurance',
-			'taxes', 'utilities', 'maintenance', 'property_management_fee', 'tenant_placement_fee',
-			'resign_fee', 'schools', 'county', 'year_built', 'owned', 'notes'
-		]
-		help_texts = {
-			'sqft': 'Pulled from Zillow',
-			'rent': 'Pulled from Zillow',
-			'curr_value': 'Pulled from Zillow',
-			'schools': 'Pulled from Zillow',
-			'year_built': 'Pulled from Zillow',
-			'county': 'Pulled from Zillow',
-			'taxes': 'Defaults to $2000. If modifying this value, enter annual amount.',
-			'insurance': 'Defaults to $1000. \
-			If modifying this value, enter annual amount',
-			'maintenance': 'Default value is an estimate for quick analysis purposes only. \
-			If modifying this value, enter annual amount',
-			'tenant_placement_fee': 'Enter annual amount',
-			'resign_fee': 'Enter annual amount',
-			'closing_costs': 'Estimated at 3% of zestimate',
-			'hoa': 'This value is not auto-populated, please verify - Enter annual amount',
-			'property_management_fee': 'Calculated at 9% of rent',
-			'utilities': 'Enter *MONTHLY* amount'
-		}
 
-
-class AddressForm(forms.ModelForm):
-	class Meta:
-		model = Property
-		fields = ['address']
+class PropertyForm(forms.Form):
+		address = forms.CharField(label='Address', max_length=150)
+		sqft = forms.IntegerField(label='SQFT', help_text='Pulled from Zillow.com')
+		rent = forms.IntegerField(label='Rent', help_text='Pulled from Zillow.com')
+		curr_value = forms.IntegerField(
+			label='Zestimate (Current Value)', help_text='Pulled from Zillow.com')
+		down_payment_percentage = forms.FloatField(label='Down Payment %')
+		interest_rate = forms.FloatField(label='Mortgage Interest Rate %')
+		closing_costs = forms.IntegerField(
+			label='Closing Costs', help_text='Estimated at 3% of Zestimate')
+		initial_improvements = forms.IntegerField(
+			label='Initial Improvement Costs',
+			help_text='Enter any costs to renovate property', required=False)
+		hoa = forms.IntegerField(label='HOA', help_text='Enter annual amount', required=False)
+		insurance = forms.CharField(
+			label='Insurance', max_length=150, help_text='Defaults at $1000 If modifying, enter annual amount')
+		taxes = forms.IntegerField(
+			label='Taxes', help_text='Defaults to $1500. If modifying, enter annual amount')
+		utilities = forms.IntegerField(
+			label='Utility Costs',
+			help_text='If you pay Gas, Electric, etc. -- Enter monthly amount', required=False)
+		maintenance = forms.IntegerField(
+			label='Maintenance Costs',
+			help_text='Defaults to $800. If modifying, enter annual amount')
+		prop_management_fee = forms.IntegerField(
+			label='Prop Management Fee', help_text='Defaults to 9% of rent amount')
+		tenant_placement_fee = forms.IntegerField(
+			label='Tenant Placement Fee', help_text='Enter annual amount', required=False)
+		resign_fee = forms.IntegerField(
+			label='Resign Fee', help_text='Enter annual amount', required=False)
+		schools = forms.CharField(label='Schools', max_length=150, required=False)
+		county = forms.CharField(label='County', max_length=150, required=False, help_text='Pulled from Zillow.com')
+		year_built = forms.IntegerField(label='Year Built', help_text='Pulled from Zillow.com')
+		notes = forms.CharField(label='Your Notes', widget=forms.Textarea, required=False)
 
 
 class BootstrapAuthenticationForm(AuthenticationForm):

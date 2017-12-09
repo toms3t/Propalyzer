@@ -9,8 +9,8 @@ admin.autodiscover()
 
 urlpatterns = [
 	url(r'^address/$', views.address, name='address'),
-	url(r'^(?P<pk>\d+)/edit/$', views.edit, name='edit'),
-	url(r'^(?P<pk>\d+)/$', views.results, name='results'),
+	url(r'^edit/$', views.edit, name='edit'),
+	url(r'^results/$', views.results, name='results'),
 	url(r'^disclaimer/$', views.disclaimer, name='disclaimer'),
 	url(r'^$', contrib.auth.views.login,
 		{
