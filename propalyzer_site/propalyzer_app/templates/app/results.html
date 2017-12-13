@@ -79,7 +79,7 @@
                         <tr><th scope="row">Taxes**</th><td>{{ taxes }}</td></tr>
                         <tr><th scope="row">Insurance**</th><td>{{ insurance }}</td></tr>
                         <tr><th scope="row">HOA**</th><td>{{ hoa }}</td></tr>
-                        <tr><th scope="row">Property Management Expense**</th><td>{{ property_management_fee }}</td></tr>
+                        <tr><th scope="row">Property Management Expense**</th><td>{{ prop_management_fee }}</td></tr>
                         <tr><th scope="row">Tenant Placement**</th><td>{{ tenant_placement_fee }}</td></tr>
                         <tr><th scope="row">Lease Resign Fee**</th><td>{{ resign_fee }}</td></tr>
                         <tr><th scope="row">Maintenance**</th><td>{{ maintenance }}</td></tr>
@@ -133,7 +133,7 @@
                 </div>
             </div>
         </div>
-        <a class="btn btn-primary" href="{% url 'edit' pk=pkey %}">EDIT</a>
+        <a class="btn btn-primary" href="{% url 'edit' %}">EDIT</a>
     </div>
 </div>
 <a href="http://zillow.com">
