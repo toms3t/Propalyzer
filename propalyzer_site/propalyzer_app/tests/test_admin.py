@@ -5,7 +5,7 @@ from ..models import Property
 
 
 class PropertyAdminTest(TestCase):
-    def test_access_property_admin_should_be_accessibel(self):
+    def test_access_property_admin_should_be_accessible(self):
         User.objects.create_superuser('admin', 'admin@pronto.com', 'admin')
         self.client.login(username='admin', password='admin')
 
