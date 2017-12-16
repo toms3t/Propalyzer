@@ -1,8 +1,6 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from ..models import Property
-
 
 class PropertyAdminTest(TestCase):
     def test_access_property_admin_should_be_accessible(self):

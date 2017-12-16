@@ -1,5 +1,9 @@
 from django.test import TestCase
 from ..property import PropSetup
+from ..secret import Secret
+import requests
+
+ZWSID = Secret.ZWSID
 
 
 class PropertyModelTest(TestCase):
@@ -107,3 +111,9 @@ class PropertyModelTest(TestCase):
 
     def test_closing_costs_calc_should_return_closing_costs(self):
         self.assertEqual(self.prop.closing_costs, 20988)
+
+    def test_zillow_api_key(self):
+        resp = str(requests.get(f'http://www.zillow.com/webservice/GetZestimate.htm?zws-id={ZWSID}&zpid=48749425'))
+        self.assertEqual(resp, '<Response [200]>')
+
+

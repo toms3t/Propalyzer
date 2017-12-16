@@ -298,6 +298,10 @@ class PropSetup:
 		self.long = self.zillow_dict['address/longitude']
 
 	def set_areavibes_url(self):
+		"""
+		Method that returns formatted areavibes URL for data retrieval
+		:return: Returns URL used to obtain areavibes data
+		"""
 		areavibes_url1 = 'http://www.areavibes.com/{}-{}/livability/'.format(
 			self.address_dict['PlaceName'],
 			self.address_dict['StateName'])
