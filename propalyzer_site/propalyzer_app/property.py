@@ -78,9 +78,15 @@ class PropSetup:
             'address/latitude': '',
             'address/longitude': ''
         }
-        self.schools_dict = {'high': {},
-                             'middle': {},
-                             'elem': []}
+        self.schools_dict = {'high': {'name': '',
+                                     'gsRating': '',
+                                     'distance': ''},
+                             'middle': {'name': '',
+                                     'gsRating': '',
+                                     'distance': ''},
+                             'elem': [{'name': '',
+                                     'gsRating': '',
+                                     'distance': ''}]}
 
         self.areavibes_dict = {
             'crime': '',
@@ -113,6 +119,7 @@ class PropSetup:
         self.county = ''
         self.listing_details = ''
         self.xml_info = ''
+        self.gs_xml_info = ''
         self.url = ''
         self.error = ''
         self.lat = ''
@@ -397,7 +404,7 @@ class PropSetup:
             if 'no exact match' in school_data.text:
                 self.error = 'AddressNotFound'
 
-            self.xml_info = school_data.text
+            self.gs_xml_info = school_data.text
 
         else:
             pass  # Missing secret key
@@ -409,30 +416,31 @@ class PropSetup:
 
         :return:
         """
-        schools = {'high': [],
-                   'middle': [],
-                   'elementary': []}
-        tree = ET.fromstring(self.xml_info)
-        for elem in tree.findall('school'):
-            if self.county in elem.find('district').text:
-                for key in schools.keys():
-                    if key.title() in elem.find('name').text:
-                        schools[key].append(
-                            (elem.find('name').text, elem.find('gsRating').text, elem.find('distance').text))
+        if self.gs_xml_info:
+            schools = {'high': [],
+                       'middle': [],
+                       'elementary': []}
+            tree = ET.fromstring(self.gs_xml_info)
+            for elem in tree.findall('school'):
+                if self.county in elem.find('district').text:
+                    for key in schools.keys():
+                        if key.title() in elem.find('name').text:
+                            schools[key].append(
+                                (elem.find('name').text, elem.find('gsRating').text, elem.find('distance').text))
 
-        self.schools_dict['high'] = {'name': schools['high'][0][0],
-                                     'gsRating': schools['high'][0][1],
-                                     'distance': schools['high'][0][2]}
+            self.schools_dict['high'] = {'name': schools['high'][0][0],
+                                         'gsRating': schools['high'][0][1],
+                                         'distance': schools['high'][0][2]}
 
-        self.schools_dict['middle'] = {'name': schools['middle'][0][0],
-                                       'gsRating': schools['middle'][0][1],
-                                       'distance': schools['middle'][0][2]}
-
-        for x in (range(3) if len(schools['elementary']) > 3 else range(len(schools['elementary']))):
-            self.schools_dict['elem'].append({'name': schools['elementary'][x][0],
-                                              'gsRating': schools['elementary'][x][1],
-                                              'distance': schools['elementary'][x][2]})
-        print(self.schools_dict)
+            self.schools_dict['middle'] = {'name': schools['middle'][0][0],
+                                           'gsRating': schools['middle'][0][1],
+                                           'distance': schools['middle'][0][2]}
+            self.schools_dict['elem'] = []
+            for x in (range(3) if len(schools['elementary']) > 3 else range(len(schools['elementary']))):
+                self.schools_dict['elem'].append({'name': schools['elementary'][x][0],
+                                                  'gsRating': schools['elementary'][x][1],
+                                                  'distance': schools['elementary'][x][2]})
+            print(self.schools_dict)
 
     @property
     def __str__(self):
