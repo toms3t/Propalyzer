@@ -1,10 +1,8 @@
 from datetime import datetime
 import logging
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.template.response import TemplateResponse
 from django.utils import timezone
-
 from .forms import AddressForm
 from .forms import PropertyForm
 from .property import PropSetup
@@ -13,7 +11,6 @@ LOG = logging.getLogger(__name__)
 PROP = object
 
 
-@login_required
 def address(request):
 	"""
 	Renders the starting page for entering a property address
@@ -72,7 +69,6 @@ def address(request):
 		return TemplateResponse(request, 'app/address.html', context)
 
 
-@login_required
 def edit(request):
 	"""
 	Renders the 'app/edit.html' page for editing listing values
@@ -129,7 +125,6 @@ def edit(request):
 	return render(request, 'app/edit.html', {'form': form})
 
 
-@login_required
 def results(request):
 	"""
 	Renders the results page which displays listing information, operating income/expense, cash flow, and

@@ -380,7 +380,6 @@ class PropSetup:
 
 	@property
 	def oper_inc_calc(self):
-		# self.vacancy = self.vacancy_calc
 		self.oper_income = int(self.rent_zest - self.vacancy)
 		return self.oper_income
 
