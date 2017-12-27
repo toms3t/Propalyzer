@@ -4,8 +4,6 @@ Definition of forms.
 """
 
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
-from django.utils.translation import ugettext_lazy as _
 from crispy_forms.layout import Layout, Submit, Field
 from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
@@ -58,18 +56,6 @@ class PropertyForm(forms.Form):
 		county = forms.CharField(label='County', max_length=150, required=False, help_text='Pulled from Zillow.com')
 		year_built = forms.IntegerField(label='Year Built', help_text='Pulled from Zillow.com')
 		notes = forms.CharField(label='Your Notes', widget=forms.Textarea, required=False)
-
-
-class BootstrapAuthenticationForm(AuthenticationForm):
-	"""Authentication form which uses boostrap CSS."""
-	username = forms.CharField(max_length=254,
-		widget=forms.TextInput({
-			'class': 'form-control',
-			'placeholder': 'User name'}))
-	password = forms.CharField(label=_("Password"),
-		widget=forms.PasswordInput({
-			'class': 'form-control',
-			'placeholder': 'Password'}))
 
 
 

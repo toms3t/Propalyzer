@@ -308,21 +308,21 @@ class PropSetup:
         self.lat = self.zillow_dict['address/latitude']
         self.long = self.zillow_dict['address/longitude']
 
-	def set_areavibes_url(self):
-		"""
-		Method that returns formatted areavibes URL for data retrieval
-		:return: Returns URL used to obtain areavibes data
-		"""areavibes_url1 = 'http://www.areavibes.com/{}-{}/livability/'.format(
-			self.address_dict['PlaceName'],
-			self.address_dict['StateName'])
-		areavibes_url2 = '?addr={}+{}+{}+{}&ll={}+{}'.format(
-			self.address_dict['AddressNumber'],
-			self.address_dict['StreetNamePreDirectional'],
-			self.address_dict['StreetName'],
-			self.address_dict['StreetNamePostType'],
-			self.lat, self.long)
-		areavibes_url = areavibes_url1 + areavibes_url2
-		return areavibes_url
+    def set_areavibes_url(self):
+        """
+        Method that returns formatted areavibes URL for data retrieval
+        :return: Returns URL used to obtain areavibes data
+        """areavibes_url1 = 'http://www.areavibes.com/{}-{}/livability/'.format(
+            self.address_dict['PlaceName'],
+            self.address_dict['StateName'])
+        areavibes_url2 = '?addr={}+{}+{}+{}&ll={}+{}'.format(
+            self.address_dict['AddressNumber'],
+            self.address_dict['StreetNamePreDirectional'],
+            self.address_dict['StreetName'],
+            self.address_dict['StreetNamePostType'],
+            self.lat, self.long)
+        areavibes_url = areavibes_url1 + areavibes_url2
+        return areavibes_url
 
     def set_areavibes_info(self):
         """
@@ -451,7 +451,7 @@ class PropSetup:
 
     @property
     def oper_inc_calc(self):
-        # self.vacancy = self.vacancy_calc
+
         self.oper_income = int(self.rent_zest - self.vacancy)
         return self.oper_income
 

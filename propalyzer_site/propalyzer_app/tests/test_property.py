@@ -116,4 +116,10 @@ class PropertyModelTest(TestCase):
         resp = str(requests.get(f'http://www.zillow.com/webservice/GetZestimate.htm?zws-id={ZWSID}&zpid=48749425'))
         self.assertEqual(resp, '<Response [200]>')
 
+    def test_net_oper_income(self):
+        self.assertEqual(self.prop.oper_income - self.prop.oper_exp, self.prop.net_oper_income)
+
+    def test_cash_flow(self):
+        self.assertEqual(self.prop.net_oper_income - self.prop.mort_payment, self.prop.cash_flow)
+
 
