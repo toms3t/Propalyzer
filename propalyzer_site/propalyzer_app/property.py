@@ -312,7 +312,8 @@ class PropSetup:
         """
         Method that returns formatted areavibes URL for data retrieval
         :return: Returns URL used to obtain areavibes data
-        """areavibes_url1 = 'http://www.areavibes.com/{}-{}/livability/'.format(
+        """
+        areavibes_url1 = 'http://www.areavibes.com/{}-{}/livability/'.format(
             self.address_dict['PlaceName'],
             self.address_dict['StateName'])
         areavibes_url2 = '?addr={}+{}+{}+{}&ll={}+{}'.format(
