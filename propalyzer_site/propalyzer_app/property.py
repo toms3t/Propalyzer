@@ -1,5 +1,7 @@
 import requests
 import re
+
+import json
 from django.utils import timezone
 from decimal import Decimal, getcontext
 from bs4 import BeautifulSoup
@@ -7,6 +9,7 @@ import usaddress
 from .county import County
 from .secret import Secret
 import xml.etree.cElementTree as ET
+from collections import Counter
 
 ZWSID = Secret.ZWSID
 
@@ -79,14 +82,14 @@ class PropSetup:
             'address/longitude': ''
         }
         self.schools_dict = {'high': {'name': '',
-                                     'gsRating': '',
-                                     'distance': ''},
+                                      'gsRating': '',
+                                      'distance': ''},
                              'middle': {'name': '',
-                                     'gsRating': '',
-                                     'distance': ''},
+                                        'gsRating': '',
+                                        'distance': ''},
                              'elem': [{'name': '',
-                                     'gsRating': '',
-                                     'distance': ''}]}
+                                       'gsRating': '',
+                                       'distance': ''}]}
 
         self.areavibes_dict = {
             'crime': '',
@@ -308,6 +311,105 @@ class PropSetup:
         self.lat = self.zillow_dict['address/latitude']
         self.long = self.zillow_dict['address/longitude']
 
+    def set_greatschool_url(self):
+        """
+        Function builds the GreatSchools API url, makes the request, and stores the xml_info for later use.
+        :return: Sets self.error if issues arise during API calls
+        """
+        if Secret.GSCHOOL_API_KEY:
+            self.url = 'https://api.greatschools.org/schools/nearby?'
+            self.url += 'key={gs_key}&address={street}&city={city}&state={state}&zip={zip}&schoolType=public' \
+                        '&radius=10&limit=100'.format(gs_key=Secret.GSCHOOL_API_KEY,
+                                                      street=self.address_str,
+                                                      city=self.city,
+                                                      state=self.state,
+                                                      zip=self.zip_code)
+            try:
+                school_data = requests.get(self.url)
+            except:
+                self.error = 'ConnectionError'
+                return
+
+            # TODO Need to verify no match condition
+            if 'no exact match' in school_data.text:
+                self.error = 'AddressNotFound'
+
+            self.gs_xml_info = school_data.text
+
+        else:
+            pass  # Missing secret key
+
+    def set_gs_xml_data(self):
+        """
+        Uses elementTree builtin to parse the XML. It then iterates through a static dict to fill out any necessary data
+        required by the program that was contained in the xml file.
+
+        :return:
+        """
+        if self.gs_xml_info:
+            schools = {'high': [],
+                       'middle': [],
+                       'elementary': []}
+            tree = ET.fromstring(self.gs_xml_info)
+            for elem in tree.findall('school'):
+                if self.county in elem.find('district').text:
+                    for key in schools.keys():
+                        if key.title() in elem.find('name').text:
+                            schools[key].append(
+                                (elem.find('name').text, elem.find('gsRating').text, elem.find('distance').text))
+
+            self.schools_dict['high'] = {'name': schools['high'][0][0],
+                                         'gsRating': schools['high'][0][1],
+                                         'distance': schools['high'][0][2]}
+
+            self.schools_dict['middle'] = {'name': schools['middle'][0][0],
+                                           'gsRating': schools['middle'][0][1],
+                                           'distance': schools['middle'][0][2]}
+            self.schools_dict['elem'] = []
+            for x in (range(3) if len(schools['elementary']) > 3 else range(len(schools['elementary']))):
+                self.schools_dict['elem'].append({'name': schools['elementary'][x][0],
+                                                  'gsRating': schools['elementary'][x][1],
+                                                  'distance': schools['elementary'][x][2]})
+            print(self.schools_dict)
+
+    def set_disaster_url(self):
+        """
+        Function builds the Disasters API url, makes the request, and stores the xml_info for later use.
+        :return: Sets self.error if issues arise during API calls
+        """
+        self.url = 'https://www.fema.gov/api/open/v1/DisasterDeclarationsSummaries?$filter='
+        self.url += "state eq '{state}' and declaredCountyArea eq '{county} (County)'".format(state=self.state,
+                                                                                              county=self.county)
+        try:
+            data = requests.get(self.url)
+        except:
+            self.error = 'ConnectionError'
+            return
+
+        # TODO Need to verify no match condition
+        if 'no exact match' in data.text:
+            self.error = 'AddressNotFound'
+
+        self.disaster_xml_info = data.text
+
+    def set_disaster_xml_data(self):
+        """
+        Uses elementTree builtin to parse the XML. It then iterates through a static dict to fill out any necessary data
+        required by the program that was contained in the xml file.
+
+        :return:
+        """
+        if self.disaster_xml_info:
+            disasters = json.loads(self.disaster_xml_info)
+            count_list = []
+            for item in disasters['DisasterDeclarationsSummaries']:
+                count_list.append(item['incidentType'])
+
+            self.disaster_counts = Counter(count_list)
+            for key in self.disaster_counts:
+                print(key, self.disaster_counts[key])
+        # TODO Need to investigate adding the date occurrences to some type of object
+
     def set_areavibes_url(self):
         """
         Method that returns formatted areavibes URL for data retrieval
@@ -384,67 +486,6 @@ class PropSetup:
             'housing': housing,
             'weather': weather
         }
-
-    def set_greatschool_url(self):
-        """
-        Function builds the GreatSchools API url, makes the request, and stores the xml_info for later use.
-        :return: Sets self.error if issues arise during API calls
-        """
-        if Secret.GSCHOOL_API_KEY:
-            self.url = 'https://api.greatschools.org/schools/nearby?'
-            self.url += 'key={gs_key}&address={street}&city={city}&state={state}&zip={zip}&schoolType=public' \
-                        '&radius=10&limit=100'.format(gs_key=Secret.GSCHOOL_API_KEY,
-                                                      street=self.address_str,
-                                                      city=self.city,
-                                                      state=self.state,
-                                                      zip=self.zip_code)
-            try:
-                school_data = requests.get(self.url)
-            except:
-                self.error = 'ConnectionError'
-                return
-
-            # TODO Need to verify no match condition
-            if 'no exact match' in school_data.text:
-                self.error = 'AddressNotFound'
-
-            self.gs_xml_info = school_data.text
-
-        else:
-            pass  # Missing secret key
-
-    def set_gs_xml_data(self):
-        """
-        Uses elementTree builtin to parse the XML. It then iterates through a static dict to fill out any necessary data
-        required by the program that was contained in the xml file.
-
-        :return:
-        """
-        if self.gs_xml_info:
-            schools = {'high': [],
-                       'middle': [],
-                       'elementary': []}
-            tree = ET.fromstring(self.gs_xml_info)
-            for elem in tree.findall('school'):
-                if self.county in elem.find('district').text:
-                    for key in schools.keys():
-                        if key.title() in elem.find('name').text:
-                            schools[key].append(
-                                (elem.find('name').text, elem.find('gsRating').text, elem.find('distance').text))
-
-            self.schools_dict['high'] = {'name': schools['high'][0][0],
-                                         'gsRating': schools['high'][0][1],
-                                         'distance': schools['high'][0][2]}
-
-            self.schools_dict['middle'] = {'name': schools['middle'][0][0],
-                                           'gsRating': schools['middle'][0][1],
-                                           'distance': schools['middle'][0][2]}
-            self.schools_dict['elem'] = []
-            for x in (range(3) if len(schools['elementary']) > 3 else range(len(schools['elementary']))):
-                self.schools_dict['elem'].append({'name': schools['elementary'][x][0],
-                                                  'gsRating': schools['elementary'][x][1],
-                                                  'distance': schools['elementary'][x][2]})
-            print(self.schools_dict)
 
     @property
     def __str__(self):
