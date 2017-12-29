@@ -406,9 +406,16 @@ class PropSetup:
                 count_list.append(item['incidentType'])
 
             self.disaster_counts = Counter(count_list)
+
+            self.disaster_dict = {key: [] for key in self.disaster_counts.keys()}
+            for key in self.disaster_dict:
+                for item in disasters['DisasterDeclarationsSummaries']:
+                    if item['incidentType'] == key:
+                        self.disaster_dict[key].append(item['declarationDate'].split('T')[0])
+
             for key in self.disaster_counts:
-                print(key, self.disaster_counts[key])
-        # TODO Need to investigate adding the date occurrences to some type of object
+                print(key, self.disaster_counts[key], self.disaster_dict[key])
+        # TODO Need to combine the results to a single dict for ease of consumption
 
     def set_areavibes_url(self):
         """
