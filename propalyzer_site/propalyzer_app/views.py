@@ -7,8 +7,10 @@ from .forms import AddressForm
 from .forms import PropertyForm
 from .property import PropSetup
 
+# Globals
 LOG = logging.getLogger(__name__)
-PROP = object
+ADDRESS = ''
+PROP = PropSetup('')
 
 
 def address(request):
@@ -20,45 +22,8 @@ def address(request):
 
 	if request.method == "POST":
 		address_str = str(request.POST['text_input'])
-		prop = PropSetup(address_str)
-		prop.set_address()
-		if prop.error:
-			return TemplateResponse(request, 'app/addressnotfound.html')
-
-		prop.set_zillow_url()
-		if 'ConnectionError' in prop.error:
-			return TemplateResponse(request, 'app/connection_error.html')
-		if 'AddressNotFound' in prop.error:
-			return TemplateResponse(request, 'app/addressnotfound.html')
-
-		prop.set_xml_data()
-		prop.set_areavibes_info()
-
-		# Loggers
-		LOG.debug('prop.address_str --- {}'.format(prop.address_str))
-		LOG.debug('prop.address_dict --- {}'.format(prop.address_dict))
-		LOG.debug('prop.url --- {}'.format(prop.url))
-		LOG.debug('prop.zillow_dict --- {}'.format(prop.zillow_dict))
-		LOG.debug('areavibes_dict--- {}'.format(prop.areavibes_dict))
-
-		try:
-			prop.prop_management_fee = int(.09 * int(prop.rent_zest))
-		except ValueError:
-			prop.prop_management_fee = 0
-		prop.initial_market_value = prop.curr_value
-		prop.initial_improvements = 0
-		prop.insurance = 1000
-		prop.maintenance = 800
-		prop.taxes = 1500
-		prop.hoa = 0
-		prop.utilities = 0
-		prop.interest_rate = 4.75
-		prop.down_payment_percentage = 25
-		prop.down_payment = int(prop.curr_value) * (prop.down_payment_percentage / 100.0)
-		prop.closing_costs = int(.03 * int(prop.curr_value))
-
-		global PROP
-		PROP = prop
+		global ADDRESS
+		ADDRESS = address_str
 		return redirect('edit')
 	else:
 		context = {
@@ -75,6 +40,7 @@ def edit(request):
 	:param request: HTTP Request
 	:return: 'app/edit.html' page
 	"""
+	global PROP
 	if request.method == "POST":
 		form = PropertyForm(request.POST)
 		PROP.sqft = int(form.data['sqft'])
@@ -99,6 +65,42 @@ def edit(request):
 		if form.is_valid():
 			return redirect('results')
 	else:
+		PROP = PropSetup(ADDRESS)
+		PROP.set_address()
+		if PROP.error:
+			return TemplateResponse(request, 'app/addressnotfound.html')
+
+		PROP.set_zillow_url()
+		if 'ConnectionError' in PROP.error:
+			return TemplateResponse(request, 'app/connection_error.html')
+		if 'AddressNotFound' in PROP.error:
+			return TemplateResponse(request, 'app/addressnotfound.html')
+
+		PROP.set_xml_data()
+		PROP.set_areavibes_info()
+
+		# Loggers
+		LOG.debug('PROP.address_str --- {}'.format(PROP.address_str))
+		LOG.debug('PROP.address_dict --- {}'.format(PROP.address_dict))
+		LOG.debug('PROP.url --- {}'.format(PROP.url))
+		LOG.debug('PROP.zillow_dict --- {}'.format(PROP.zillow_dict))
+		LOG.debug('areavibes_dict--- {}'.format(PROP.areavibes_dict))
+
+		try:
+			PROP.prop_management_fee = int(.09 * int(PROP.rent_zest))
+		except ValueError:
+			PROP.prop_management_fee = 0
+		PROP.initial_market_value = PROP.curr_value
+		PROP.initial_improvements = 0
+		PROP.insurance = 1000
+		PROP.maintenance = 800
+		PROP.taxes = 1500
+		PROP.hoa = 0
+		PROP.utilities = 0
+		PROP.interest_rate = 4.75
+		PROP.down_payment_percentage = 25
+		PROP.down_payment = int(PROP.curr_value) * (PROP.down_payment_percentage / 100.0)
+		PROP.closing_costs = int(.03 * int(PROP.curr_value))
 		form = PropertyForm(initial={
 			'address': PROP.address_str,
 			'curr_value': PROP.curr_value,
@@ -132,6 +134,8 @@ def results(request):
 	:param request: HTTP request
 	:return: 'app/results.html' page
 	"""
+	global PROP
+	PROP = PROP
 	context = {
 		'address': PROP.address_str,
 		'taxes': '$' + str(int(int(PROP.taxes) / 12)),
