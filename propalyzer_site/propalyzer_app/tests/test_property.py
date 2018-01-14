@@ -13,7 +13,7 @@ class PropertyModelTest(TestCase):
 
     def test_property_attributes_should_be_persisted(self):
         self.assertEqual(
-            self.prop.address_str,
+            self.prop.address,
             '3465-N-Main-St-Soquel-CA-95073'
         )
         self.assertEqual(
@@ -27,7 +27,7 @@ class PropertyModelTest(TestCase):
         self.assertEqual(self.prop.value_high, 751691)
         self.assertEqual(self.prop.initial_market_value, 699600)
         self.assertEqual(self.prop.initial_improvements, 5000)
-        self.assertEqual(self.prop.rent_zest, 2600)
+        self.assertEqual(self.prop.rent, 2600)
         self.assertEqual(self.prop.rent_low, 2106)
         self.assertEqual(self.prop.rent_high, 2990)
         self.assertEqual(self.prop.sqft, 1058)
