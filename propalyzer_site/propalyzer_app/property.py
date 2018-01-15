@@ -13,19 +13,22 @@ ZWSID = Secret.ZWSID
 
 def mk_int(s):
     """
-	Function to change a string to int or 0 if None.
+    Function to change a string to int or 0 if None.
 
-	:param s: String to change to int.
-	:return: Either returns the int of the string or 0 for None.
-	"""
-    s = s.strip()
-    return int(s) if s else 0
+    :param s: String to change to int.
+    :return: Either returns the int of the string or 0 for None.
+    """
+    try:
+        s = s.strip()
+        return int(s) if s else 0
+    except:
+        return s
 
 
 class PropSetup:
     """
-	Class to create property objects and execute the Zillow API call business logic.
-	"""
+    Class to create property objects and execute the Zillow API call business logic.
+    """
 
     def __init__(self, add_str):
         self.address = add_str
@@ -151,9 +154,9 @@ class PropSetup:
 
     def create_test_obj(self):
         """
-		Method to create test PropSetup instance for use by 'test_property.py'
-		:return: Sets object attributes -- does not return an object
-		"""
+        Method to create test PropSetup instance for use by 'test_property.py'
+        :return: Sets object attributes -- does not return an object
+        """
         self.address = '3465-N-Main-St-Soquel-CA-95073'
         self.listing_url = 'http://www.zillow.com/homedetails/3465-N-Main-St-Soquel-CA-95073/16128477_zpid/'
         self.neighborhood = 'Unknown'
@@ -205,10 +208,10 @@ class PropSetup:
 
     def __convert_address(self):
         """
-		Function to take a string assumed to be a US address and parse it into the correct components.
+        Function to take a string assumed to be a US address and parse it into the correct components.
 
-		:return: Uses self.error to notify requester if an error occurred.
-		"""
+        :return: Uses self.error to notify requester if an error occurred.
+        """
 
         address_parse = usaddress.tag(self.address)
         if address_parse[1] != 'Street Address':
@@ -217,18 +220,18 @@ class PropSetup:
 
     def __set_address_dict(self, add_dict):
         """
-		Takes the parameters if the untangled address and fills out the address dict for later usage.
-		:param add_dict: Parsed US address dictionary
-		:return: None. Just sets the class obj address_dict
-		"""
+        Takes the parameters if the untangled address and fills out the address dict for later usage.
+        :param add_dict: Parsed US address dictionary
+        :return: None. Just sets the class obj address_dict
+        """
         for key in add_dict.keys():
             self.address_dict[key] = add_dict[key]
 
     def set_address(self):
         """
-		Mian function call to convert a string to an US address and generates necessary parameters to be used later.
-		:return:
-		"""
+        Mian function call to convert a string to an US address and generates necessary parameters to be used later.
+        :return:
+        """
         self.__convert_address()
         self.street_address = (str(self.address_dict['AddressNumberPrefix']) + ' ' +
                                str(self.address_dict['AddressNumber']) + ' ' +
@@ -244,9 +247,9 @@ class PropSetup:
 
     def set_zillow_url(self):
         """
-		Function builds the Zillow API url, makes the request, and stores the xml_info for later use.
-		:return: Sets self.error if issues arise during API calls
-		"""
+        Function builds the Zillow API url, makes the request, and stores the xml_info for later use.
+        :return: Sets self.error if issues arise during API calls
+        """
         self.url = 'http://www.zillow.com/webservice/GetDeepSearchResults.htm?'
         self.url += 'zws-id={ZWSID}&address={street}&citystatezip={city}%2C+{state}+{zip}&' \
                     'rentzestimate=true'.format(ZWSID=ZWSID,
@@ -267,12 +270,12 @@ class PropSetup:
 
     def set_xml_data(self):
         """
-		Uses elementTree builtin to parse the XML. It then iterates through a static dict to fill out any necessary data
-		required by the program that was contained in the xml file.
+        Uses elementTree builtin to parse the XML. It then iterates through a static dict to fill out any necessary data
+        required by the program that was contained in the xml file.
 
-		Not sure if listing_details is necessary, but left in since it was part of previous logic
-		:return:
-		"""
+        Not sure if listing_details is necessary, but left in since it was part of previous logic
+        :return:
+        """
         tree = ET.fromstring(self.xml_info)
         for tag in self.zillow_dict.keys():
             for elem in tree.findall('.//' + tag):
@@ -300,9 +303,9 @@ class PropSetup:
 
     def set_areavibes_url(self):
         """
-		Method that returns formatted areavibes URL for data retrieval
-		:return: Returns URL used to obtain areavibes data
-		"""
+        Method that returns formatted areavibes URL for data retrieval
+        :return: Returns URL used to obtain areavibes data
+        """
         areavibes_url1 = 'http://www.areavibes.com/{}-{}/livability/'.format(
             self.address_dict['PlaceName'],
             self.address_dict['StateName'])
@@ -317,18 +320,18 @@ class PropSetup:
 
     def set_areavibes_info(self):
         """
-		Method that generates the areavibes dictionary with areavibes information for a given address.
-		:param ADDRESSDICT: Identified components of the property address (i.e. street name, city, zip code, etc.)
-		:return: areavibes_dict - Dictionary that contains ratings sourced from areavibes.com based on a given address
-		for the following categories:
-			- Livability
-			- Crime
-			- Cost of Living
-			- Education
-			- Employment
-			- Housing
-			- Weather
-		"""
+        Method that generates the areavibes dictionary with areavibes information for a given address.
+        :param ADDRESSDICT: Identified components of the property address (i.e. street name, city, zip code, etc.)
+        :return: areavibes_dict - Dictionary that contains ratings sourced from areavibes.com based on a given address
+        for the following categories:
+            - Livability
+            - Crime
+            - Cost of Living
+            - Education
+            - Employment
+            - Housing
+            - Weather
+        """
         url = self.set_areavibes_url()
         r = requests.get(url)
         soup = BeautifulSoup(r.content, 'html.parser')
