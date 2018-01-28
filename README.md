@@ -1,4 +1,6 @@
 # Propalyzer
+Production site can be found at http://propalyzer.info to try functionality
+
 **Time to get up and running = less than 10 minutes**
 
 Web app that helps investors evaluate investment property opportunities. The user inputs a US residential property address and the app uses Zillow's API to pull property details. The app presents the property details to the user for inspection and the ability to edit. With the details finalized, the app will crunch the data and return information about the property including:
@@ -15,7 +17,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites (MacOS and Linux Users)
 
-- Install Python 3.6.2
+- Install Python 3.6.0
 ```
 https://www.python.org/downloads/
 ```
@@ -74,7 +76,7 @@ $ python manage.py createsuperuser
 ```
 $ python manage.py runserver
 ```
-Test that the site homepage appears when you browse to http://127.0.0.1:8000/propalyzer.
+Test that the site homepage appears when you browse to http://127.0.0.1:8000.
 
 Log in with your superuser credentials
 
@@ -140,7 +142,7 @@ class Secret():
 ```
 > python manage.py runserver
 ```
-Test that the site homepage appears when you browse to http://127.0.0.1:8000/propalyzer.
+Test that the site homepage appears when you browse to http://127.0.0.1:8000.
 
 Log in with your superuser credentials
 
@@ -162,7 +164,7 @@ Not yet deployed in a live environment.
 
 ## Authors
 
-* **Tom Setliffe** - *Initial work* - [toms3t](https://github.com/toms3t)
+* **Tom Setliffe** - [toms3t](https://github.com/toms3t)
 
 See also the list of [contributors](https://github.com/toms3t/Propalyzer/graphs/contributors) who participated in this project.
 
