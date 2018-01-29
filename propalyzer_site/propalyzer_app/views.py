@@ -6,6 +6,7 @@ from django.utils import timezone
 from .forms import AddressForm
 from .forms import PropertyForm
 from .property import PropSetup
+from .greatschools import GreatSchools
 
 LOG = logging.getLogger(__name__)
 
@@ -79,7 +80,7 @@ def edit(request):
 
         prop_list = ['sqft', 'curr_value', 'rent', 'down_payment_percentage', 'interest_rate', 'closing_costs',
                      'initial_improvements', 'hoa', 'insurance', 'taxes', 'utilities', 'maintenance',
-                     'prop_management_fee', 'tenant_placement_fee', 'resign_fee', 'schools', 'county',
+                     'prop_management_fee', 'tenant_placement_fee', 'resign_fee', 'county',
                      'year_built', 'notes']
         for key in prop_list:
             prop[key] = form.data[key]
@@ -96,12 +97,16 @@ def edit(request):
 
 def results(request):
     """
-    Renders the results page which displays listing information, operating income/expense, cash flow, and
-    investment ratios.
-    :param c: HTTP request
+    Renders the results page which displays property information (general, schools, and financial metrics)
+    :param: HTTP request
     :return: 'app/results.html' page
     """
+
     prop_data = request.session.get('prop')
+    schools = GreatSchools(
+        prop_data['address'], prop_data['city'], prop_data['state'], prop_data['zip_code'], prop_data['county'])
+    schools.set_greatschool_url()
+    schools.set_xml_data()
     prop = PropSetup(prop_data['address'])
     for key in prop_data.keys():
         prop.__dict__[key] = prop_data[key]
@@ -141,8 +146,12 @@ def results(request):
         'oper_exp_ratio': '{0:.1f}'.format(prop.oper_exp_ratio_calc * 100) + '%',
         'debt_coverage_ratio': prop.debt_coverage_ratio_calc,
         'cash_on_cash': '{0:.2f}%'.format(prop.cash_on_cash_calc * 100),
-        'schools': 'Unknown',
-        'school_scores': '0,0,0',
+        'school1': schools.elem_school,
+        'school1_score': schools.elem_school_score,
+        'school2': schools.mid_school,
+        'school2_score': schools.mid_school_score,
+        'school3': schools.high_school,
+        'school3_score': schools.high_school_score,
         'year_built': prop.year_built,
         'county': prop.county,
         'nat_disasters': 'Unknown',

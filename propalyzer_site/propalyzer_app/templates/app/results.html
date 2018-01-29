@@ -18,8 +18,6 @@
                         <tr><th scope="row">Bedrooms/Bathrooms</th><td>{{ beds }}/{{ baths }}</td></tr>
                         <tr><th scope="row">Year Built</th><td>{{ year_built }}</td></tr>
                         <tr><th scope="row">County</th><td>{{ county }}</td></tr>
-                        <tr><th scope="row">Schools**</th><td>{{ schools }}</td></tr>
-                        <tr><th scope="row">School Scores**</th><td>{{ school_scores }}</td></tr>
                         <tr><th scope="row">Area Livability* (100 is best)</th><td>{{ livability }}</td></tr>
                         <tr><th scope="row">Area Crime*</th><td>{{ crime }}</td></tr>
                         <tr><th scope="row">Area Cost Of Living*</th><td>{{ cost_of_living }}</td></tr>
@@ -34,24 +32,24 @@
                     </tbody>
                 </table>
                 <p><b>*</b> <i>information obtained from areavibes.com</i></p>
-                <p><b>**</b> <i>information obtained from greatschools.org</i></p>
             </div>
         </div>
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h2 class="panel-title">Initial Cash Invested</h2>
+                <h2 class="panel-title"> School Information* </h2>
             </div>
             <div class="panel-body">
                 <table class="table table-bordered">
                     <tbody>
-                        <tr class="warning"><th scope="row">Zestimate (current mkt value)</th><td>{{ curr_value }}</td></tr>
-                        <tr><th scope="row">Down Payment (%)</th><td>{{ down_payment_percentage }}</td></tr>
-                        <tr><th scope="row">Down Payment ($)</th><td>{{ down_payment }}</td></tr>
-                        <tr><th scope="row">Initial Improvements</th><td>{{ initial_improvements }}</td></tr>
-                        <tr><th scope="row">Closing Costs</th><td>{{ closing_costs }}</td></tr>
-                        <tr class="warning"><th scope="row">Initial Cash Invested</th><td>{{ init_cash_invest }}</td></tr>
+                        <tr><th scope="row">School Name</th><td> Rating </td></tr>
+                        <tr><th scope="row">{{ school1 }}</th><td> {{ school1_score }}</td></tr>
+                        <tr><th scope="row">{{ school2 }}</th><td> {{ school2_score }}</td></tr>
+                        <tr><th scope="row">{{ school3 }}</th><td> {{ school3_score }}</td></tr>
                     </tbody>
                 </table>
+                <p><b>*</b> <i><a href="http://greatschools.org">School </a> information pulled from greatschools.org</i></p>
+                <p><b>*</b> <i>Rating is based on a scale of 1 - 10 (10 = best) </i></p>
+
             </div>
         </div>
     </div>
@@ -119,6 +117,23 @@
                         <tr><th scope="row">Capitalization Rate</th><td>{{ cap_rate }}</td></tr>
                         <tr class="warning"><th scope="row">Cash on Cash Return</th><td>{{ cash_on_cash }}</td></tr>
                         <tr><th scope="row">Rent-to-Value Ratio</th><td>{{ rtv }}</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2 class="panel-title">Initial Cash Invested</h2>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr class="warning"><th scope="row">Zestimate (current mkt value)</th><td>{{ curr_value }}</td></tr>
+                        <tr><th scope="row">Down Payment (%)</th><td>{{ down_payment_percentage }}</td></tr>
+                        <tr><th scope="row">Down Payment ($)</th><td>{{ down_payment }}</td></tr>
+                        <tr><th scope="row">Initial Improvements</th><td>{{ initial_improvements }}</td></tr>
+                        <tr><th scope="row">Closing Costs</th><td>{{ closing_costs }}</td></tr>
+                        <tr class="warning"><th scope="row">Initial Cash Invested</th><td>{{ init_cash_invest }}</td></tr>
                     </tbody>
                 </table>
             </div>

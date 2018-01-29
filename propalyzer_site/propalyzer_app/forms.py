@@ -52,7 +52,6 @@ class PropertyForm(forms.Form):
 			label='Tenant Placement Fee', help_text='Enter annual amount', required=False)
 		resign_fee = forms.IntegerField(
 			label='Resign Fee', help_text='Enter annual amount', required=False)
-		schools = forms.CharField(label='Schools', max_length=150, required=False)
 		county = forms.CharField(label='County', max_length=150, required=False, help_text='Pulled from Zillow.com')
 		year_built = forms.IntegerField(label='Year Built', help_text='Pulled from Zillow.com')
 		notes = forms.CharField(label='Your Notes', widget=forms.Textarea, required=False)
