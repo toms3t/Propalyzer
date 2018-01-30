@@ -105,11 +105,25 @@ def results(request):
     prop_data = request.session.get('prop')
     schools = GreatSchools(
         prop_data['address'], prop_data['city'], prop_data['state'], prop_data['zip_code'], prop_data['county'])
-    schools.set_greatschool_url()
-    schools.set_xml_data()
+    schools.set_greatschool_urls()
+    if schools.api_key:
+        for url in schools.urls:
+            schools.get_greatschool_xml(url)
+
+    #TODO - Need to implement an API call limit
+    # if schools.daily_api_call_limit_reached:
+    #     schools.elem_school = 'GS API LIMIT REACHED'
+    #     schools.mid_school = 'GS API LIMIT REACHED'
+    #     schools.high_school = 'GS API LIMIT REACHED'
+
+    else:
+        schools.elem_school = 'NO API KEY'
+        schools.mid_school = 'NO API KEY'
+        schools.high_school = 'NO API KEY'
     prop = PropSetup(prop_data['address'])
     for key in prop_data.keys():
         prop.__dict__[key] = prop_data[key]
+
 
     context = {
         'address': prop.address,
@@ -146,12 +160,12 @@ def results(request):
         'oper_exp_ratio': '{0:.1f}'.format(prop.oper_exp_ratio_calc * 100) + '%',
         'debt_coverage_ratio': prop.debt_coverage_ratio_calc,
         'cash_on_cash': '{0:.2f}%'.format(prop.cash_on_cash_calc * 100),
-        'school1': schools.elem_school,
-        'school1_score': schools.elem_school_score,
-        'school2': schools.mid_school,
-        'school2_score': schools.mid_school_score,
-        'school3': schools.high_school,
-        'school3_score': schools.high_school_score,
+        'elem_school': schools.elem_school,
+        'elem_school_score': schools.elem_school_score,
+        'mid_school': schools.mid_school,
+        'mid_school_score': schools.mid_school_score,
+        'high_school': schools.high_school,
+        'high_school_score': schools.high_school_score,
         'year_built': prop.year_built,
         'county': prop.county,
         'nat_disasters': 'Unknown',

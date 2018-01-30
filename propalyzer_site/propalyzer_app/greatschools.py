@@ -1,17 +1,18 @@
 import requests
+import logging
 from .secret import Secret
 import xml.etree.cElementTree as ET
+
+LOG = logging.getLogger(__name__)
 
 
 class GreatSchools:
 	"""
-	Class to create and execute the GreatSchools API call business logic.
+	Class to create and execute the GreatSchools API call logic with the goal of retrieving the elementary,
+	middle, and high schools that are nearest to the property address.
 	"""
 
 	def __init__(self, add_str, city, state, zip_code, county):
-		self.elem_xml = ''
-		self.mid_xml = ''
-		self.high_xml = ''
 		self.address_str = add_str
 		self.city = city
 		self.state = state
@@ -20,19 +21,19 @@ class GreatSchools:
 		self.elem_url = ''
 		self.mid_url = ''
 		self.high_url = ''
+		self.urls = []
+		self.api_key = True
 		self.error = ''
-		self.no_key = False
 		self.elem_school = ''
 		self.elem_school_score = ''
 		self.mid_school = ''
 		self.mid_school_score = ''
 		self.high_school = ''
 		self.high_school_score = ''
-		self.greatschool_dict = {}
 
 	def set_greatschool_urls(self):
 		"""
-		Function builds the GreatSchools API url, makes the request, and stores the xml_info for later use.
+		Function builds the GreatSchools API URLs (one for each level of school)
 		:return: Sets self.error if issues arise during API calls
 		"""
 		if Secret.GSCHOOL_API_KEY:
@@ -47,58 +48,57 @@ class GreatSchools:
 													level='elementary-schools')
 			self.mid_url = self.elem_url.replace('elementary-schools', 'middle-schools')
 			self.high_url = self.elem_url.replace('elementary-schools', 'high-schools')
-
+			self.urls = [self.elem_url, self.mid_url, self.high_url]
 		else:
-			self.no_key = True
+			self.api_key = False
 
-
-
-
-
-
-	def get_greatschool_xml(self):
+	def get_greatschool_xml(self, url):
 		"""
-		Uses elementTree builtin to parse the XML. It then iterates through a static dict to fill out any necessary data
-		required by the program that was contained in the xml file.
+		Uses elementTree builtin to parse the XML. It then generates a dictionary of key/value pairs found in the
+		XML, including school name, distance from property address, and GreatSchools.org rating. The elementary,
+		middle, and high schools closest to the given property address are populated as attributes of the
+		GreatSchools object.
+		:param: Url used for GreatSchools API call for XML retrieval
+		:return: None
 
-		:return:
 		"""
-		urls = [self.elem_url, self.mid_url, self.high_url]
-		for url in urls:
+		if self.api_key:
+			dist = 20
+			school_name = ''
+			school_score = ''
+			greatschools_dict = {}
+			school_data = ''
+
 			try:
 				school_data = requests.get(url)
-				print (school_data.text)
 			except:
+				LOG.debug('Greatschools ConnectionError --- Tried URL - {}'.format(url))
 				self.error = 'ConnectionError'
-				school_data = 'unknown'
 
 			if 'no exact match' in school_data.text:
-				self.error = 'AddressNotFound'
+				LOG.debug('Greatschools --- No exact match - {}'.format(url))
+				self.error = 'NoExactMatch'
 
 			if not self.error:
+				school_xml = school_data.text
+
+				tree = ET.fromstring(school_xml)
+				for elem in tree.findall('school'):
+					try:
+						greatschools_dict[elem.find('name').text] = (elem.find('distance').text, elem.find('gsRating').text)
+					except AttributeError:
+						continue
+				for school in sorted(greatschools_dict.items(), key=lambda x: x[1]):
+					if float(school[1][0]) < dist:
+						dist = float(school[1][0])
+						school_name = school[0]
+						school_score = school[1][1]
 				if url == self.elem_url:
-					self.elem_xml = school_data.text
-				elif url == self.mid_url:
-					self.mid_xml = school_data.text
-				elif url == self.high_url:
-					self.high_xml = school_data.text
-
-		tree = ET.fromstring(self.xml_info)
-		for elem in tree.findall('school'):
-			try:
-				self.greatschool_dict[elem.find('name').text] = (elem.find('distance').text, elem.find('gsRating').text)
-			except AttributeError:
-				continue
-		print (self.url)
-		print (self.greatschool_dict)
-		for school in sorted(self.greatschool_dict.items(), key=lambda x: x[1]):
-			if 'Elementary' in school[0] and not self.elem_school:
-				self.elem_school = school[0]
-				self.elem_school_score = school[1][1]
-			elif 'Middle' in school[0] and not self.mid_school:
-				self.mid_school = school[0]
-				self.mid_school_score = school[1][1]
-			elif 'High' in school[0] and not self.high_school:
-				self.high_school = school[0]
-				self.high_school_score = school[1][1]
-
+					self.elem_school = school_name
+					self.elem_school_score = school_score
+				if url == self.mid_url:
+					self.mid_school = school_name
+					self.mid_school_score = school_score
+				if url == self.high_url:
+					self.high_school = school_name
+					self.high_school_score = school_score
