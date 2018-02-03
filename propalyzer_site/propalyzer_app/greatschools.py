@@ -7,6 +7,9 @@ LOG = logging.getLogger(__name__)
 
 
 class GreatSchools:
+
+	DAILY_API_CALL_COUNT = 0
+
 	"""
 	Class to create and execute the GreatSchools API call logic with the goal of retrieving the elementary,
 	middle, and high schools that are nearest to the property address.
@@ -71,6 +74,8 @@ class GreatSchools:
 
 			try:
 				school_data = requests.get(url)
+				GreatSchools.DAILY_API_CALL_COUNT += 1
+				LOG.debug('Greatschools API CALL COUNT --- {}'.format(GreatSchools.DAILY_API_CALL_COUNT))
 			except:
 				LOG.debug('Greatschools ConnectionError --- Tried URL - {}'.format(url))
 				self.error = 'ConnectionError'
@@ -102,3 +107,10 @@ class GreatSchools:
 				if url == self.high_url:
 					self.high_school = school_name
 					self.high_school_score = school_score
+			else:
+				self.elem_school = 'Unknown'
+				self.elem_school_score = 'Unknown'
+				self.mid_school = 'Unknown'
+				self.mid_school_score = 'Unknown'
+				self.high_school = 'Unknown'
+				self.high_school_score = 'Unknown'

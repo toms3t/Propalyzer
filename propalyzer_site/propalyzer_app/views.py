@@ -106,24 +106,17 @@ def results(request):
     schools = GreatSchools(
         prop_data['address'], prop_data['city'], prop_data['state'], prop_data['zip_code'], prop_data['county'])
     schools.set_greatschool_urls()
-    if schools.api_key:
+    if schools.api_key and schools.DAILY_API_CALL_COUNT <= 2950:
         for url in schools.urls:
             schools.get_greatschool_xml(url)
 
-    #TODO - Need to implement an API call limit
-    # if schools.daily_api_call_limit_reached:
-    #     schools.elem_school = 'GS API LIMIT REACHED'
-    #     schools.mid_school = 'GS API LIMIT REACHED'
-    #     schools.high_school = 'GS API LIMIT REACHED'
-
     else:
-        schools.elem_school = 'NO API KEY'
-        schools.mid_school = 'NO API KEY'
-        schools.high_school = 'NO API KEY'
+        schools.elem_school = 'Unknown'
+        schools.mid_school = 'Unknown'
+        schools.high_school = 'Unknown'
     prop = PropSetup(prop_data['address'])
     for key in prop_data.keys():
         prop.__dict__[key] = prop_data[key]
-
 
     context = {
         'address': prop.address,
