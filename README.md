@@ -21,9 +21,13 @@ These instructions will get you a copy of the project up and running on your loc
 ```
 https://www.python.org/downloads/
 ```
-- Obtain a Zillow account and Zillow API Key (ZWS-ID)
+- Obtain a Zillow account and Zillow API Key (REQUIRED)
 ```
 https://www.zillow.com/webservice/Registration.htm
+```
+- Obtain a GreatSchools API Key (NOT REQUIRED)
+```
+https://www.greatschools.org/api/request-api-key/
 ```
 
 - Create and configure virtualenv 
@@ -47,6 +51,7 @@ The secret.py files are included in the .gitignore file so don't worry about acc
 ```
 class Secret():
   ZWSID = '[enter your Zillow key here without brackets]'
+  GSCHOOL_API_KEY = '[enter your GreatSchools key here without brackets]'
 ## now save the file ##
 ```
 - Create a second secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_site' folder and enter the following:
@@ -86,9 +91,13 @@ Log in with your superuser credentials
 ```
 https://conda.io/miniconda.html
 ```
-- Obtain a Zillow account and Zillow API Key (ZWS-ID)
+- Obtain a Zillow account and Zillow API Key (REQUIRED)
 ```
 https://www.zillow.com/webservice/Registration.htm
+```
+- Obtain a GreatSchools API Key (NOT REQUIRED)
+```
+https://www.greatschools.org/api/request-api-key/
 ```
 
 - Create and configure virtualenv (Use Windows PowerShell, Command Prompt, or a Terminal Emulator such as ConEmu)
@@ -118,6 +127,7 @@ The secret.py files are included in the .gitignore file so don't worry about acc
 ```
 class Secret():
   ZWSID = '[enter your Zillow key here without brackets]'
+  GSCHOOL_API_KEY = '[enter your GreatSchools key here without brackets]'
 ## now save the file ##
 ```
 - Create a second secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_site' folder and enter the following:
