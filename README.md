@@ -1,4 +1,6 @@
 # Propalyzer
+Production site can be found at http://propalyzer.info to try functionality
+
 **Time to get up and running = less than 10 minutes**
 
 Web app that helps investors evaluate investment property opportunities. The user inputs a US residential property address and the app uses Zillow's API to pull property details. The app presents the property details to the user for inspection and the ability to edit. With the details finalized, the app will crunch the data and return information about the property including:
@@ -15,13 +17,17 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites (MacOS and Linux Users)
 
-- Install Python 3.6.2
+- Install Python 3.6.0
 ```
 https://www.python.org/downloads/
 ```
-- Obtain a Zillow account and Zillow API Key (ZWS-ID)
+- Obtain a Zillow account and Zillow API Key (REQUIRED)
 ```
 https://www.zillow.com/webservice/Registration.htm
+```
+- Obtain a GreatSchools API Key (NOT REQUIRED)
+```
+https://www.greatschools.org/api/request-api-key/
 ```
 
 - Create and configure virtualenv 
@@ -45,6 +51,7 @@ The secret.py files are included in the .gitignore file so don't worry about acc
 ```
 class Secret():
   ZWSID = '[enter your Zillow key here without brackets]'
+  GSCHOOL_API_KEY = '[enter your GreatSchools key here without brackets]'
 ## now save the file ##
 ```
 - Create a second secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_site' folder and enter the following:
@@ -74,7 +81,7 @@ $ python manage.py createsuperuser
 ```
 $ python manage.py runserver
 ```
-Test that the site homepage appears when you browse to http://127.0.0.1:8000/propalyzer.
+Test that the site homepage appears when you browse to http://127.0.0.1:8000.
 
 Log in with your superuser credentials
 
@@ -84,9 +91,13 @@ Log in with your superuser credentials
 ```
 https://conda.io/miniconda.html
 ```
-- Obtain a Zillow account and Zillow API Key (ZWS-ID)
+- Obtain a Zillow account and Zillow API Key (REQUIRED)
 ```
 https://www.zillow.com/webservice/Registration.htm
+```
+- Obtain a GreatSchools API Key (NOT REQUIRED)
+```
+https://www.greatschools.org/api/request-api-key/
 ```
 
 - Create and configure virtualenv (Use Windows PowerShell, Command Prompt, or a Terminal Emulator such as ConEmu)
@@ -116,6 +127,7 @@ The secret.py files are included in the .gitignore file so don't worry about acc
 ```
 class Secret():
   ZWSID = '[enter your Zillow key here without brackets]'
+  GSCHOOL_API_KEY = '[enter your GreatSchools key here without brackets]'
 ## now save the file ##
 ```
 - Create a second secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_site' folder and enter the following:
@@ -140,7 +152,7 @@ class Secret():
 ```
 > python manage.py runserver
 ```
-Test that the site homepage appears when you browse to http://127.0.0.1:8000/propalyzer.
+Test that the site homepage appears when you browse to http://127.0.0.1:8000.
 
 Log in with your superuser credentials
 
@@ -162,7 +174,7 @@ Not yet deployed in a live environment.
 
 ## Authors
 
-* **Tom Setliffe** - *Initial work* - [toms3t](https://github.com/toms3t)
+* **Tom Setliffe** - [toms3t](https://github.com/toms3t)
 
 See also the list of [contributors](https://github.com/toms3t/Propalyzer/graphs/contributors) who participated in this project.
 
