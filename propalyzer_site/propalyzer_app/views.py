@@ -6,9 +6,9 @@ from django.utils import timezone
 from .forms import AddressForm
 from .forms import PropertyForm
 from .property import PropSetup
+from .greatschools import GreatSchools
 
 LOG = logging.getLogger(__name__)
-PROP = object
 
 
 def address(request):
@@ -31,8 +31,7 @@ def address(request):
         if 'AddressNotFound' in prop.error:
             return TemplateResponse(request, 'app/addressnotfound.html')
 
-        prop.set_zillow_xml_data()
-
+        prop.set_xml_data()
         prop.set_greatschool_url()
         if 'ConnectionError' in prop.error:
             return TemplateResponse(request, 'app/connection_error.html')
@@ -43,14 +42,14 @@ def address(request):
         prop.set_areavibes_info()
 
         # Loggers
-        LOG.debug('prop.address_str --- {}'.format(prop.address_str))
+        LOG.debug('prop.address --- {}'.format(prop.address))
         LOG.debug('prop.address_dict --- {}'.format(prop.address_dict))
         LOG.debug('prop.url --- {}'.format(prop.url))
         LOG.debug('prop.zillow_dict --- {}'.format(prop.zillow_dict))
         LOG.debug('areavibes_dict--- {}'.format(prop.areavibes_dict))
 
         try:
-            prop.prop_management_fee = int(.09 * int(prop.rent_zest))
+            prop.prop_management_fee = int(.09 * int(prop.rent))
         except ValueError:
             prop.prop_management_fee = 0
         prop.initial_market_value = prop.curr_value
@@ -65,8 +64,7 @@ def address(request):
         prop.down_payment = int(prop.curr_value) * (prop.down_payment_percentage / 100.0)
         prop.closing_costs = int(.03 * int(prop.curr_value))
 
-        global PROP
-        PROP = prop
+        request.session['prop'] = prop.__dict__
         return redirect('edit')
     else:
         context = {
@@ -85,112 +83,105 @@ def edit(request):
     """
     if request.method == "POST":
         form = PropertyForm(request.POST)
-        PROP.sqft = int(form.data['sqft'])
-        PROP.curr_value = int(form.data['curr_value'])
-        PROP.rent_zest = int(form.data['rent'])
-        PROP.down_payment_percentage = float(form.data['down_payment_percentage'])
-        PROP.interest_rate = float(form.data['interest_rate'])
-        PROP.closing_costs = int(form.data['closing_costs'])
-        PROP.initial_improvements = int(form.data['initial_improvements'])
-        PROP.hoa = int(form.data['hoa'])
-        PROP.insurance = int(form.data['insurance'])
-        PROP.taxes = int(form.data['taxes'])
-        PROP.utilities = int(form.data['utilities'])
-        PROP.maintenance = int(form.data['maintenance'])
-        PROP.prop_management_fee = int(form.data['prop_management_fee'])
-        PROP.tenant_placement_fee = int(form.data['tenant_placement_fee'])
-        PROP.resign_fee = int(form.data['resign_fee'])
-        PROP.schools = form.data['schools']
-        PROP.county = form.data['county']
-        PROP.year_built = int(form.data['year_built'])
-        PROP.notes = form.data['notes']
+        prop = request.session.get('prop')
+
+        prop_list = ['sqft', 'curr_value', 'rent', 'down_payment_percentage', 'interest_rate', 'closing_costs',
+                     'initial_improvements', 'hoa', 'insurance', 'taxes', 'utilities', 'maintenance',
+                     'prop_management_fee', 'tenant_placement_fee', 'resign_fee', 'county',
+                     'year_built', 'notes']
+        for key in prop_list:
+            prop[key] = form.data[key]
+
+        request.session['prop'] = prop
         if form.is_valid():
             return redirect('results')
     else:
-        form = PropertyForm(initial={
-            'address': PROP.address_str,
-            'curr_value': PROP.curr_value,
-            'rent': PROP.rent_zest,
-            'sqft': PROP.sqft,
-            'down_payment_percentage': PROP.down_payment_percentage,
-            'interest_rate': PROP.interest_rate,
-            'closing_costs': PROP.closing_costs,
-            'initial_improvements': PROP.initial_improvements,
-            'hoa': PROP.hoa,
-            'insurance': PROP.insurance,
-            'taxes': PROP.taxes,
-            'utilities': PROP.utilities,
-            'maintenance': PROP.maintenance,
-            'prop_management_fee': PROP.prop_management_fee,
-            'tenant_placement_fee': PROP.tenant_placement_fee,
-            'resign_fee': PROP.resign_fee,
-            'schools': PROP.schools,
-            'county': PROP.county,
-            'year_built': PROP.year_built,
-            'notes': PROP.notes
-        }
-        )
+        prop = request.session.get('prop')
+        form = PropertyForm(initial={key: prop[key] for key in prop.keys()})
+
     return render(request, 'app/edit.html', {'form': form})
 
 
 def results(request):
     """
-    Renders the results page which displays listing information, operating income/expense, cash flow, and
-    investment ratios.
-    :param request: HTTP request
+    Renders the results page which displays property information (general, schools, and financial metrics)
+    :param: HTTP request
     :return: 'app/results.html' page
     """
+
+    prop_data = request.session.get('prop')
+    schools = GreatSchools(
+        prop_data['address'], prop_data['city'], prop_data['state'], prop_data['zip_code'], prop_data['county'])
+    schools.set_greatschool_urls()
+    if schools.api_key and schools.DAILY_API_CALL_COUNT <= 2950:
+        for url in schools.urls:
+            schools.get_greatschool_xml(url)
+
+    else:
+        schools.elem_school = 'Unknown'
+        schools.mid_school = 'Unknown'
+        schools.high_school = 'Unknown'
+    prop = PropSetup(prop_data['address'])
+    for key in prop_data.keys():
+        prop.__dict__[key] = prop_data[key]
+
     context = {
-        'address': PROP.address_str,
-        'taxes': '$' + str(int(int(PROP.taxes) / 12)),
-        'hoa': '$' + str(int(int(PROP.hoa) / 12)),
-        'rent': '$' + str(PROP.rent_zest),
-        'vacancy': '$' + str(PROP.vacancy_calc),
-        'oper_income': '$' + str(PROP.oper_inc_calc),
-        'total_mortgage': '$' + str(PROP.total_mortgage_calc),
-        'down_payment_percentage': str(PROP.down_payment_percentage) + '%',
-        'down_payment': '$' + str(PROP.down_payment_calc),
-        'curr_value': '$' + str(PROP.curr_value),
-        'init_cash_invest': '$' + str(PROP.init_cash_invested_calc),
-        'oper_exp': '$' + str(PROP.oper_exp_calc),
-        'net_oper_income': '$' + str(PROP.net_oper_income_calc),
-        'cap_rate': '{0:.1f}%'.format(PROP.cap_rate_calc * 100),
-        'initial_market_value': '$' + str(PROP.curr_value),
-        'interest_rate': str(PROP.interest_rate) + '%',
-        'mort_payment': '$' + str(PROP.mort_payment_calc),
-        'sqft': PROP.sqft,
-        'closing_costs': '$' + str(PROP.closing_costs),
-        'initial_improvements': '$' + str(PROP.initial_improvements),
-        'cost_per_sqft': '$' + str(PROP.cost_per_sqft_calc),
-        'insurance': '$' + str(int(PROP.insurance / 12)),
-        'maintenance': '$' + str(int(PROP.maint_calc / 12)),
-        'prop_management_fee': '$' + str(PROP.prop_management_fee),
-        'utilities': '$' + str(PROP.utilities),
-        'tenant_placement_fee': '$' + str(int(PROP.tenant_place_calc / 12)),
-        'resign_fee': '$' + str(int(PROP.resign_calc / 12)),
-        'notes': PROP.notes,
+        'address': prop.address,
+        'taxes': '$' + str(int(int(prop.taxes) / 12)),
+        'hoa': '$' + str(int(int(prop.hoa) / 12)),
+        'rent': '$' + str(prop.rent),
+        'vacancy': '$' + str(prop.vacancy_calc),
+        'oper_income': '$' + str(prop.oper_inc_calc),
+        'total_mortgage': '$' + str(prop.total_mortgage_calc),
+        'down_payment_percentage': str(prop.down_payment_percentage) + '%',
+        'down_payment': '$' + str(prop.down_payment_calc),
+        'curr_value': '$' + str(prop.curr_value),
+        'init_cash_invest': '$' + str(prop.init_cash_invested_calc),
+        'oper_exp': '$' + str(prop.oper_exp_calc),
+        'net_oper_income': '$' + str(prop.net_oper_income_calc),
+        'cap_rate': '{0:.1f}%'.format(prop.cap_rate_calc * 100),
+        'initial_market_value': '$' + str(prop.curr_value),
+        'interest_rate': str(prop.interest_rate) + '%',
+        'mort_payment': '$' + str(prop.mort_payment_calc),
+        'sqft': prop.sqft,
+        'closing_costs': '$' + str(prop.closing_costs),
+        'initial_improvements': '$' + str(prop.initial_improvements),
+        'cost_per_sqft': '$' + str(prop.cost_per_sqft_calc),
+        'insurance': '$' + str(int(int(prop.insurance) / 12)),
+        'maintenance': '$' + str(int(int(prop.maint_calc) / 12)),
+        'prop_management_fee': '$' + str(prop.prop_management_fee),
+        'utilities': '$' + str(prop.utilities),
+        'tenant_placement_fee': '$' + str(int(int(prop.tenant_place_calc) / 12)),
+        'resign_fee': '$' + str(int(int(prop.resign_calc) / 12)),
+        'notes': prop.notes,
         'pub_date': timezone.now,
-        'rtv': '{0:.2f}%'.format(PROP.rtv_calc * 100),
-        'cash_flow': '$' + str(PROP.cash_flow_calc),
-        'oper_exp_ratio': '{0:.1f}'.format(PROP.oper_exp_ratio_calc * 100) + '%',
-        'debt_coverage_ratio': PROP.debt_coverage_ratio_calc,
-        'cash_on_cash': '{0:.2f}%'.format(PROP.cash_on_cash_calc * 100),
-        'schools': 'Unknown',
-        'school_scores': '0,0,0',
-        'year_built': PROP.year_built,
-        'county': PROP.county,
+        'rtv': '{0:.2f}%'.format(prop.rtv_calc * 100),
+        'cash_flow': '$' + str(prop.cash_flow_calc),
+        'oper_exp_ratio': '{0:.1f}'.format(prop.oper_exp_ratio_calc * 100) + '%',
+        'debt_coverage_ratio': prop.debt_coverage_ratio_calc,
+        'cash_on_cash': '{0:.2f}%'.format(prop.cash_on_cash_calc * 100),
+        'elem_school': schools.elem_school,
+        'elem_school_score': schools.elem_school_score,
+        'mid_school': schools.mid_school,
+        'mid_school_score': schools.mid_school_score,
+        'high_school': schools.high_school,
+        'high_school_score': schools.high_school_score,
+        'year_built': prop.year_built,
+        'county': prop.county,
         'nat_disasters': 'Unknown',
-        'listing_url': PROP.listing_url,
-        'beds': PROP.beds,
-        'baths': PROP.baths,
-        'livability': PROP.areavibes_dict['livability'],
-        'crime': PROP.areavibes_dict['crime'],
-        'cost_of_living': PROP.areavibes_dict['cost_of_living'],
-        'education': PROP.areavibes_dict['education'],
-        'employment': PROP.areavibes_dict['employment'],
-        'housing': PROP.areavibes_dict['housing'],
-        'weather': PROP.areavibes_dict['weather']
+        'listing_url': prop.listing_url,
+        'beds': prop.beds,
+        'baths': prop.baths,
+        'livability': prop.areavibes_dict['livability'],
+        'crime': prop.areavibes_dict['crime'],
+        'cost_of_living': prop.areavibes_dict['cost_of_living'],
+        'education': prop.areavibes_dict['education'],
+        'employment': prop.areavibes_dict['employment'],
+        'housing': prop.areavibes_dict['housing'],
+        'weather': prop.areavibes_dict['weather']
     }
+
+    request.session['PROP'] = prop.__dict__
     return render(request, 'app/results.html', context)
 
 

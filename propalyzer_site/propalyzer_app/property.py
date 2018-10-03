@@ -21,8 +21,11 @@ def mk_int(s):
     :param s: String to change to int.
     :return: Either returns the int of the string or 0 for None.
     """
-    s = s.strip()
-    return int(s) if s else 0
+    try:
+        s = s.strip()
+        return int(s) if s else 0
+    except:
+        return s
 
 
 class PropSetup:
@@ -31,7 +34,7 @@ class PropSetup:
     """
 
     def __init__(self, add_str):
-        self.address_str = add_str
+        self.address = add_str
         self.address_dict = {
             'AddressNumber': 0,
             'AddressNumberPrefix': '',
@@ -113,7 +116,7 @@ class PropSetup:
         self.curr_value = 0
         self.value_low = 0
         self.value_high = 0
-        self.rent_zest = 0
+        self.rent = 0
         self.rent_low = 0
         self.rent_high = 0
         self.year_built = 0
@@ -167,7 +170,7 @@ class PropSetup:
         Method to create test PropSetup instance for use by 'test_property.py'
         :return: Sets object attributes -- does not return an object
         """
-        self.address_str = '3465-N-Main-St-Soquel-CA-95073'
+        self.address = '3465-N-Main-St-Soquel-CA-95073'
         self.listing_url = 'http://www.zillow.com/homedetails/3465-N-Main-St-Soquel-CA-95073/16128477_zpid/'
         self.neighborhood = 'Unknown'
         self.pub_date = timezone.now()
@@ -176,7 +179,7 @@ class PropSetup:
         self.value_high = 751691
         self.initial_market_value = 699600
         self.initial_improvements = 5000
-        self.rent_zest = 2600
+        self.rent = 2600
         self.rent_low = 2106
         self.rent_high = 2990
         self.sqft = 1058
@@ -216,19 +219,19 @@ class PropSetup:
         self.cap_rate = self.cap_rate_calc
         self.cash_on_cash_return = self.cash_on_cash_calc
 
-    def convert_address(self):
+    def __convert_address(self):
         """
         Function to take a string assumed to be a US address and parse it into the correct components.
 
         :return: Uses self.error to notify requester if an error occurred.
         """
 
-        address_parse = usaddress.tag(self.address_str)
+        address_parse = usaddress.tag(self.address)
         if address_parse[1] != 'Street Address':
             self.error = 'NotAStreetAddress'
-        self.set_address_dict(address_parse[0])
+        self.__set_address_dict(address_parse[0])
 
-    def set_address_dict(self, add_dict):
+    def __set_address_dict(self, add_dict):
         """
         Takes the parameters if the untangled address and fills out the address dict for later usage.
         :param add_dict: Parsed US address dictionary
@@ -242,7 +245,7 @@ class PropSetup:
         Mian function call to convert a string to an US address and generates necessary parameters to be used later.
         :return:
         """
-        self.convert_address()
+        self.__convert_address()
         self.street_address = (str(self.address_dict['AddressNumberPrefix']) + ' ' +
                                str(self.address_dict['AddressNumber']) + ' ' +
                                str(self.address_dict['AddressNumberSuffix']) + ' ' +
@@ -278,7 +281,7 @@ class PropSetup:
 
         self.xml_info = prop_data.text
 
-    def set_zillow_xml_data(self):
+    def set_xml_data(self):
         """
         Uses elementTree builtin to parse the XML. It then iterates through a static dict to fill out any necessary data
         required by the program that was contained in the xml file.
@@ -301,7 +304,7 @@ class PropSetup:
         self.curr_value = mk_int(self.zillow_dict['zestimate/amount'])
         self.value_low = mk_int(self.zillow_dict['zestimate/valuationRange/low'])
         self.value_high = mk_int(self.zillow_dict['zestimate/valuationRange/high'])
-        self.rent_zest = mk_int(self.zillow_dict['rentzestimate/amount'])
+        self.rent = mk_int(self.zillow_dict['rentzestimate/amount'])
         self.rent_low = mk_int(self.zillow_dict['rentzestimate/valuationRange/low'])
         self.rent_high = mk_int(self.zillow_dict['rentzestimate/valuationRange/high'])
         self.year_built = mk_int(self.zillow_dict['yearBuilt'])
@@ -310,6 +313,7 @@ class PropSetup:
         self.county = County.county_finder(self.county_code)
         self.lat = self.zillow_dict['address/latitude']
         self.long = self.zillow_dict['address/longitude']
+
 
     def set_greatschool_url(self):
         """
@@ -496,37 +500,36 @@ class PropSetup:
 
     @property
     def __str__(self):
-        return self.address_str
+        return self.address
 
     @property
     def oper_inc_calc(self):
-
-        self.oper_income = int(self.rent_zest - self.vacancy)
+        self.oper_income = int(mk_int(self.rent) - self.vacancy)
         return self.oper_income
 
     @property
     def init_cash_invested_calc(self):
         self.down_payment = self.down_payment_calc
-        self.init_cash_invest = int(self.down_payment + self.closing_costs + self.initial_improvements)
+        self.init_cash_invest = int(self.down_payment + mk_int(self.closing_costs) + mk_int(self.initial_improvements))
         return self.init_cash_invest
 
     @property
     def vacancy_calc(self):
         self.vacancy_rate = .08
-        self.vacancy = int(self.vacancy_rate * self.rent_zest)
+        self.vacancy = int(self.vacancy_rate * mk_int(self.rent))
         return self.vacancy
 
     @property
     def oper_exp_calc(self):
         self.oper_exp = int((
-                (self.resign_fee / 12) +
-                (self.taxes / 12) +
-                (self.hoa / 12) +
-                self.utilities +
-                self.prop_management_fee +
-                (self.insurance / 12) +
-                (self.maintenance / 12) +
-                (self.tenant_placement_fee / 12)
+                (mk_int(self.resign_fee) / 12) +
+                (mk_int(self.taxes) / 12) +
+                (mk_int(self.hoa) / 12) +
+                mk_int(self.utilities) +
+                mk_int(self.prop_management_fee) +
+                (mk_int(self.insurance) / 12) +
+                (mk_int(self.maintenance) / 12) +
+                (mk_int(self.tenant_placement_fee) / 12)
         )
         )
         return self.oper_exp
@@ -566,7 +569,7 @@ class PropSetup:
     @property
     def cap_rate_calc(self):
         getcontext().prec = 2
-        self.initial_market_value = self.curr_value
+        self.initial_market_value = mk_int(self.curr_value)
         try:
             self.cap_rate = float(Decimal((self.net_oper_income * 12) / Decimal(self.initial_market_value)))
         except ZeroDivisionError:
@@ -585,18 +588,18 @@ class PropSetup:
 
     @property
     def down_payment_calc(self):
-        self.down_payment = int((float(self.down_payment_percentage) * self.curr_value) / 100)
+        self.down_payment = int((float(self.down_payment_percentage) * mk_int(self.curr_value)) / 100)
         return self.down_payment
 
     @property
     def total_mortgage_calc(self):
         getcontext().prec = 8
-        self.total_mortgage = self.curr_value - self.down_payment
+        self.total_mortgage = mk_int(self.curr_value) - self.down_payment
         return int(self.total_mortgage)
 
     @property
     def mort_payment_calc(self):
-        i = (self.interest_rate / 100) / 12
+        i = (float(self.interest_rate) / 100) / 12
         n = 360
         p = self.total_mortgage
         self.mort_payment = int(p * (i * (1 + i) ** n) / ((1 + i) ** n - 1))
@@ -605,14 +608,14 @@ class PropSetup:
     @property
     def cost_per_sqft_calc(self):
         try:
-            self.cost_per_sqft = int(self.curr_value / self.sqft)
+            self.cost_per_sqft = int(mk_int(self.curr_value) / mk_int(self.sqft))
         except ZeroDivisionError:
             self.cost_per_sqft = 0
         return self.cost_per_sqft
 
     @property
     def resign_calc(self):
-        if self.resign_fee > 80:
+        if int(self.resign_fee) > 80:
             self.resign_fee = int(self.resign_fee)
             return self.resign_fee
         else:
@@ -620,7 +623,7 @@ class PropSetup:
 
     @property
     def tenant_place_calc(self):
-        if self.tenant_placement_fee > 300:
+        if int(self.tenant_placement_fee) > 300:
             self.tenant_placement_fee = int(self.tenant_placement_fee)
             return self.tenant_placement_fee
         else:
@@ -628,7 +631,7 @@ class PropSetup:
 
     @property
     def maint_calc(self):
-        if self.maintenance > 300:
+        if int(self.maintenance) > 300:
             self.maintenance = int(self.maintenance)
             return self.maintenance
         else:
@@ -638,7 +641,7 @@ class PropSetup:
     def rtv_calc(self):
         getcontext().prec = 2
         try:
-            self.rtv = float(Decimal(self.rent_zest) / Decimal(self.curr_value))
+            self.rtv = float(Decimal(mk_int(self.rent)) / Decimal(mk_int(self.curr_value)))
         except ZeroDivisionError:
             self.rtv = 0.00
         self.rtv = self.rtv + 0
@@ -646,7 +649,7 @@ class PropSetup:
 
     @property
     def prop_mgmt_calc(self):
-        self.prop_management_fee = int(.09 * self.rent_zest)
+        self.prop_management_fee = int(.09 * self.rent)
         return self.prop_management_fee
 
     @property
