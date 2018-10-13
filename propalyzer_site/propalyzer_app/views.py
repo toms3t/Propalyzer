@@ -38,7 +38,9 @@ def address(request):
         if 'AddressNotFound' in prop.error:
             return TemplateResponse(request, 'app/addressnotfound.html')
 
-        prop.set_gs_xml_data()
+        # prop.set_gs_xml_data()
+        prop.set_disaster_url()
+        prop.set_disaster_xml_data()
         prop.set_areavibes_info()
 
         # Loggers
@@ -46,6 +48,7 @@ def address(request):
         LOG.debug('prop.address_dict --- {}'.format(prop.address_dict))
         LOG.debug('prop.url --- {}'.format(prop.url))
         LOG.debug('prop.zillow_dict --- {}'.format(prop.zillow_dict))
+        LOG.debug('prop.disaster--- {}'.format(prop.disaster_counts))
         LOG.debug('areavibes_dict--- {}'.format(prop.areavibes_dict))
 
         try:
@@ -178,7 +181,8 @@ def results(request):
         'education': prop.areavibes_dict['education'],
         'employment': prop.areavibes_dict['employment'],
         'housing': prop.areavibes_dict['housing'],
-        'weather': prop.areavibes_dict['weather']
+        'weather': prop.areavibes_dict['weather'],
+        'disaster': prop.disaster_counts
     }
 
     request.session['PROP'] = prop.__dict__
