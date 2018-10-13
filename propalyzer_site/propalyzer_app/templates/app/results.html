@@ -52,6 +52,27 @@
 
             </div>
         </div>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2 class="panel-title"> Disaster Info* </h2>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr><th scope="row">Disasters</th><td> Count </td></tr>
+                        {% for key, value in disaster.items %}
+                           <tr>
+                                <th> {{ key }} </th>
+                                <td> {{ value }} </td>
+                           </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <p><b>*</b> <i>School information pulled from <a href="http://greatschools.org">greatschools.org </a></i></p>
+                <p><b>*</b> <i>Rating is based on a scale of 1 - 10 (10 = best) </i></p>
+
+            </div>
+        </div>
     </div>
     <div class="col-md-4">
         <div class="panel panel-info">

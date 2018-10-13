@@ -1,7 +1,6 @@
 import requests
 import re
 
-import json
 from django.utils import timezone
 from decimal import Decimal, getcontext
 from bs4 import BeautifulSoup
@@ -9,6 +8,7 @@ import usaddress
 from .county import County
 from .secret import Secret
 import xml.etree.cElementTree as ET
+import json
 from collections import Counter
 
 ZWSID = Secret.ZWSID
@@ -164,6 +164,9 @@ class PropSetup:
         self.schools = ''
         self.school_scores = ''
         self.county = ''
+        self.disaster_xml_info = ''
+        self.disaster_counts = 0
+        self.disaster_dict = {}
 
     def create_test_obj(self):
         """
@@ -289,6 +292,7 @@ class PropSetup:
         Not sure if listing_details is necessary, but left in since it was part of previous logic
         :return:
         """
+        print(self.xml_info)
         tree = ET.fromstring(self.xml_info)
         for tag in self.zillow_dict.keys():
             for elem in tree.findall('.//' + tag):
@@ -314,7 +318,6 @@ class PropSetup:
         self.lat = self.zillow_dict['address/latitude']
         self.long = self.zillow_dict['address/longitude']
 
-
     def set_greatschool_url(self):
         """
         Function builds the GreatSchools API url, makes the request, and stores the xml_info for later use.
@@ -324,7 +327,7 @@ class PropSetup:
             self.url = 'https://api.greatschools.org/schools/nearby?'
             self.url += 'key={gs_key}&address={street}&city={city}&state={state}&zip={zip}&schoolType=public' \
                         '&radius=10&limit=100'.format(gs_key=Secret.GSCHOOL_API_KEY,
-                                                      street=self.address_str,
+                                                      street=self.address,
                                                       city=self.city,
                                                       state=self.state,
                                                       zip=self.zip_code)
@@ -351,6 +354,7 @@ class PropSetup:
         :return:
         """
         if self.gs_xml_info:
+            print("gs =", self.gs_xml_info)
             schools = {'high': [],
                        'middle': [],
                        'elementary': []}
@@ -381,9 +385,14 @@ class PropSetup:
         Function builds the Disasters API url, makes the request, and stores the xml_info for later use.
         :return: Sets self.error if issues arise during API calls
         """
+
+        # FIXME State and county info has to be provided to work. County is obtained from zillow only. Way around that?
         self.url = 'https://www.fema.gov/api/open/v1/DisasterDeclarationsSummaries?$filter='
-        self.url += "state eq '{state}' and declaredCountyArea eq '{county} (County)'".format(state=self.state,
-                                                                                              county=self.county)
+        self.url += "state eq '{state}'".format(state=self.state.upper())
+        # FIXME County doesnt work if the original county has 'county' in its name. Need to strip it
+        if self.county:
+            self.url += " and declaredCountyArea eq '{county} (County)'".format(county=self.county.strip(' County'))
+
         try:
             data = requests.get(self.url)
         except:
@@ -419,7 +428,6 @@ class PropSetup:
 
             for key in self.disaster_counts:
                 print(key, self.disaster_counts[key], self.disaster_dict[key])
-        # TODO Need to combine the results to a single dict for ease of consumption
 
     def set_areavibes_url(self):
         """
