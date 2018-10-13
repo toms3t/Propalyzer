@@ -16,7 +16,7 @@ def address(request):
     Renders the starting page for entering a property address
     :param request: HTTP Request
     :return: app/address.html page
-    """ 
+    """
 
     if request.method == "POST":
         address_str = str(request.POST['text_input'])
@@ -32,6 +32,13 @@ def address(request):
             return TemplateResponse(request, 'app/addressnotfound.html')
 
         prop.set_xml_data()
+        prop.set_greatschool_url()
+        if 'ConnectionError' in prop.error:
+            return TemplateResponse(request, 'app/connection_error.html')
+        if 'AddressNotFound' in prop.error:
+            return TemplateResponse(request, 'app/addressnotfound.html')
+
+        prop.set_gs_xml_data()
         prop.set_areavibes_info()
 
         # Loggers
