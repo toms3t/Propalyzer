@@ -8,4 +8,4 @@ env:
   - DJANGO_VERSION=1.11.5
 # command to run tests
 script:
-  - python manage.py test
+  - python propalyzer_site/manage.py test
