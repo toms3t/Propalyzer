@@ -381,17 +381,32 @@ class PropSetup:
 
     def set_disaster_info(self):
         local_disasters = []
+        disaster_dict = {}
+        c = 1
+        if 'County' in self.county:
+            county_pattern = re.search('^(.*?) County', self.county)
+            try:
+                county = county_pattern.group(1)
+            except AttributeError:
+                county = self.county
+        else:
+            county = self.county
         url1 = 'https://www.fema.gov/api/open/v1/DisasterDeclarationsSummaries?'
         url2 = '$filter=state eq \'{}\'&$select=state, incidentType, declaredCountyArea, '.format(self.state)
         url3 = 'incidentEndDate&$orderby=incidentEndDate'
         url = url1+url2+url3
         resp = requests.get(url)
         resp_json = resp.json()
+        print(self.county)
         for dis in resp_json['DisasterDeclarationsSummaries']:
-            if self.county in dis['declaredCountyArea']:
+            if county in dis['declaredCountyArea']:
                 local_disasters.append(dis)
-        last_5_disasters = resp_json['DisasterDeclarationsSummaries'][-5:]
-        print(last_5)
+        print(local_disasters)
+        last_5_disasters = local_disasters[-5:]
+        for disaster in last_5_disasters:
+            disaster_dict[c] = [disaster['incidentType'], disaster['state'], disaster['incidentEndDate']]
+            c += 1
+        print(disaster_dict)
         Disaster = namedtuple('type', 'state date county')
         disaster_obj = Disaster('2019', 'Douglas')
 
