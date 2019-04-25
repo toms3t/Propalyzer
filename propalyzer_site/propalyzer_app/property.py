@@ -7,6 +7,7 @@ import usaddress
 from .county import County
 from .secret import Secret
 import xml.etree.cElementTree as ET
+from collections import namedtuple
 
 ZWSID = Secret.ZWSID
 
@@ -229,7 +230,7 @@ class PropSetup:
 
     def set_address(self):
         """
-        Mian function call to convert a string to an US address and generates necessary parameters to be used later.
+        Main function call to convert a string to an US address and generates necessary parameters to be used later.
         :return:
         """
         self.__convert_address()
@@ -377,6 +378,22 @@ class PropSetup:
             'housing': housing,
             'weather': weather
         }
+
+    def set_disaster_info(self):
+        local_disasters = []
+        url1 = 'https://www.fema.gov/api/open/v1/DisasterDeclarationsSummaries?'
+        url2 = '$filter=state eq \'{}\'&$select=state, incidentType, declaredCountyArea, '.format(self.state)
+        url3 = 'incidentEndDate&$orderby=incidentEndDate'
+        url = url1+url2+url3
+        resp = requests.get(url)
+        resp_json = resp.json()
+        for dis in resp_json['DisasterDeclarationsSummaries']:
+            if self.county in dis['declaredCountyArea']:
+                local_disasters.append(dis)
+        last_5_disasters = resp_json['DisasterDeclarationsSummaries'][-5:]
+        print(last_5)
+        Disaster = namedtuple('type', 'state date county')
+        disaster_obj = Disaster('2019', 'Douglas')
 
     @property
     def __str__(self):

@@ -17,7 +17,7 @@ def address(request):
     :param request: HTTP Request
     :return: app/address.html page
     """ 
-
+    
     if request.method == "POST":
         address_str = str(request.POST['text_input'])
         prop = PropSetup(address_str)
@@ -40,6 +40,7 @@ def address(request):
         LOG.debug('prop.url --- {}'.format(prop.url))
         LOG.debug('prop.zillow_dict --- {}'.format(prop.zillow_dict))
         LOG.debug('areavibes_dict--- {}'.format(prop.areavibes_dict))
+        print(prop.set_disaster_info())
 
         try:
             prop.prop_management_fee = int(.09 * int(prop.rent))
