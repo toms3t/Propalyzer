@@ -33,6 +33,7 @@ def address(request):
 
         prop.set_xml_data()
         prop.set_areavibes_info()
+        prop.set_disaster_info()
 
         # Loggers
         LOG.debug('prop.address --- {}'.format(prop.address))
@@ -40,7 +41,6 @@ def address(request):
         LOG.debug('prop.url --- {}'.format(prop.url))
         LOG.debug('prop.zillow_dict --- {}'.format(prop.zillow_dict))
         LOG.debug('areavibes_dict--- {}'.format(prop.areavibes_dict))
-        print(prop.set_disaster_info())
 
         try:
             prop.prop_management_fee = int(.09 * int(prop.rent))

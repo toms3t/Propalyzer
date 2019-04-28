@@ -152,6 +152,7 @@ class PropSetup:
         self.schools = ''
         self.school_scores = ''
         self.county = ''
+        self.disaster_dict = {}
 
     def create_test_obj(self):
         """
@@ -382,7 +383,6 @@ class PropSetup:
     def set_disaster_info(self):
         local_disasters = []
         disaster_dict = {}
-        c = 1
         if 'County' in self.county:
             county_pattern = re.search('^(.*?) County', self.county)
             try:
@@ -397,19 +397,21 @@ class PropSetup:
         url = url1+url2+url3
         resp = requests.get(url)
         resp_json = resp.json()
-        print(self.county)
         for dis in resp_json['DisasterDeclarationsSummaries']:
             if county in dis['declaredCountyArea']:
                 local_disasters.append(dis)
-        print(local_disasters)
         last_5_disasters = local_disasters[-5:]
+        Disaster = namedtuple('id', 'type date county state url')
+        c = 1
         for disaster in last_5_disasters:
-            disaster_dict[c] = [disaster['incidentType'], disaster['state'], disaster['incidentEndDate']]
+            disaster_obj = Disaster(
+                disaster['incidentType'], disaster['incidentEndDate'], 
+                disaster['declaredCountyArea'], disaster['state'], url1[:-1]+'/'+disaster['id']
+            )
+            disaster_dict[c] = disaster_obj
             c += 1
-        print(disaster_dict)
-        Disaster = namedtuple('type', 'state date county')
-        disaster_obj = Disaster('2019', 'Douglas')
-
+        self.disaster_dict = disaster_dict    
+        
     @property
     def __str__(self):
         return self.address
