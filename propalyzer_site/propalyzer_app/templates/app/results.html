@@ -25,7 +25,6 @@
                         <tr><th scope="row">Area Employment*</th><td>{{ employment }}</td></tr>
                         <tr><th scope="row">Area Housing*</th><td>{{ housing }}</td></tr>
                         <tr><th scope="row">Area Weather*</th><td>{{ weather }}</td></tr>
-                        <tr><th scope="row">Area Natural Disasters</th><td>{{ nat_disasters }}</td></tr>
                         <tr class="warning"><th scope="row">Cost Per SQFT</th><td>{{ cost_per_sqft }}</td></tr>
                         <tr><th scope="row">Interest Rate</th><td>{{ interest_rate }}</td></tr>
                         <tr><th scope="row">Mortgage Amount</th><td>{{ total_mortgage }}</td></tr>
@@ -49,26 +48,6 @@
                 </table>
                 <p><b>*</b> <i>School information pulled from <a href="http://greatschools.org">greatschools.org </a></i></p>
                 <p><b>*</b> <i>Rating is based on a scale of 1 - 10 (10 = best) </i></p>
-            </div>
-        </div>
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h2 class="panel-title"> Natural Disaster Information* </h2>
-            </div>
-            <div class="panel-body">
-                <table class="table table-bordered">
-                    <tbody>
-                        <tr><th scope="row">Disaster Type</th><td> Date </td><td> County </td></tr>
-                        <tr><th scope="row">{{ elem_school }}</th><td> {{ elem_school_score }}</td><td> County </td></tr>
-                        <tr><th scope="row">{{ mid_school }}</th><td> {{ mid_school_score }}</td><td> County </td></tr>
-                        <tr><th scope="row">{{ high_school }}</th><td> {{ high_school_score }}</td><td> County </td></tr>
-                        <tr><th scope="row">{{ mid_school }}</th><td> {{ mid_school_score }}</td><td> County </td></tr>
-                        <tr><th scope="row">{{ high_school }}</th><td> {{ high_school_score }}</td><td> County </td></tr>
-                    </tbody>
-                </table>
-                <p><b>*</b> <i>School information pulled from <a href="http://greatschools.org">greatschools.org </a></i></p>
-                <p><b>*</b> <i>Rating is based on a scale of 1 - 10 (10 = best) </i></p>
-
             </div>
         </div>
     </div>
@@ -138,8 +117,8 @@
                         <tr><th scope="row">Operating Expense Ratio</th><td>{{ oper_exp_ratio }} (Typical 25-35%)</td></tr>
                         <tr><th scope="row">Debt Coverage Ratio</th><td>{{ debt_coverage_ratio }}</td></tr>
                         <tr><th scope="row">Capitalization Rate</th><td>{{ cap_rate }}</td></tr>
-                        <tr class="warning"><th scope="row">Cash on Cash Return</th><td>{{ cash_on_cash }}</td></tr>
                         <tr><th scope="row">Rent-to-Value Ratio</th><td>{{ rtv }}</td></tr>
+                        <tr class="warning"><th scope="row">Cash on Cash Return</th><td>{{ cash_on_cash }}</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -173,10 +152,32 @@
                 </div>
             </div>
         </div>
-        <a class="btn btn-primary" href="{% url 'edit' %}">EDIT</a>
     </div>
 </div>
+<div class="panel panel-info">
+                <div class="panel-heading">
+                    <h2 class="panel-title"> Last 5 Natural Disasters in {{ county }}* </h2>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr><th scope="row">Disaster Type</th><th> Date </th><th> County </th><th> Details </th></tr>
+                            <tr><td scope="row">{{ disaster1_type }}</td><td> {{ disaster1_date }}</td><td> {{ disaster1_county }} </td><td> {{ disaster1_title }} </td></tr>
+                            <tr><td scope="row">{{ disaster2_type }}</td><td> {{ disaster2_date }}</td><td> {{ disaster2_county }} </td><td> {{ disaster2_title }} </td></tr>
+                            <tr><td scope="row">{{ disaster3_type }}</td><td> {{ disaster3_date }}</td><td> {{ disaster3_county }} </td><td> {{ disaster3_title }} </td></tr>
+                            <tr><td scope="row">{{ disaster4_type }}</td><td> {{ disaster4_date }}</td><td> {{ disaster4_county }} </td><td> {{ disaster4_title }} </td></tr>
+                            <tr><td scope="row">{{ disaster5_type }}</td><td> {{ disaster5_date }}</td><td> {{ disaster5_county }} </td><td> {{ disaster5_title }} </td></tr>
+                        </tbody>
+                    </table>
+                    <p><b>*</b> <i>Disaster information pulled from <a href="https://www.fema.gov/">fema.gov </a></i></p>
+
+                </div>
+</div>
+<a class="btn btn-primary" href="{% url 'edit' %}">EDIT</a>
+<br>
+<br>
+<br>
 <a href="http://zillow.com">
-    <img src="http://www.zillow.com/widgets/GetVersionedResource.htm?path=/static/logos/Zillowlogo_200x50.gif" width="200" height="50" alt="Zillow Real Estate Search" id="yui_3_18_1_1_1506979974705_333">
+<img src="http://www.zillow.com/widgets/GetVersionedResource.htm?path=/static/logos/Zillowlogo_200x50.gif" width="200" height="50" alt="Zillow Real Estate Search" id="yui_3_18_1_1_1506979974705_333">
 </a>
 {% endblock %}

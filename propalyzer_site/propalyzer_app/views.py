@@ -118,6 +118,7 @@ def results(request):
     prop = PropSetup(prop_data['address'])
     for key in prop_data.keys():
         prop.__dict__[key] = prop_data[key]
+    print('xzzzzzzzz',prop.disaster_dict)
 
     context = {
         'address': prop.address,
@@ -172,7 +173,32 @@ def results(request):
         'education': prop.areavibes_dict['education'],
         'employment': prop.areavibes_dict['employment'],
         'housing': prop.areavibes_dict['housing'],
-        'weather': prop.areavibes_dict['weather']
+        'weather': prop.areavibes_dict['weather'],
+        'disaster1_type': prop.disaster_dict['1'][0],
+        'disaster1_date': prop.disaster_dict['1'][1],
+        'disaster1_county': prop.disaster_dict['1'][2],
+        'disaster1_url': prop.disaster_dict['1'][4],
+        'disaster1_title': prop.disaster_dict['1'][5],
+        'disaster2_type': prop.disaster_dict['2'][0],
+        'disaster2_date': prop.disaster_dict['2'][1],
+        'disaster2_county': prop.disaster_dict['2'][2],
+        'disaster2_url': prop.disaster_dict['2'][4],
+        'disaster2_title': prop.disaster_dict['2'][5],
+        'disaster3_type': prop.disaster_dict['3'][0],
+        'disaster3_date': prop.disaster_dict['3'][1],
+        'disaster3_county': prop.disaster_dict['3'][2],
+        'disaster3_url': prop.disaster_dict['3'][4],
+        'disaster3_title': prop.disaster_dict['3'][5],
+        'disaster4_type': prop.disaster_dict['4'][0],
+        'disaster4_date': prop.disaster_dict['4'][1],
+        'disaster4_county': prop.disaster_dict['4'][2],
+        'disaster4_url': prop.disaster_dict['4'][4],
+        'disaster4_title': prop.disaster_dict['4'][5],
+        'disaster5_type': prop.disaster_dict['5'][0],
+        'disaster5_date': prop.disaster_dict['5'][1],
+        'disaster5_county': prop.disaster_dict['5'][2],
+        'disaster5_url': prop.disaster_dict['5'][4],
+        'disaster5_title': prop.disaster_dict['5'][5],
     }
 
     request.session['PROP'] = prop.__dict__
