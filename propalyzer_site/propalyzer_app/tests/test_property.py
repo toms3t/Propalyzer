@@ -113,13 +113,22 @@ class PropertyModelTest(TestCase):
         self.assertEqual(self.prop.closing_costs, 20988)
 
     def test_zillow_api_key(self):
-        resp = str(requests.get(f'http://www.zillow.com/webservice/GetZestimate.htm?zws-id={ZWSID}&zpid=48749425'))
+        resp = str(requests.get(
+            f'http://www.zillow.com/webservice/GetZestimate.htm?zws-id={ZWSID}&zpid=48749425'))
         self.assertEqual(resp, '<Response [200]>')
 
     def test_net_oper_income(self):
-        self.assertEqual(self.prop.oper_income - self.prop.oper_exp, self.prop.net_oper_income)
+        self.assertEqual(self.prop.oper_income -
+                         self.prop.oper_exp, self.prop.net_oper_income)
 
     def test_cash_flow(self):
-        self.assertEqual(self.prop.net_oper_income - self.prop.mort_payment, self.prop.cash_flow)
+        self.assertEqual(self.prop.net_oper_income -
+                         self.prop.mort_payment, self.prop.cash_flow)
 
-
+    def test_fema_response(self):
+        url1 = 'https://www.fema.gov/api/open/v1/DisasterDeclarationsSummaries?'
+        url2 = '$filter=state eq TN&$select=state, incidentType, declaredCountyArea, title, '
+        url3 = 'incidentEndDate&$orderby=incidentEndDate'
+        url = url1+url2+url3
+        resp = str(requests.get(url))
+        self.assertEqual(resp, '<Response [200]>')

@@ -88,7 +88,7 @@ class PropSetup:
             'livability': '',
             'cost_of_living': '',
             'housing': '',
-            'education': '',
+            'schools': '',
             'weather': '',
             'employment': ''
         }
@@ -333,7 +333,7 @@ class PropSetup:
             - Livability
             - Crime
             - Cost of Living
-            - Education
+            - schools
             - Employment
             - Housing
             - Weather
@@ -347,38 +347,49 @@ class PropSetup:
         except IndexError:
             result_string = 'Unknown'
         try:
-            livability = int(re.findall('Livability(\d+)', result_string)[0])
-        except IndexError:
-            livability = 0
-        try:
-            crime = re.findall('Crime(.*?)Edu', result_string)[0]
-        except IndexError:
-            crime = 'Unknown'
-        try:
-            cost_of_living = re.findall('Living(.*?)Crime', result_string)[0]
-        except IndexError:
+            parsed = re.search('Livability(.*?)Amenities(.*?)Cost of Living(.*?)Crime(.*?)Employment(.*?)Housing(.*?)Schools(.*?)Weather(.*?)', result_string)
+        except AttributeError:
+            livability = 'Unknown'
             cost_of_living = 'Unknown'
-        try:
-            education = re.findall('Education(.*?)Empl', result_string)[0]
-        except IndexError:
-            education = 'Unknown'
-        try:
-            employment = re.findall('Employment(.*?)Hou', result_string)[0]
-        except IndexError:
+            crime = 'Unknown'
             employment = 'Unknown'
-        try:
-            housing = re.findall('Housing(.*?)Schools', result_string)[0]
-        except IndexError:
             housing = 'Unknown'
-        try:
-            weather = re.findall('Weather(.*)$', result_string)[0].rstrip()
-        except IndexError:
+            schools = 'Unknown'
             weather = 'Unknown'
+        if parsed:
+            try:
+                livability = parsed.group(1)
+            except IndexError:
+                livability = 'Unknown'
+            try:
+                cost_of_living = parsed.group(3)
+            except IndexError:
+                cost_of_living = 'Unknown'
+            try:
+                crime = parsed.group(4)
+            except IndexError:
+                crime = 'Unknown'
+            try:
+                employment = parsed.group(5)
+            except IndexError:
+                employment = 'Unknown'
+            try:
+                housing = parsed.group(6)
+            except IndexError:
+                housing = 'Unknown'
+            try:
+                schools = parsed.group(7)
+            except IndexError:
+                schools = 'Unknown'
+            try:
+                weather = parsed.group(8)
+            except IndexError:
+                weather = 'Unknown'
         self.areavibes_dict = {
             'livability': livability,
             'crime': crime,
             'cost_of_living': cost_of_living,
-            'education': education,
+            'schools': schools,
             'employment': employment,
             'housing': housing,
             'weather': weather

@@ -118,7 +118,6 @@ def results(request):
     prop = PropSetup(prop_data['address'])
     for key in prop_data.keys():
         prop.__dict__[key] = prop_data[key]
-    print('xzzzzzzzz',prop.disaster_dict)
 
     context = {
         'address': prop.address,
@@ -170,7 +169,7 @@ def results(request):
         'livability': prop.areavibes_dict['livability'],
         'crime': prop.areavibes_dict['crime'],
         'cost_of_living': prop.areavibes_dict['cost_of_living'],
-        'education': prop.areavibes_dict['education'],
+        'schools': prop.areavibes_dict['schools'],
         'employment': prop.areavibes_dict['employment'],
         'housing': prop.areavibes_dict['housing'],
         'weather': prop.areavibes_dict['weather'],
@@ -200,7 +199,6 @@ def results(request):
         'disaster5_url': prop.disaster_dict['5'][4],
         'disaster5_title': prop.disaster_dict['5'][5],
     }
-
     request.session['PROP'] = prop.__dict__
     return render(request, 'app/results.html', context)
 
