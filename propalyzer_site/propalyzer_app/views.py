@@ -16,8 +16,8 @@ def address(request):
     Renders the starting page for entering a property address
     :param request: HTTP Request
     :return: app/address.html page
-    """ 
-    
+    """
+
     if request.method == "POST":
         address_str = str(request.POST['text_input'])
         prop = PropSetup(address_str)
@@ -55,7 +55,8 @@ def address(request):
         prop.utilities = 0
         prop.interest_rate = 4.75
         prop.down_payment_percentage = 25
-        prop.down_payment = int(prop.curr_value) * (prop.down_payment_percentage / 100.0)
+        prop.down_payment = int(prop.curr_value) * \
+            (prop.down_payment_percentage / 100.0)
         prop.closing_costs = int(.03 * int(prop.curr_value))
 
         request.session['prop'] = prop.__dict__

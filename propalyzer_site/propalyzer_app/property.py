@@ -347,7 +347,8 @@ class PropSetup:
         except IndexError:
             result_string = 'Unknown'
         try:
-            parsed = re.search('Livability(.*?)Amenities(.*?)Cost of Living(.*?)Crime(.*?)Employment(.*?)Housing(.*?)Schools(.*?)Weather(.*?)', result_string)
+            parsed = re.search(
+                'Livability(.*?)Amenities(.*?)Cost of Living(.*?)Crime(.*?)Employment(.*?)Housing(.*?)Schools(.*?)Weather(.*?)$', result_string)
         except AttributeError:
             livability = 'Unknown'
             cost_of_living = 'Unknown'
@@ -396,6 +397,10 @@ class PropSetup:
         }
 
     def set_disaster_info(self):
+        """
+        Method that generates the self.disaster_dict dictionary which includes the last 5 disasters from fema.gov for the county
+        of the property being researched. The dictionary includes disaster type, date, county, state, url, and fema id for each disaster. 
+        """
         local_disasters = []
         disaster_dict = {}
         if 'County' in self.county:
@@ -407,7 +412,8 @@ class PropSetup:
         else:
             county = self.county
         url1 = 'https://www.fema.gov/api/open/v1/DisasterDeclarationsSummaries?'
-        url2 = '$filter=state eq \'{}\'&$select=state, incidentType, declaredCountyArea, title, '.format(self.state)
+        url2 = '$filter=state eq \'{}\'&$select=state, incidentType, declaredCountyArea, title, '.format(
+            self.state)
         url3 = 'incidentEndDate&$orderby=incidentEndDate'
         url = url1+url2+url3
         resp = requests.get(url)
@@ -418,11 +424,16 @@ class PropSetup:
         last_5_disasters = local_disasters[-5:]
         c = 1
         if not last_5_disasters:
-            disaster_dict[1] = ['No Records Found', 'NA', 'NA', 'NA', 'NA', 'NA']
-            disaster_dict[2] = ['No Records Found', 'NA', 'NA', 'NA', 'NA', 'NA']
-            disaster_dict[3] = ['No Records Found', 'NA', 'NA', 'NA', 'NA', 'NA']
-            disaster_dict[4] = ['No Records Found', 'NA', 'NA', 'NA', 'NA', 'NA']
-            disaster_dict[5] = ['No Records Found', 'NA', 'NA', 'NA', 'NA', 'NA']
+            disaster_dict[1] = ['No Records Found',
+                                'NA', 'NA', 'NA', 'NA', 'NA']
+            disaster_dict[2] = ['No Records Found',
+                                'NA', 'NA', 'NA', 'NA', 'NA']
+            disaster_dict[3] = ['No Records Found',
+                                'NA', 'NA', 'NA', 'NA', 'NA']
+            disaster_dict[4] = ['No Records Found',
+                                'NA', 'NA', 'NA', 'NA', 'NA']
+            disaster_dict[5] = ['No Records Found',
+                                'NA', 'NA', 'NA', 'NA', 'NA']
         else:
             for disaster in last_5_disasters[::-1]:
                 disaster_dict[c] = [
@@ -435,13 +446,17 @@ class PropSetup:
                 ]
                 c += 1
             if not disaster_dict[2]:
-                disaster_dict[2] = ['No Records Found', 'NA', 'NA', 'NA', 'NA', 'NA']
+                disaster_dict[2] = ['No Records Found',
+                                    'NA', 'NA', 'NA', 'NA', 'NA']
             if not disaster_dict[3]:
-                disaster_dict[3] = ['No Records Found', 'NA', 'NA', 'NA', 'NA', 'NA']
+                disaster_dict[3] = ['No Records Found',
+                                    'NA', 'NA', 'NA', 'NA', 'NA']
             if not disaster_dict[4]:
-                disaster_dict[4] = ['No Records Found', 'NA', 'NA', 'NA', 'NA', 'NA']
+                disaster_dict[4] = ['No Records Found',
+                                    'NA', 'NA', 'NA', 'NA', 'NA']
             if not disaster_dict[5]:
-                disaster_dict[5] = ['No Records Found', 'NA', 'NA', 'NA', 'NA', 'NA']
+                disaster_dict[5] = ['No Records Found',
+                                    'NA', 'NA', 'NA', 'NA', 'NA']
 
         self.disaster_dict = disaster_dict
 
