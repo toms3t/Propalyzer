@@ -11,6 +11,7 @@ Web app that helps investors evaluate investment property opportunities. The use
 - Monthly Cash Flow
 - Scoring of area Livability, Crime, Cost of Living, Education, Employment, Housing, Weather relative to local and national averages
 - Localized natural disaster information
+- Local School information
 
 ## Getting Started
 
