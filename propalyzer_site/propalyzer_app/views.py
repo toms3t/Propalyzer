@@ -16,7 +16,7 @@ def address(request):
     Renders the starting page for entering a property address
     :param request: HTTP Request
     :return: app/address.html page
-    """ 
+    """
 
     if request.method == "POST":
         address_str = str(request.POST['text_input'])
@@ -33,6 +33,7 @@ def address(request):
 
         prop.set_xml_data()
         prop.set_areavibes_info()
+        prop.set_disaster_info()
 
         # Loggers
         LOG.debug('prop.address --- {}'.format(prop.address))
@@ -54,7 +55,8 @@ def address(request):
         prop.utilities = 0
         prop.interest_rate = 4.75
         prop.down_payment_percentage = 25
-        prop.down_payment = int(prop.curr_value) * (prop.down_payment_percentage / 100.0)
+        prop.down_payment = int(prop.curr_value) * \
+            (prop.down_payment_percentage / 100.0)
         prop.closing_costs = int(.03 * int(prop.curr_value))
 
         request.session['prop'] = prop.__dict__
@@ -168,12 +170,36 @@ def results(request):
         'livability': prop.areavibes_dict['livability'],
         'crime': prop.areavibes_dict['crime'],
         'cost_of_living': prop.areavibes_dict['cost_of_living'],
-        'education': prop.areavibes_dict['education'],
+        'schools': prop.areavibes_dict['schools'],
         'employment': prop.areavibes_dict['employment'],
         'housing': prop.areavibes_dict['housing'],
-        'weather': prop.areavibes_dict['weather']
+        'weather': prop.areavibes_dict['weather'],
+        'disaster1_type': prop.disaster_dict['1'][0],
+        'disaster1_date': prop.disaster_dict['1'][1],
+        'disaster1_county': prop.disaster_dict['1'][2],
+        'disaster1_url': prop.disaster_dict['1'][4],
+        'disaster1_title': prop.disaster_dict['1'][5],
+        'disaster2_type': prop.disaster_dict['2'][0],
+        'disaster2_date': prop.disaster_dict['2'][1],
+        'disaster2_county': prop.disaster_dict['2'][2],
+        'disaster2_url': prop.disaster_dict['2'][4],
+        'disaster2_title': prop.disaster_dict['2'][5],
+        'disaster3_type': prop.disaster_dict['3'][0],
+        'disaster3_date': prop.disaster_dict['3'][1],
+        'disaster3_county': prop.disaster_dict['3'][2],
+        'disaster3_url': prop.disaster_dict['3'][4],
+        'disaster3_title': prop.disaster_dict['3'][5],
+        'disaster4_type': prop.disaster_dict['4'][0],
+        'disaster4_date': prop.disaster_dict['4'][1],
+        'disaster4_county': prop.disaster_dict['4'][2],
+        'disaster4_url': prop.disaster_dict['4'][4],
+        'disaster4_title': prop.disaster_dict['4'][5],
+        'disaster5_type': prop.disaster_dict['5'][0],
+        'disaster5_date': prop.disaster_dict['5'][1],
+        'disaster5_county': prop.disaster_dict['5'][2],
+        'disaster5_url': prop.disaster_dict['5'][4],
+        'disaster5_title': prop.disaster_dict['5'][5],
     }
-
     request.session['PROP'] = prop.__dict__
     return render(request, 'app/results.html', context)
 

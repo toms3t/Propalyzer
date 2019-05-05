@@ -1,12 +1,13 @@
-import requests
-import re
-from django.utils import timezone
 from decimal import Decimal, getcontext
+import re
+import xml.etree.cElementTree as ET
+import requests
+from django.utils import timezone
 from bs4 import BeautifulSoup
 import usaddress
 from .county import County
 from .secret import Secret
-import xml.etree.cElementTree as ET
+
 
 ZWSID = Secret.ZWSID
 
@@ -87,7 +88,7 @@ class PropSetup:
             'livability': '',
             'cost_of_living': '',
             'housing': '',
-            'education': '',
+            'schools': '',
             'weather': '',
             'employment': ''
         }
@@ -151,6 +152,7 @@ class PropSetup:
         self.schools = ''
         self.school_scores = ''
         self.county = ''
+        self.disaster_dict = {}
 
     def create_test_obj(self):
         """
@@ -229,7 +231,7 @@ class PropSetup:
 
     def set_address(self):
         """
-        Mian function call to convert a string to an US address and generates necessary parameters to be used later.
+        Main function call to convert a string to an US address and generates necessary parameters to be used later.
         :return:
         """
         self.__convert_address()
@@ -289,11 +291,15 @@ class PropSetup:
         self.baths = self.zillow_dict['bathrooms']
         self.beds = mk_int(self.zillow_dict['bedrooms'])
         self.curr_value = mk_int(self.zillow_dict['zestimate/amount'])
-        self.value_low = mk_int(self.zillow_dict['zestimate/valuationRange/low'])
-        self.value_high = mk_int(self.zillow_dict['zestimate/valuationRange/high'])
+        self.value_low = mk_int(
+            self.zillow_dict['zestimate/valuationRange/low'])
+        self.value_high = mk_int(
+            self.zillow_dict['zestimate/valuationRange/high'])
         self.rent = mk_int(self.zillow_dict['rentzestimate/amount'])
-        self.rent_low = mk_int(self.zillow_dict['rentzestimate/valuationRange/low'])
-        self.rent_high = mk_int(self.zillow_dict['rentzestimate/valuationRange/high'])
+        self.rent_low = mk_int(
+            self.zillow_dict['rentzestimate/valuationRange/low'])
+        self.rent_high = mk_int(
+            self.zillow_dict['rentzestimate/valuationRange/high'])
         self.year_built = mk_int(self.zillow_dict['yearBuilt'])
         self.last_sold_date = self.zillow_dict['lastSoldDate']
         self.neighborhood = self.zillow_dict['localRealEstate']
@@ -327,7 +333,7 @@ class PropSetup:
             - Livability
             - Crime
             - Cost of Living
-            - Education
+            - schools
             - Employment
             - Housing
             - Weather
@@ -341,42 +347,118 @@ class PropSetup:
         except IndexError:
             result_string = 'Unknown'
         try:
-            livability = int(re.findall('Livability(\d+)', result_string)[0])
-        except IndexError:
-            livability = 0
-        try:
-            crime = re.findall('Crime(.*?)Edu', result_string)[0]
-        except IndexError:
-            crime = 'Unknown'
-        try:
-            cost_of_living = re.findall('Living(.*?)Crime', result_string)[0]
-        except IndexError:
+            parsed = re.search(
+                'Livability(.*?)Amenities(.*?)Cost of Living(.*?)Crime(.*?)Employment(.*?)Housing(.*?)Schools(.*?)Weather(.*?)$', result_string)
+        except AttributeError:
+            livability = 'Unknown'
             cost_of_living = 'Unknown'
-        try:
-            education = re.findall('Education(.*?)Empl', result_string)[0]
-        except IndexError:
-            education = 'Unknown'
-        try:
-            employment = re.findall('Employment(.*?)Hou', result_string)[0]
-        except IndexError:
+            crime = 'Unknown'
             employment = 'Unknown'
-        try:
-            housing = re.findall('Housing(.*?)Weather', result_string)[0]
-        except IndexError:
             housing = 'Unknown'
-        try:
-            weather = re.findall('Weather(.*)$', result_string)[0].rstrip()
-        except IndexError:
+            schools = 'Unknown'
             weather = 'Unknown'
+        if parsed:
+            try:
+                livability = parsed.group(1)
+            except IndexError:
+                livability = 'Unknown'
+            try:
+                cost_of_living = parsed.group(3)
+            except IndexError:
+                cost_of_living = 'Unknown'
+            try:
+                crime = parsed.group(4)
+            except IndexError:
+                crime = 'Unknown'
+            try:
+                employment = parsed.group(5)
+            except IndexError:
+                employment = 'Unknown'
+            try:
+                housing = parsed.group(6)
+            except IndexError:
+                housing = 'Unknown'
+            try:
+                schools = parsed.group(7)
+            except IndexError:
+                schools = 'Unknown'
+            try:
+                weather = parsed.group(8)
+            except IndexError:
+                weather = 'Unknown'
         self.areavibes_dict = {
             'livability': livability,
             'crime': crime,
             'cost_of_living': cost_of_living,
-            'education': education,
+            'schools': schools,
             'employment': employment,
             'housing': housing,
             'weather': weather
         }
+
+    def set_disaster_info(self):
+        """
+        Method that generates the self.disaster_dict dictionary which includes the last 5 disasters from fema.gov for the county
+        of the property being researched. The dictionary includes disaster type, date, county, state, url, and fema id for each disaster. 
+        """
+        local_disasters = []
+        disaster_dict = {}
+        if 'County' in self.county:
+            county_pattern = re.search('^(.*?) County', self.county)
+            try:
+                county = county_pattern.group(1)
+            except AttributeError:
+                county = self.county
+        else:
+            county = self.county
+        url1 = 'https://www.fema.gov/api/open/v1/DisasterDeclarationsSummaries?'
+        url2 = '$filter=state eq \'{}\'&$select=state, incidentType, declaredCountyArea, title, '.format(
+            self.state)
+        url3 = 'incidentEndDate&$orderby=incidentEndDate'
+        url = url1+url2+url3
+        resp = requests.get(url)
+        resp_json = resp.json()
+        for dis in resp_json['DisasterDeclarationsSummaries']:
+            if county in dis['declaredCountyArea']:
+                local_disasters.append(dis)
+        last_5_disasters = local_disasters[-5:]
+        c = 1
+        if not last_5_disasters:
+            disaster_dict[1] = ['No Records Found',
+                                'NA', 'NA', 'NA', 'NA', 'NA']
+            disaster_dict[2] = ['No Records Found',
+                                'NA', 'NA', 'NA', 'NA', 'NA']
+            disaster_dict[3] = ['No Records Found',
+                                'NA', 'NA', 'NA', 'NA', 'NA']
+            disaster_dict[4] = ['No Records Found',
+                                'NA', 'NA', 'NA', 'NA', 'NA']
+            disaster_dict[5] = ['No Records Found',
+                                'NA', 'NA', 'NA', 'NA', 'NA']
+        else:
+            for disaster in last_5_disasters[::-1]:
+                disaster_dict[c] = [
+                    disaster['incidentType'],
+                    disaster['incidentEndDate'][:10],
+                    disaster['declaredCountyArea'],
+                    disaster['state'],
+                    url1[:-1]+'/'+disaster['id'],
+                    disaster['title']
+                ]
+                c += 1
+            if not disaster_dict[2]:
+                disaster_dict[2] = ['No Records Found',
+                                    'NA', 'NA', 'NA', 'NA', 'NA']
+            if not disaster_dict[3]:
+                disaster_dict[3] = ['No Records Found',
+                                    'NA', 'NA', 'NA', 'NA', 'NA']
+            if not disaster_dict[4]:
+                disaster_dict[4] = ['No Records Found',
+                                    'NA', 'NA', 'NA', 'NA', 'NA']
+            if not disaster_dict[5]:
+                disaster_dict[5] = ['No Records Found',
+                                    'NA', 'NA', 'NA', 'NA', 'NA']
+
+        self.disaster_dict = disaster_dict
 
     @property
     def __str__(self):
@@ -390,7 +472,8 @@ class PropSetup:
     @property
     def init_cash_invested_calc(self):
         self.down_payment = self.down_payment_calc
-        self.init_cash_invest = int(self.down_payment + mk_int(self.closing_costs) + mk_int(self.initial_improvements))
+        self.init_cash_invest = int(
+            self.down_payment + mk_int(self.closing_costs) + mk_int(self.initial_improvements))
         return self.init_cash_invest
 
     @property
@@ -402,14 +485,14 @@ class PropSetup:
     @property
     def oper_exp_calc(self):
         self.oper_exp = int((
-                (mk_int(self.resign_fee) / 12) +
-                (mk_int(self.taxes) / 12) +
-                (mk_int(self.hoa) / 12) +
-                mk_int(self.utilities) +
-                mk_int(self.prop_management_fee) +
-                (mk_int(self.insurance) / 12) +
-                (mk_int(self.maintenance) / 12) +
-                (mk_int(self.tenant_placement_fee) / 12)
+            (mk_int(self.resign_fee) / 12) +
+            (mk_int(self.taxes) / 12) +
+            (mk_int(self.hoa) / 12) +
+            mk_int(self.utilities) +
+            mk_int(self.prop_management_fee) +
+            (mk_int(self.insurance) / 12) +
+            (mk_int(self.maintenance) / 12) +
+            (mk_int(self.tenant_placement_fee) / 12)
         )
         )
         return self.oper_exp
@@ -428,7 +511,8 @@ class PropSetup:
     def oper_exp_ratio_calc(self):
         getcontext().prec = 2
         try:
-            self.oper_exp_ratio = float(Decimal(self.oper_exp) / Decimal(self.oper_income))
+            self.oper_exp_ratio = float(
+                Decimal(self.oper_exp) / Decimal(self.oper_income))
         except ZeroDivisionError:
             self.oper_exp_ratio = 0.00
         self.oper_exp_ratio = self.oper_exp_ratio + 0
@@ -439,7 +523,8 @@ class PropSetup:
         getcontext().prec = 2
         if self.mort_payment:
             try:
-                self.debt_cover_ratio = float(Decimal(self.net_oper_income) / Decimal(self.mort_payment))
+                self.debt_cover_ratio = float(
+                    Decimal(self.net_oper_income) / Decimal(self.mort_payment))
             except ZeroDivisionError:
                 self.debt_cover_ratio = 0.00
             return self.debt_cover_ratio
@@ -451,7 +536,8 @@ class PropSetup:
         getcontext().prec = 2
         self.initial_market_value = mk_int(self.curr_value)
         try:
-            self.cap_rate = float(Decimal((self.net_oper_income * 12) / Decimal(self.initial_market_value)))
+            self.cap_rate = float(
+                Decimal((self.net_oper_income * 12) / Decimal(self.initial_market_value)))
         except ZeroDivisionError:
             self.cap_rate = 0.00
         self.cap_rate = self.cap_rate + 0
@@ -461,14 +547,16 @@ class PropSetup:
     def cash_on_cash_calc(self):
         getcontext().prec = 3
         try:
-            self.cash_on_cash_return = float(Decimal((self.cash_flow * 12) / Decimal(self.init_cash_invest)))
+            self.cash_on_cash_return = float(
+                Decimal((self.cash_flow * 12) / Decimal(self.init_cash_invest)))
         except ZeroDivisionError:
             self.cash_on_cash_return = 0.00
         return self.cash_on_cash_return
 
     @property
     def down_payment_calc(self):
-        self.down_payment = int((float(self.down_payment_percentage) * mk_int(self.curr_value)) / 100)
+        self.down_payment = int(
+            (float(self.down_payment_percentage) * mk_int(self.curr_value)) / 100)
         return self.down_payment
 
     @property
@@ -488,7 +576,8 @@ class PropSetup:
     @property
     def cost_per_sqft_calc(self):
         try:
-            self.cost_per_sqft = int(mk_int(self.curr_value) / mk_int(self.sqft))
+            self.cost_per_sqft = int(
+                mk_int(self.curr_value) / mk_int(self.sqft))
         except ZeroDivisionError:
             self.cost_per_sqft = 0
         return self.cost_per_sqft
@@ -521,7 +610,8 @@ class PropSetup:
     def rtv_calc(self):
         getcontext().prec = 2
         try:
-            self.rtv = float(Decimal(mk_int(self.rent)) / Decimal(mk_int(self.curr_value)))
+            self.rtv = float(Decimal(mk_int(self.rent)) /
+                             Decimal(mk_int(self.curr_value)))
         except ZeroDivisionError:
             self.rtv = 0.00
         self.rtv = self.rtv + 0
