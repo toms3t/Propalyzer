@@ -156,7 +156,6 @@ class PropSetup:
         self.county = ''
         self.disaster_dict = {}
 
-
         try:
             self.prop_management_fee = int(.09 * int(self.rent))
         except ValueError:
@@ -173,8 +172,6 @@ class PropSetup:
         self.down_payment = int(self.curr_value) * \
             (self.down_payment_percentage / 100.0)
         self.closing_costs = int(.03 * int(self.curr_value))
-
-
 
     def get_info(self):
         self.set_address()
@@ -372,7 +369,6 @@ class PropSetup:
     def set_areavibes_info(self):
         """
         Method that generates the areavibes dictionary with areavibes information for a given address.
-        :param ADDRESSDICT: Identified components of the property address (i.e. street name, city, zip code, etc.)
         :return: areavibes_dict - Dictionary that contains ratings sourced from areavibes.com based on a given address
         for the following categories:
             - Livability
@@ -391,9 +387,26 @@ class PropSetup:
             result_string = info_block[0].get_text()
         except IndexError:
             result_string = 'Unknown'
+
+        parsed = ''
+        livability = ''
+        cost_of_living = ''
+        crime = ''
+        employment = ''
+        housing = ''
+        schools = ''
+        weather = ''
+
         try:
             parsed = re.search(
-                'Livability(.*?)Amenities(.*?)Cost of Living(.*?)Crime(.*?)Employment(.*?)Housing(.*?)Schools(.*?)Weather(.*?)$', result_string)
+                'Livability(.*?)'
+                'Amenities(.*?)'
+                'Cost of Living(.*?)'
+                'Crime(.*?)'
+                'Employment(.*?)'
+                'Housing(.*?)'
+                'Schools(.*?)'
+                'Weather(.*?)$', result_string)
         except AttributeError:
             livability = 'Unknown'
             cost_of_living = 'Unknown'
@@ -443,8 +456,9 @@ class PropSetup:
 
     def set_disaster_info(self):
         """
-        Method that generates the self.disaster_dict dictionary which includes the last 5 disasters from fema.gov for the county
-        of the property being researched. The dictionary includes disaster type, date, county, state, url, and fema id for each disaster. 
+        Method that generates the self.disaster_dict dictionary which includes the last 5 disasters from fema.gov for
+        the county of the property being researched. The dictionary includes disaster type, date, county, state, url,
+        and fema id for each disaster.
         """
         local_disasters = []
         disaster_dict = {}
