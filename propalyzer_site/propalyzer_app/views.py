@@ -21,19 +21,14 @@ def address(request):
     if request.method == "POST":
         address_str = str(request.POST['text_input'])
         prop = PropSetup(address_str)
-        prop.set_address()
+        prop.get_info()
         if prop.error:
             return TemplateResponse(request, 'app/addressnotfound.html')
 
-        prop.set_zillow_url()
         if 'ConnectionError' in prop.error:
             return TemplateResponse(request, 'app/connection_error.html')
         if 'AddressNotFound' in prop.error:
             return TemplateResponse(request, 'app/addressnotfound.html')
-
-        prop.set_xml_data()
-        prop.set_areavibes_info()
-        prop.set_disaster_info()
 
         # Loggers
         LOG.debug('prop.address --- {}'.format(prop.address))
@@ -42,24 +37,7 @@ def address(request):
         LOG.debug('prop.zillow_dict --- {}'.format(prop.zillow_dict))
         LOG.debug('areavibes_dict--- {}'.format(prop.areavibes_dict))
 
-        try:
-            prop.prop_management_fee = int(.09 * int(prop.rent))
-        except ValueError:
-            prop.prop_management_fee = 0
-        prop.initial_market_value = prop.curr_value
-        prop.initial_improvements = 0
-        prop.insurance = 1000
-        prop.maintenance = 800
-        prop.taxes = 1500
-        prop.hoa = 0
-        prop.utilities = 0
-        prop.interest_rate = 4.75
-        prop.down_payment_percentage = 25
-        prop.down_payment = int(prop.curr_value) * \
-            (prop.down_payment_percentage / 100.0)
-        prop.closing_costs = int(.03 * int(prop.curr_value))
-
-        request.session['prop'] = prop.__dict__
+        request.session['prop'] = prop.dict_from_class()
         return redirect('edit')
     else:
         context = {
@@ -105,17 +83,7 @@ def results(request):
     """
 
     prop_data = request.session.get('prop')
-    schools = GreatSchools(
-        prop_data['address'], prop_data['city'], prop_data['state'], prop_data['zip_code'], prop_data['county'])
-    schools.set_greatschool_urls()
-    if schools.api_key and schools.DAILY_API_CALL_COUNT <= 2950:
-        for url in schools.urls:
-            schools.get_greatschool_xml(url)
 
-    else:
-        schools.elem_school = 'Unknown'
-        schools.mid_school = 'Unknown'
-        schools.high_school = 'Unknown'
     prop = PropSetup(prop_data['address'])
     for key in prop_data.keys():
         prop.__dict__[key] = prop_data[key]
@@ -155,12 +123,12 @@ def results(request):
         'oper_exp_ratio': '{0:.1f}'.format(prop.oper_exp_ratio_calc * 100) + '%',
         'debt_coverage_ratio': prop.debt_coverage_ratio_calc,
         'cash_on_cash': '{0:.2f}%'.format(prop.cash_on_cash_calc * 100),
-        'elem_school': schools.elem_school,
-        'elem_school_score': schools.elem_school_score,
-        'mid_school': schools.mid_school,
-        'mid_school_score': schools.mid_school_score,
-        'high_school': schools.high_school,
-        'high_school_score': schools.high_school_score,
+        'elem_school': prop.schools['elem_school'],
+        'elem_school_score': prop.schools['elem_school_score'],
+        'mid_school': prop.schools['mid_school'],
+        'mid_school_score': prop.schools['mid_school_score'],
+        'high_school': prop.schools['high_school'],
+        'high_school_score': prop.schools['high_school_score'],
         'year_built': prop.year_built,
         'county': prop.county,
         'nat_disasters': 'Unknown',

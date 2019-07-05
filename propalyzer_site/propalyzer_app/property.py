@@ -5,6 +5,8 @@ import requests
 from django.utils import timezone
 from bs4 import BeautifulSoup
 import usaddress
+
+from .greatschools import GreatSchools
 from .county import County
 from .secret import Secret
 
@@ -153,6 +155,49 @@ class PropSetup:
         self.school_scores = ''
         self.county = ''
         self.disaster_dict = {}
+
+
+        try:
+            self.prop_management_fee = int(.09 * int(self.rent))
+        except ValueError:
+            self.prop_management_fee = 0
+        self.initial_market_value = self.curr_value
+        self.initial_improvements = 0
+        self.insurance = 1000
+        self.maintenance = 800
+        self.taxes = 1500
+        self.hoa = 0
+        self.utilities = 0
+        self.interest_rate = 4.75
+        self.down_payment_percentage = 25
+        self.down_payment = int(self.curr_value) * \
+            (self.down_payment_percentage / 100.0)
+        self.closing_costs = int(.03 * int(self.curr_value))
+
+
+
+    def get_info(self):
+        self.set_address()
+        self.set_zillow_url()
+        self.set_xml_data()
+        self.set_areavibes_info()
+        self.set_disaster_info()
+        self.schools = GreatSchools(
+            self.address, self.city, self.state, self.zip_code, self.county)
+        self.schools.set_greatschool_urls()
+        if self.schools.api_key and self.schools.DAILY_API_CALL_COUNT <= 2950:
+            for url in self.schools.urls:
+                self.schools.get_greatschool_xml(url)
+
+        else:
+            self.schools.elem_school = 'Unknown'
+            self.schools.mid_school = 'Unknown'
+            self.schools.high_school = 'Unknown'
+        self.schools = dict((key, value) for (key, value) in self.schools.__dict__.items())
+
+    def dict_from_class(self):
+
+        return dict((key, value) for (key, value) in self.__dict__.items())
 
     def create_test_obj(self):
         """

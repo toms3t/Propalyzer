@@ -25,7 +25,7 @@ class GreatSchools:
 		self.mid_url = ''
 		self.high_url = ''
 		self.urls = []
-		self.api_key = True
+		self.api_key = False
 		self.error = ''
 		self.elem_school = ''
 		self.elem_school_score = ''
