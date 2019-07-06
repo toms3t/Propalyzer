@@ -64,13 +64,12 @@ steps:
       print('##vso[task.setvariable variable=projectRoot]{}'.format(project_location))
 
 - script: |
-    cp $(secret.secureFilePath) /
-    cp $(settings.secureFilePath) /
+    cp $(secret.secureFilePath) /propalyzer_site/propalyzer_app/
+    cp $(settings.secureFilePath) /propalyzer_site/propalyzer_site/
     cp $(startup.secureFilePath) /
-    cp $(urls.secureFilePath) /
-    cp $(wsgi.secureFilePath) /
+    cp $(urls.secureFilePath) /propalyzer_site/propalyzer_app/
+    cp $(wsgi.secureFilePath) /propalyzer_site/propalyzer_site/
     cp $(req_docker.secureFilePath) /
-    ls
   displayName: 'Copy files to build agent root dir'
 
 - script: |
