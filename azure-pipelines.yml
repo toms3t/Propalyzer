@@ -34,8 +34,8 @@ steps:
       print('##vso[task.setvariable variable=projectRoot]{}'.format(project_location))
 
 - script: |
-    displayName: 'Copy secret.py to directory'
     cp $(secret.secureFilePath) /Propalyzer/propalyzer_site/propalyzer_app/
+  displayName: 'Copy secret.py to directory'
 
 - script: |
     python -m pip install --upgrade pip setuptools wheel django
