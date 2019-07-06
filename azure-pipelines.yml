@@ -34,7 +34,7 @@ steps:
       print('##vso[task.setvariable variable=projectRoot]{}'.format(project_location))
 
 - script: |
-    cp $(secret.secureFilePath) /Propalyzer/propalyzer_site/propalyzer_app/
+    cp $(secret.secureFilePath) /Propalyzer/propalyzer_site/propalyzer_app/secret.py
   displayName: 'Copy secret.py to directory'
 
 - script: |
