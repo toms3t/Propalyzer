@@ -1,6 +1,6 @@
 FROM ubuntu:latest
 
-COPY requirements.txt /
+COPY requirements_docker.txt /
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -14,7 +14,7 @@ RUN apt-get --assume-yes install git-all
 
 RUN apt-get --assume-yes install vim
 
-RUN pip3 install  --trusted-host pypi.python.org -r requirements.txt
+RUN pip3 install  --trusted-host pypi.python.org -r requirements_docker.txt
 
 RUN git clone https://github.com/toms3t/Propalyzer.git
 
