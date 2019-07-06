@@ -17,25 +17,25 @@ steps:
   inputs:
     secureFile: 'secret.py'
 
-- task: DownloadSecureFile@2
+- task: DownloadSecureFile@1
   name: settings
   displayName: 'Download settings.py file'
   inputs:
     secureFile: 'settings.py'
 
-- task: DownloadSecureFile@3
+- task: DownloadSecureFile@1
   name: startup
   displayName: 'Download startup.sh file'
   inputs:
     secureFile: 'startup.sh'
 
-- task: DownloadSecureFile@4
+- task: DownloadSecureFile@1
   name: urls
   displayName: 'Download urls.py file'
   inputs:
     secureFile: 'urls.py'
 
-- task: DownloadSecureFile@5
+- task: DownloadSecureFile@1
   name: wsgi
   displayName: 'Download wsgi.py file'
   inputs:
