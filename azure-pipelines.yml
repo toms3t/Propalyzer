@@ -17,6 +17,30 @@ steps:
   inputs:
     secureFile: 'secret.py'
 
+- task: DownloadSecureFile@2
+  name: settings
+  displayName: 'Download settings.py file'
+  inputs:
+    secureFile: 'settings.py'
+
+- task: DownloadSecureFile@3
+  name: startup
+  displayName: 'Download startup.sh file'
+  inputs:
+    secureFile: 'startup.sh'
+
+- task: DownloadSecureFile@4
+  name: urls
+  displayName: 'Download urls.py file'
+  inputs:
+    secureFile: 'urls.py'
+
+- task: DownloadSecureFile@5
+  name: wsgi
+  displayName: 'Download wsgi.py file'
+  inputs:
+    secureFile: 'wsgi.py'
+
 - task: PythonScript@0
   displayName: 'Export project path'
   inputs:
@@ -35,7 +59,11 @@ steps:
 
 - script: |
     cp $(secret.secureFilePath) /
-  displayName: 'Copy secret.py to root dir'
+    cp $(settings.secureFilePath) /
+    cp $(startup.secureFilePath) /
+    cp $(urls.secureFilePath) /
+    cp $(wsgi.secureFilePath) /
+  displayName: 'Copy files to root dir'
 
 - script: |
     python -m pip install --upgrade pip setuptools wheel django
