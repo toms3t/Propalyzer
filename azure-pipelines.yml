@@ -41,6 +41,12 @@ steps:
   inputs:
     secureFile: 'wsgi.py'
 
+- task: DownloadSecureFile@1
+  name: req_docker
+  displayName: 'Download requirements file'
+  inputs:
+    secureFile: 'requirements_docker.txt'
+
 - task: PythonScript@0
   displayName: 'Export project path'
   inputs:
@@ -63,11 +69,13 @@ steps:
     cp $(startup.secureFilePath) /
     cp $(urls.secureFilePath) /
     cp $(wsgi.secureFilePath) /
-  displayName: 'Copy files to root dir'
+    cp $(req_docker.secureFilePath) /
+    cp /secret.py /Propalyzer/propalyzer_site/propalyzer_app/
+  displayName: 'Copy files to build agent root dir'
 
 - script: |
     python -m pip install --upgrade pip setuptools wheel django
-    pip install -r requirements.txt
+    pip install -r requirements_docker.txt
     pip install unittest-xml-reporting
   displayName: 'Install prerequisites'
 
