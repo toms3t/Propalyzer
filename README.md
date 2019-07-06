@@ -1,6 +1,8 @@
 # Propalyzer
 Production site can be found at http://propalyzer.info to try functionality
 
+[![Build Status](https://tomset.visualstudio.com/Propalyzer/_apis/build/status/toms3t.Propalyzer?branchName=master)](https://tomset.visualstudio.com/Propalyzer/_build/latest?definitionId=7&branchName=master)
+
 **Time to get up and running = less than 10 minutes**
 
 Web app that helps investors evaluate investment property opportunities. The user inputs a US residential property address and the app uses Zillow's API to pull property details. The app presents the property details to the user for inspection and the ability to edit. With the details finalized, the app will crunch the data and return information about the property including:
