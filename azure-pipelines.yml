@@ -11,6 +11,12 @@ steps:
     versionSpec: 3.6
     architecture: 'x64'
 
+- task: DownloadSecureFile@1
+  name: secret
+  displayName: 'Download secret.py file'
+  inputs:
+    secureFile: 'secret.py'
+
 - task: PythonScript@0
   displayName: 'Export project path'
   inputs:
@@ -26,6 +32,10 @@ steps:
       project_location = path.dirname(path.abspath(manage_py))
       print('Found Django project in', project_location)
       print('##vso[task.setvariable variable=projectRoot]{}'.format(project_location))
+
+- script: |
+    displayName: 'Copy secret.py to directory'
+    cp $(secret.secureFilePath) /Propalyzer/propalyzer_site/propalyzer_app/
 
 - script: |
     python -m pip install --upgrade pip setuptools wheel django
