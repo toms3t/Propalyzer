@@ -2,7 +2,6 @@ from datetime import datetime
 import logging
 from django.shortcuts import render, redirect
 from django.template.response import TemplateResponse
-from django.utils import timezone
 from .forms import AddressForm
 from .forms import PropertyForm
 from .property import PropSetup

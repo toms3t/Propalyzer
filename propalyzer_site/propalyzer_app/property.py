@@ -415,8 +415,8 @@ class PropSetup:
         else:
             county = self.county
         url1 = 'https://www.fema.gov/api/open/v1/DisasterDeclarationsSummaries?'
-        url2 = '$filter=state eq \'{}\'&$select=state, incidentType, declaredCountyArea, title, '.format(
-            self.state)
+        url2 = "$filter=state eq '{}'&$select=state, incidentType, declaredCountyArea, title, ".format(
+            self.state.upper())
         url3 = 'incidentEndDate&$orderby=incidentEndDate'
         url = url1+url2+url3
         resp = requests.get(url)
