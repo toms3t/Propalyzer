@@ -107,3 +107,9 @@ steps:
   inputs:
     command: login
     containerRegistry: MyContainerRegistry
+
+- task: Docker@1
+  displayName: Build and Push to ACR
+  inputs:
+    command: buildAndPush
+    repository: prop_dev_repo
