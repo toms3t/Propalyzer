@@ -16,7 +16,7 @@ RUN apt-get --assume-yes install vim
 
 RUN pip3 install  --trusted-host pypi.python.org -r requirements_docker.txt
 
-RUN git clone https://github.com/toms3t/Propalyzer.git
+RUN git clone -b azure-pipelines --single-branch https://github.com/toms3t/Propalyzer.git
 
 RUN cd Propalyzer/propalyzer_site
 
