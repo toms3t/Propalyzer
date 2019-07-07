@@ -2,17 +2,21 @@ FROM ubuntu:latest
 
 COPY requirements_docker.txt /
 
+COPY secret.py /Propalyzer/propalyzer_site/propalyzer_app/
+
+COPY settings.py /Propalyzer/propalyzer_site/propalyzer_site/
+
+COPY wsgi.py /Propalyzer/propalyzer_site/propalyzer_site/
+
+COPY urls.py /Propalyzer/propalyzer_site/propalyzer_app/
+
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update
 
-RUN apt-get --assume-yes install inetutils-ping
-
 RUN apt-get --assume-yes install python3-pip
 
 RUN apt-get --assume-yes install git-all
-
-RUN apt-get --assume-yes install vim
 
 RUN pip3 install  --trusted-host pypi.python.org -r requirements_docker.txt
 
