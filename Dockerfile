@@ -26,16 +26,6 @@ RUN git config --global user.name "Tom Setliffe"
 
 EXPOSE 80
 
-COPY secret.py /Propalyzer/propalyzer_site/propalyzer_app/
-
-COPY s/secret.py /Propalyzer/propalyzer_site/propalyzer_site/
-
-COPY settings.py /Propalyzer/propalyzer_site/propalyzer_site/
-
-COPY wsgi.py /Propalyzer/propalyzer_site/propalyzer_site/
-
-COPY urls.py /Propalyzer/propalyzer_site/propalyzer_app/
-
 WORKDIR Propalyzer/propalyzer_site
 
 COPY startup.sh /Propalyzer/propalyzer_site/
