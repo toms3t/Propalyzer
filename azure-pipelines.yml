@@ -11,6 +11,48 @@ steps:
     versionSpec: 3.6
     architecture: 'x64'
 
+- task: DownloadSecureFile@1
+  name: secret
+  displayName: 'Download secret.py file'
+  inputs:
+    secureFile: 'secret.py'
+
+- task: DownloadSecureFile@1
+  name: settings
+  displayName: 'Download settings.py file'
+  inputs:
+    secureFile: 'settings.py'
+
+- task: DownloadSecureFile@1
+  name: startup
+  displayName: 'Download startup.sh file'
+  inputs:
+    secureFile: 'startup.sh'
+
+- task: DownloadSecureFile@1
+  name: urls
+  displayName: 'Download urls.py file'
+  inputs:
+    secureFile: 'urls.py'
+
+- task: DownloadSecureFile@1
+  name: wsgi
+  displayName: 'Download wsgi.py file'
+  inputs:
+    secureFile: 'wsgi.py'
+
+- task: DownloadSecureFile@1
+  name: req_docker
+  displayName: 'Download requirements file'
+  inputs:
+    secureFile: 'requirements_docker.txt'
+
+- task: DownloadSecureFile@1
+  name: dockerfile
+  displayName: 'Download Dockerfile'
+  inputs:
+    secureFile: 'Dockerfile'
+
 - task: PythonScript@0
   displayName: 'Export project path'
   inputs:
@@ -28,8 +70,34 @@ steps:
       print('##vso[task.setvariable variable=projectRoot]{}'.format(project_location))
 
 - script: |
+    cp $(secret.secureFilePath) /secret.py
+    cp $(settings.secureFilePath) /settings.py
+    cp $(startup.secureFilePath) /startup.sh
+    cp $(urls.secureFilePath) /urls.py
+    cp $(wsgi.secureFilePath) /wsgi.py
+    cp $(req_docker.secureFilePath) /requirements_docker.txt
+    cp $(dockerfile.secureFilePath) /Dockerfile
+  displayName: 'Copy files to build agent root dir'
+
+- bash: |
+    cp settings.py /propalyzer_site/propalyzer_app/
+    ls /propalyzer_site/propalyzer_app
+  displayName: 'bash copy'
+
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: /
+    contents: |
+      /settings.py 
+    targetFolder: /propalyzer_site/propalyzer_app/
+    #cleanTargetFolder: false # Optional
+    overWrite: true
+    #flattenFolders: false # Optional
+    #preserveTimestamp: false # Optional
+
+- script: |
     python -m pip install --upgrade pip setuptools wheel django
-    pip install -r requirements.txt
+    pip install -r requirements_docker.txt
     pip install unittest-xml-reporting
   displayName: 'Install prerequisites'
 
@@ -45,13 +113,8 @@ steps:
     testResultsFiles: "**/TEST-*.xml"
     testRunTitle: 'Python $(PYTHON_VERSION)'
 
-- task: Docker@2
+- task: Docker@1
   displayName: Login to Azure Container Registry
   inputs:
     command: login
     containerRegistry: MyContainerRegistry
-- task: Docker@2
-  displayName: Build and Push to ACR
-  inputs:
-    command: buildAndPush
-    repository: prop_prod
