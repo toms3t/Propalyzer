@@ -69,9 +69,18 @@ steps:
       print('Found Django project in', project_location)
       print('##vso[task.setvariable variable=projectRoot]{}'.format(project_location))
 
+- task: CopyFiles@2
+  inputs:
+    #sourceFolder: # Optional
+    #contents: '**' 
+    targetFolder: /propalyzer_site/propalyzer_app/
+    #cleanTargetFolder: false # Optional
+    overWrite: true
+    #flattenFolders: false # Optional
+    #preserveTimestamp: false # Optional
+
 - script: |
     cp $(secret.secureFilePath) /secret.py
-    cp secret.py /propalyzer_site/propalyzer_app/secret.py
     cp $(settings.secureFilePath) /settings.py
     cp $(startup.secureFilePath) /startup.sh
     cp $(urls.secureFilePath) /urls.py
