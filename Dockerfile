@@ -2,14 +2,6 @@ FROM ubuntu:latest
 
 COPY requirements_docker.txt /
 
-COPY secret.py /Propalyzer/propalyzer_site/propalyzer_app/
-
-COPY settings.py /Propalyzer/propalyzer_site/propalyzer_site/
-
-COPY wsgi.py /Propalyzer/propalyzer_site/propalyzer_site/
-
-COPY urls.py /Propalyzer/propalyzer_site/propalyzer_app/
-
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update
@@ -21,6 +13,14 @@ RUN apt-get --assume-yes install git-all
 RUN pip3 install  --trusted-host pypi.python.org -r requirements_docker.txt
 
 RUN git clone -b azure-pipelines --single-branch https://github.com/toms3t/Propalyzer.git
+
+COPY secret.py /Propalyzer/propalyzer_site/propalyzer_app/
+
+COPY settings.py /Propalyzer/propalyzer_site/propalyzer_site/
+
+COPY wsgi.py /Propalyzer/propalyzer_site/propalyzer_site/
+
+COPY urls.py /Propalyzer/propalyzer_site/propalyzer_app/
 
 RUN cd Propalyzer/propalyzer_site
 
