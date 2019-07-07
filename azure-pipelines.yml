@@ -70,6 +70,11 @@ steps:
     cp $(urls.secureFilePath) /propalyzer_site/propalyzer_app/
     cp $(wsgi.secureFilePath) /propalyzer_site/propalyzer_site/
     cp $(req_docker.secureFilePath) /
+    ls
+    cd propalyzer_site
+    ls
+    cd propalyzer_app
+    ls
   displayName: 'Copy files to build agent root dir'
 
 - script: |
