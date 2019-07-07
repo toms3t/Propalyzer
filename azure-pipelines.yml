@@ -47,6 +47,12 @@ steps:
   inputs:
     secureFile: 'requirements_docker.txt'
 
+- task: DownloadSecureFile@1
+  name: dockerfile
+  displayName: 'Download Dockerfile'
+  inputs:
+    secureFile: 'Dockerfile'
+
 - task: PythonScript@0
   displayName: 'Export project path'
   inputs:
@@ -64,12 +70,14 @@ steps:
       print('##vso[task.setvariable variable=projectRoot]{}'.format(project_location))
 
 - script: |
-    cp $(secret.secureFilePath) /propalyzer_site/propalyzer_app/secret.py
-    cp $(settings.secureFilePath) /propalyzer_site/propalyzer_site/settings.py
+    cp $(secret.secureFilePath) /secret.py
+    cp secret.py /propalyzer_site/propalyzer_app/secret.py
+    cp $(settings.secureFilePath) /settings.py
     cp $(startup.secureFilePath) /startup.sh
-    cp $(urls.secureFilePath) /propalyzer_site/propalyzer_app/urls.py
-    cp $(wsgi.secureFilePath) /propalyzer_site/propalyzer_site/wsgi.py
+    cp $(urls.secureFilePath) /urls.py
+    cp $(wsgi.secureFilePath) /wsgi.py
     cp $(req_docker.secureFilePath) /requirements_docker.txt
+    cp $(dockerfile.secureFilePath) /Dockerfile
   displayName: 'Copy files to build agent root dir'
 
 - script: |
@@ -90,13 +98,8 @@ steps:
     testResultsFiles: "**/TEST-*.xml"
     testRunTitle: 'Python $(PYTHON_VERSION)'
 
-- task: Docker@2
+- task: Docker@1
   displayName: Login to Azure Container Registry
   inputs:
     command: login
     containerRegistry: MyContainerRegistry
-- task: Docker@2
-  displayName: Build and Push to ACR
-  inputs:
-    command: buildAndPush
-    repository: prop_prod
