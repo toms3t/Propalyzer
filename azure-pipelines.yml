@@ -82,7 +82,8 @@ steps:
 - task: CopyFiles@2
   inputs:
     sourceFolder: /
-    contents: 'settings.py' 
+    contents: |
+      /settings.py 
     targetFolder: /propalyzer_site/propalyzer_app/
     #cleanTargetFolder: false # Optional
     overWrite: true
