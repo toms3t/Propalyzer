@@ -79,6 +79,10 @@ steps:
     cp $(dockerfile.secureFilePath) /Dockerfile
   displayName: 'Copy files to build agent root dir'
 
+- task: ShellScript@2
+  inputs:
+    scriptPath: /filecopy.sh
+
 - bash: |
     cp settings.py /propalyzer_site/propalyzer_app/
     ls /propalyzer_site/propalyzer_app
