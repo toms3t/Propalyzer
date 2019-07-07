@@ -84,22 +84,6 @@ steps:
     scriptPath: filecopy.sh
     cwd: '/'
 
-- bash: |
-    cp settings.py /propalyzer_site/propalyzer_app/
-    ls /propalyzer_site/propalyzer_app
-  displayName: 'bash copy'
-
-- task: CopyFiles@2
-  inputs:
-    sourceFolder: /
-    contents: |
-      /settings.py 
-    targetFolder: /propalyzer_site/propalyzer_app/
-    #cleanTargetFolder: false # Optional
-    overWrite: true
-    #flattenFolders: false # Optional
-    #preserveTimestamp: false # Optional
-
 - script: |
     python -m pip install --upgrade pip setuptools wheel django
     pip install -r requirements_docker.txt
