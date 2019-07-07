@@ -1,7 +1,8 @@
 # Propalyzer
-Production site can be found at http://propalyzer.info to try functionality
 
 [![Build Status](https://tomset.visualstudio.com/Blog/_apis/build/status/toms3t.MyBlog?branchName=master)](https://tomset.visualstudio.com/Blog/_build/latest?definitionId=6&branchName=master)
+
+Production site can be found at http://propalyzer.info to try functionality
 
 **Time to get up and running = less than 10 minutes**
 
