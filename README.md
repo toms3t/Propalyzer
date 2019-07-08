@@ -30,7 +30,7 @@ https://www.python.org/downloads/
 ```
 https://www.zillow.com/webservice/Registration.htm
 ```
-- Obtain a GreatSchools API Key (NOT REQUIRED)
+- Obtain a GreatSchools API Key (NOT REQUIRED, BUT RECOMMENDED)
 ```
 https://www.greatschools.org/api/request-api-key/
 ```
@@ -100,7 +100,7 @@ https://conda.io/miniconda.html
 ```
 https://www.zillow.com/webservice/Registration.htm
 ```
-- Obtain a GreatSchools API Key (NOT REQUIRED)
+- Obtain a GreatSchools API Key (NOT REQUIRED BUT RECOMMENDED)
 ```
 https://www.greatschools.org/api/request-api-key/
 ```
