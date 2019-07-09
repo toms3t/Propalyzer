@@ -1,9 +1,9 @@
 from django.test import TestCase
 from ..property import PropSetup
-from ..secret import Secret
 import requests
+import keyring
 
-ZWSID = Secret.ZWSID
+ZWSID = keyring.get_password('api_keys', 'zwsid')
 
 
 class PropertyModelTest(TestCase):

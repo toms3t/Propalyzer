@@ -6,10 +6,10 @@ from django.utils import timezone
 from bs4 import BeautifulSoup
 import usaddress
 from .county import County
-from .secret import Secret
+import keyring
 
 
-ZWSID = Secret.ZWSID
+ZWSID = keyring.get_password('api_keys', 'zwsid')
 
 
 def mk_int(s):

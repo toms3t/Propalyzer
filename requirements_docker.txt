@@ -13,3 +13,4 @@ urllib3==1.24.1
 usaddress==0.5.10
 gunicorn==19.9.0
 dj-static==0.0.6
+keyring==19.0.2

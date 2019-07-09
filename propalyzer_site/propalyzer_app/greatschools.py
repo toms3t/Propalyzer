@@ -1,7 +1,7 @@
 import requests
 import logging
-from .secret import Secret
 import xml.etree.cElementTree as ET
+import keyring
 
 LOG = logging.getLogger(__name__)
 
@@ -39,11 +39,11 @@ class GreatSchools:
 		Function builds the GreatSchools API URLs (one for each level of school)
 		:return: Sets self.error if issues arise during API calls
 		"""
-		if Secret.GSCHOOL_API_KEY:
+		if keyring.get_password('api_keys','gschool'):
 			self.elem_url = 'https://api.greatschools.org/schools/nearby?'
 			self.elem_url += 'key={gs_key}&address={street}&city={city}&state={state}&zip={zip}&schoolType=public' \
 				'&radius=5&limit=2&levelCode={level}'.format(
-													gs_key=Secret.GSCHOOL_API_KEY,
+													gs_key=keyring.get_password('api_keys', 'gschool'),
 													street=self.address_str,
 													city=self.city,
 													state=self.state,
