@@ -461,3 +461,7 @@ class ContextData:
     def closing_costs_calc(self):
         self.closing_costs = int(.03 * self.curr_value)
         return self.closing_costs
+
+    @property
+    def __str__(self):
+        return self.address
