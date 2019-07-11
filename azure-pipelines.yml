@@ -12,12 +12,6 @@ steps:
     architecture: 'x64'
 
 - task: DownloadSecureFile@1
-  name: secret
-  displayName: 'Download secret.py file'
-  inputs:
-    secureFile: 'secret.py'
-
-- task: DownloadSecureFile@1
   name: settings
   displayName: 'Download settings.py file'
   inputs:
@@ -70,7 +64,6 @@ steps:
       print('##vso[task.setvariable variable=projectRoot]{}'.format(project_location))
 
 - script: |
-    cp $(secret.secureFilePath) /home/vsts/work/1/s/secret.py
     cp $(settings.secureFilePath) /home/vsts/work/1/s/settings.py
     cp $(startup.secureFilePath) /home/vsts/work/1/s/startup.sh
     cp $(urls.secureFilePath) /home/vsts/work/1/s/urls.py
