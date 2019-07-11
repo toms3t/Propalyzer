@@ -8,4 +8,5 @@ urlpatterns = [
 	url(r'^edit/$', views.edit, name='edit'),
 	url(r'^results/$', views.results, name='results'),
 	url(r'^disclaimer/$', views.disclaimer, name='disclaimer'),
+	url(r'^pdf/$', views.pdf, name='pdf')
 ]
