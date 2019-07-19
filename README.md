@@ -49,8 +49,8 @@ $ git config --global user.name "Your Name"
 $ git config --global user.email Your_email_address
 $ git clone https://github.com/toms3t/Propalyzer.git
 ```
-**The project includes a "secret.py" file to store API keys on your machine.
-secret.py is referenced in the .gitignore file so don't worry about accidentally uploading your API keys**
+**The project includes a secret.py file to store API keys on your machine.
+secret.py is referenced in the .gitignore file to prevent the secret.py file from being uploaded to GitHub by accident**
 
 - Create a secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_app' folder and enter the following:
 ```
