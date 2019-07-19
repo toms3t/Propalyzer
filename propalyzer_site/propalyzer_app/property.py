@@ -3,10 +3,9 @@ import xml.etree.cElementTree as ET
 import requests
 from bs4 import BeautifulSoup
 import usaddress
-
+from .secret import Secret
 from .greatschools import GreatSchools
 from .county import County
-from .secret import Secret
 
 
 ZWSID = Secret.ZWSID

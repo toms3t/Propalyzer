@@ -41,14 +41,17 @@ class GreatSchools:
         if Secret.GSCHOOL_API_KEY:
             self.elem_url = 'https://api.greatschools.org/schools/nearby?'
             self.elem_url += 'key={gs_key}&address={street}&city={city}&state={state}&zip={zip}&schoolType=public' \
-                             '&radius=5&limit=2&levelCode={level}'.format(gs_key=Secret.GSCHOOL_API_KEY,
-                                                                          street=self.address_str,
-                                                                          city=self.city,
-                                                                          state=self.state,
-                                                                          zip=self.zip_code,
-                                                                          level='elementary-schools')
-            self.mid_url = self.elem_url.replace('elementary-schools', 'middle-schools')
-            self.high_url = self.elem_url.replace('elementary-schools', 'high-schools')
+                '&radius=5&limit=2&levelCode={level}'.format(
+                    gs_key=Secret.GSCHOOL_API_KEY,
+                    street=self.address_str,
+                    city=self.city,
+                    state=self.state,
+                    zip=self.zip_code,
+                    level='elementary-schools')
+            self.mid_url = self.elem_url.replace(
+                'elementary-schools', 'middle-schools')
+            self.high_url = self.elem_url.replace(
+                'elementary-schools', 'high-schools')
             self.urls = [self.elem_url, self.mid_url, self.high_url]
         else:
             self.api_key = False
@@ -72,9 +75,11 @@ class GreatSchools:
             try:
                 school_data = requests.get(url)
                 GreatSchools.DAILY_API_CALL_COUNT += 1
-                LOG.debug('Greatschools API CALL COUNT --- {}'.format(GreatSchools.DAILY_API_CALL_COUNT))
+                LOG.debug(
+                    'Greatschools API CALL COUNT --- {}'.format(GreatSchools.DAILY_API_CALL_COUNT))
             except:
-                LOG.debug('Greatschools ConnectionError --- Tried URL - {}'.format(url))
+                LOG.debug(
+                    'Greatschools ConnectionError --- Tried URL - {}'.format(url))
                 self.error = 'ConnectionError'
 
             if 'no exact match' in school_data.text:
