@@ -24,12 +24,6 @@ steps:
     secureFile: 'startup.sh'
 
 - task: DownloadSecureFile@1
-  name: urls
-  displayName: 'Download urls.py file'
-  inputs:
-    secureFile: 'urls.py'
-
-- task: DownloadSecureFile@1
   name: wsgi
   displayName: 'Download wsgi.py file'
   inputs:
@@ -66,11 +60,10 @@ steps:
 - script: |
     cp $(settings.secureFilePath) /home/vsts/work/1/s/settings.py
     cp $(startup.secureFilePath) /home/vsts/work/1/s/startup.sh
-    cp $(urls.secureFilePath) /home/vsts/work/1/s/urls.py
     cp $(wsgi.secureFilePath) /home/vsts/work/1/s/wsgi.py
     cp $(req_docker.secureFilePath) /home/vsts/work/1/s/requirements_docker.txt
     cp $(dockerfile.secureFilePath) /home/vsts/work/1/s/Dockerfile
-  displayName: 'Copy files to build agent root dir'
+  displayName: 'Copy files to build agent'
 
 - task: ShellScript@2
   inputs:
