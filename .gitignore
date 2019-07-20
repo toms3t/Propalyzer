@@ -54,6 +54,7 @@ coverage.xml
 debug.log*
 local_settings.py
 secret.py
+Secret.py
 propalyzer_site/propalyzer_app/migrations
 
 # Flask stuff:

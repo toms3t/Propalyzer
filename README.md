@@ -1,4 +1,7 @@
 # Propalyzer
+
+[![Build Status](https://tomset.visualstudio.com/Propalyzer/_apis/build/status/toms3t.Propalyzer?branchName=master)](https://tomset.visualstudio.com/Propalyzer/_build/latest?definitionId=7&branchName=master)
+
 Production site can be found at http://propalyzer.info to try functionality
 
 **Time to get up and running = less than 10 minutes**
@@ -10,8 +13,8 @@ Web app that helps investors evaluate investment property opportunities. The use
 - Debt Coverage Ratio
 - Monthly Cash Flow
 - Scoring of area Livability, Crime, Cost of Living, Education, Employment, Housing, Weather relative to local and national averages
-- Localized natural disaster information
-- Local School information
+- Local natural disaster information
+- Local school information
 
 ## Getting Started
 
@@ -19,7 +22,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites (MacOS and Linux Users)
 
-- Install Python 3.6.0
+- Install Python 3.6
 ```
 https://www.python.org/downloads/
 ```
@@ -27,27 +30,27 @@ https://www.python.org/downloads/
 ```
 https://www.zillow.com/webservice/Registration.htm
 ```
-- Obtain a GreatSchools API Key (NOT REQUIRED)
+- Obtain a GreatSchools API Key (NOT REQUIRED, BUT RECOMMENDED)
 ```
 https://www.greatschools.org/api/request-api-key/
 ```
 
 - Create and configure virtualenv 
 ```
-$ mkdir [directory name]
-$ pip install virtualenv
-$ cd [directory name]
-$ virtualenv -p /Library/Frameworks/Python.framework/Versions/3.6/bin/python3.6 env
+$ mkdir Propalyzer
+$ python3.6 -m pip install virtualenv
+$ cd Propalyzer
+$ python3.6 -m venv env
 ```
 - Git dialed in! 
 ```
 $ git init
-$ git config --global user.name "John Doe"
-$ git config --global user.email johndoe@example.com
+$ git config --global user.name "Your Name"
+$ git config --global user.email Your_email_address
 $ git clone https://github.com/toms3t/Propalyzer.git
 ```
-**The project includes two "secret.py" files - one for the API keys and the other for the settings.py secret key. 
-The secret.py files are included in the .gitignore file so don't worry about accidentally uploading your API keys**
+**The project includes a secret.py file to store API keys on your machine.
+secret.py is referenced in the .gitignore file to prevent the secret.py file from being uploaded to GitHub by accident**
 
 - Create a secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_app' folder and enter the following:
 ```
@@ -56,17 +59,12 @@ class Secret():
   GSCHOOL_API_KEY = '[enter your GreatSchools key here without brackets]'
 ## now save the file ##
 ```
-- Create a second secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_site' folder and enter the following:
-```
-class Secret():
-  SECRET_KEY = '[enter a secret key here without brackets - any random string of characters will work!]'
-## now save the file ##
-```
+  
 - Install packages from requirements.txt file
 
 ```
-$ source env/bin/activate (run this from the directory you created to activate the virtual environment)
-$ pip install -r Propalyzer/requirements.txt
+$ source env/bin/activate (run this from the directory with 'env' folder)
+$ python -m pip install -r requirements.txt
 ```
 - Prep the SQLite database
 ```
@@ -97,7 +95,7 @@ https://conda.io/miniconda.html
 ```
 https://www.zillow.com/webservice/Registration.htm
 ```
-- Obtain a GreatSchools API Key (NOT REQUIRED)
+- Obtain a GreatSchools API Key (NOT REQUIRED BUT RECOMMENDED)
 ```
 https://www.greatschools.org/api/request-api-key/
 ```
@@ -105,25 +103,25 @@ https://www.greatschools.org/api/request-api-key/
 - Create and configure virtualenv (Use Windows PowerShell, Command Prompt, or a Terminal Emulator such as ConEmu)
 ```
 > Hit start and type "anaconda" to find the anaconda prompt -- launch the "anaconda prompt"
-> mkdir [directory name]
-> cd [directory name]
+> mkdir Propalyzer
+> cd Propalyzer
 > conda create --name [virtual environment name]
 > activate [virtual environment name]
 ```
 - Git dialed in! 
 ```
 > git init
-> git config --global user.name "John Doe"
-> git config --global user.email johndoe@example.com
+> git config --global user.name "Your Name"
+> git config --global user.email Your_email_address
 > git clone https://github.com/toms3t/Propalyzer.git
 ```
 - Install packages from requirements.txt file
 
 ```
-> pip install -r Propalyzer/requirements.txt
+> python3.6 -m pip install -r Propalyzer/requirements.txt
 ```
-**The project includes two "secret.py" files - one for the API keys and the other for the settings.py secret key. 
-The secret.py files are included in the .gitignore file so don't worry about accidentally uploading your API keys**
+**The project includes a "secret.py" file to store API keys on your machine.
+secret.py is referenced in the .gitignore file so don't worry about accidentally uploading your API keys**
 
 - Create a secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_app' folder and enter the following:
 ```
@@ -132,13 +130,6 @@ class Secret():
   GSCHOOL_API_KEY = '[enter your GreatSchools key here without brackets]'
 ## now save the file ##
 ```
-- Create a second secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_site' folder and enter the following:
-```
-class Secret():
-  SECRET_KEY = '[enter a secret key here without brackets]'
-## now save the file ##
-```
-
 - Prep the SQLite database
 ```
 > cd Propalyzer/propalyzer_site
@@ -160,7 +151,7 @@ Log in with your superuser credentials
 
 ## Deployment
 
-Not yet deployed in a live environment.
+http://propalyzer.info
 
 ## Built With
 

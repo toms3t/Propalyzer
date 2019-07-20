@@ -1,12 +1,11 @@
-from decimal import Decimal, getcontext
 import re
 import xml.etree.cElementTree as ET
 import requests
-from django.utils import timezone
 from bs4 import BeautifulSoup
 import usaddress
-from .county import County
 from .secret import Secret
+from .greatschools import GreatSchools
+from .county import County
 
 
 ZWSID = Secret.ZWSID
@@ -154,59 +153,45 @@ class PropSetup:
         self.county = ''
         self.disaster_dict = {}
 
-    def create_test_obj(self):
-        """
-        Method to create test PropSetup instance for use by 'test_property.py'
-        :return: Sets object attributes -- does not return an object
-        """
-        self.address = '3465-N-Main-St-Soquel-CA-95073'
-        self.listing_url = 'http://www.zillow.com/homedetails/3465-N-Main-St-Soquel-CA-95073/16128477_zpid/'
-        self.neighborhood = 'Unknown'
-        self.pub_date = timezone.now()
-        self.curr_value = 699600
-        self.value_low = 680101
-        self.value_high = 751691
-        self.initial_market_value = 699600
-        self.initial_improvements = 5000
-        self.rent = 2600
-        self.rent_low = 2106
-        self.rent_high = 2990
-        self.sqft = 1058
-        self.lot_sqft = 20343
-        self.beds = 2
-        self.baths = 1.5
-        self.year_built = 1950
-        self.hoa = 100
-        self.maintenance = 800
-        self.tenant_placement_fee = 500
-        self.taxes = 2000
-        self.utilities = 30
+        try:
+            self.prop_management_fee = int(.09 * int(self.rent))
+        except ValueError:
+            self.prop_management_fee = 0
+        self.initial_market_value = self.curr_value
+        self.initial_improvements = 0
         self.insurance = 1000
-        self.prop_management_fee = 234
-        self.resign_fee = 300
-        self.vacancy_rate = 0.08
-        self.notes = ''
+        self.maintenance = 800
+        self.taxes = 1500
+        self.hoa = 0
+        self.utilities = 0
         self.interest_rate = 4.75
-        self.down_payment_percentage = 25.00
-        self.schools = ''
-        self.school_scores = ''
-        self.county = 'Santa Cruz County'
-        self.cost_per_sqft = self.cost_per_sqft_calc
-        self.down_payment = self.down_payment_calc
-        self.vacancy = self.vacancy_calc
-        self.closing_costs = self.closing_costs_calc
-        self.oper_income = self.oper_inc_calc
-        self.oper_exp = self.oper_exp_calc
-        self.net_oper_income = self.net_oper_income_calc
-        self.total_mortgage = self.total_mortgage_calc
-        self.mort_payment = self.mort_payment_calc
-        self.cash_flow = self.cash_flow_calc
-        self.oper_exp_ratio = self.oper_exp_ratio_calc
-        self.debt_cover_ratio = self.debt_coverage_ratio_calc
-        self.rtv = self.rtv_calc
-        self.init_cash_invest = self.init_cash_invested_calc
-        self.cap_rate = self.cap_rate_calc
-        self.cash_on_cash_return = self.cash_on_cash_calc
+        self.down_payment_percentage = 25
+        self.down_payment = int(self.curr_value) * \
+            (self.down_payment_percentage / 100.0)
+        self.closing_costs = int(.03 * int(self.curr_value))
+
+    def get_info(self):
+        self.set_address()
+        self.set_zillow_url()
+        self.set_xml_data()
+        self.set_areavibes_info()
+        self.set_disaster_info()
+        self.schools = GreatSchools(
+            self.address, self.city, self.state, self.zip_code, self.county)
+        self.schools.set_greatschool_urls()
+        if self.schools.api_key and self.schools.DAILY_API_CALL_COUNT <= 2950:
+            for url in self.schools.urls:
+                self.schools.get_greatschool_xml(url)
+
+        else:
+            self.schools.elem_school = 'Unknown'
+            self.schools.mid_school = 'Unknown'
+            self.schools.high_school = 'Unknown'
+        self.schools = dict((key, value) for (key, value) in self.schools.__dict__.items())
+
+    def dict_from_class(self):
+
+        return dict((key, value) for (key, value) in self.__dict__.items())
 
     def __convert_address(self):
         """
@@ -327,7 +312,6 @@ class PropSetup:
     def set_areavibes_info(self):
         """
         Method that generates the areavibes dictionary with areavibes information for a given address.
-        :param ADDRESSDICT: Identified components of the property address (i.e. street name, city, zip code, etc.)
         :return: areavibes_dict - Dictionary that contains ratings sourced from areavibes.com based on a given address
         for the following categories:
             - Livability
@@ -346,9 +330,26 @@ class PropSetup:
             result_string = info_block[0].get_text()
         except IndexError:
             result_string = 'Unknown'
+
+        parsed = ''
+        livability = ''
+        cost_of_living = ''
+        crime = ''
+        employment = ''
+        housing = ''
+        schools = ''
+        weather = ''
+
         try:
             parsed = re.search(
-                'Livability(.*?)Amenities(.*?)Cost of Living(.*?)Crime(.*?)Employment(.*?)Housing(.*?)Schools(.*?)Weather(.*?)$', result_string)
+                'Livability(.*?)'
+                'Amenities(.*?)'
+                'Cost of Living(.*?)'
+                'Crime(.*?)'
+                'Employment(.*?)'
+                'Housing(.*?)'
+                'Schools(.*?)'
+                'Weather(.*?)$', result_string)
         except AttributeError:
             livability = 'Unknown'
             cost_of_living = 'Unknown'
@@ -398,8 +399,9 @@ class PropSetup:
 
     def set_disaster_info(self):
         """
-        Method that generates the self.disaster_dict dictionary which includes the last 5 disasters from fema.gov for the county
-        of the property being researched. The dictionary includes disaster type, date, county, state, url, and fema id for each disaster. 
+        Method that generates the self.disaster_dict dictionary which includes the last 5 disasters from fema.gov for
+        the county of the property being researched. The dictionary includes disaster type, date, county, state, url,
+        and fema id for each disaster.
         """
         local_disasters = []
         disaster_dict = {}
@@ -412,8 +414,8 @@ class PropSetup:
         else:
             county = self.county
         url1 = 'https://www.fema.gov/api/open/v1/DisasterDeclarationsSummaries?'
-        url2 = '$filter=state eq \'{}\'&$select=state, incidentType, declaredCountyArea, title, '.format(
-            self.state)
+        url2 = "$filter=state eq '{}'&$select=state, incidentType, declaredCountyArea, title, ".format(
+            self.state.upper())
         url3 = 'incidentEndDate&$orderby=incidentEndDate'
         url = url1+url2+url3
         resp = requests.get(url)
@@ -463,166 +465,3 @@ class PropSetup:
     @property
     def __str__(self):
         return self.address
-
-    @property
-    def oper_inc_calc(self):
-        self.oper_income = int(mk_int(self.rent) - self.vacancy)
-        return self.oper_income
-
-    @property
-    def init_cash_invested_calc(self):
-        self.down_payment = self.down_payment_calc
-        self.init_cash_invest = int(
-            self.down_payment + mk_int(self.closing_costs) + mk_int(self.initial_improvements))
-        return self.init_cash_invest
-
-    @property
-    def vacancy_calc(self):
-        self.vacancy_rate = .08
-        self.vacancy = int(self.vacancy_rate * mk_int(self.rent))
-        return self.vacancy
-
-    @property
-    def oper_exp_calc(self):
-        self.oper_exp = int((
-            (mk_int(self.resign_fee) / 12) +
-            (mk_int(self.taxes) / 12) +
-            (mk_int(self.hoa) / 12) +
-            mk_int(self.utilities) +
-            mk_int(self.prop_management_fee) +
-            (mk_int(self.insurance) / 12) +
-            (mk_int(self.maintenance) / 12) +
-            (mk_int(self.tenant_placement_fee) / 12)
-        )
-        )
-        return self.oper_exp
-
-    @property
-    def net_oper_income_calc(self):
-        self.net_oper_income = int(self.oper_income - self.oper_exp)
-        return self.net_oper_income
-
-    @property
-    def cash_flow_calc(self):
-        self.cash_flow = int(self.net_oper_income - self.mort_payment)
-        return self.cash_flow
-
-    @property
-    def oper_exp_ratio_calc(self):
-        getcontext().prec = 2
-        try:
-            self.oper_exp_ratio = float(
-                Decimal(self.oper_exp) / Decimal(self.oper_income))
-        except ZeroDivisionError:
-            self.oper_exp_ratio = 0.00
-        self.oper_exp_ratio = self.oper_exp_ratio + 0
-        return self.oper_exp_ratio
-
-    @property
-    def debt_coverage_ratio_calc(self):
-        getcontext().prec = 2
-        if self.mort_payment:
-            try:
-                self.debt_cover_ratio = float(
-                    Decimal(self.net_oper_income) / Decimal(self.mort_payment))
-            except ZeroDivisionError:
-                self.debt_cover_ratio = 0.00
-            return self.debt_cover_ratio
-        else:
-            return None
-
-    @property
-    def cap_rate_calc(self):
-        getcontext().prec = 2
-        self.initial_market_value = mk_int(self.curr_value)
-        try:
-            self.cap_rate = float(
-                Decimal((self.net_oper_income * 12) / Decimal(self.initial_market_value)))
-        except ZeroDivisionError:
-            self.cap_rate = 0.00
-        self.cap_rate = self.cap_rate + 0
-        return self.cap_rate
-
-    @property
-    def cash_on_cash_calc(self):
-        getcontext().prec = 3
-        try:
-            self.cash_on_cash_return = float(
-                Decimal((self.cash_flow * 12) / Decimal(self.init_cash_invest)))
-        except ZeroDivisionError:
-            self.cash_on_cash_return = 0.00
-        return self.cash_on_cash_return
-
-    @property
-    def down_payment_calc(self):
-        self.down_payment = int(
-            (float(self.down_payment_percentage) * mk_int(self.curr_value)) / 100)
-        return self.down_payment
-
-    @property
-    def total_mortgage_calc(self):
-        getcontext().prec = 8
-        self.total_mortgage = mk_int(self.curr_value) - self.down_payment
-        return int(self.total_mortgage)
-
-    @property
-    def mort_payment_calc(self):
-        i = (float(self.interest_rate) / 100) / 12
-        n = 360
-        p = self.total_mortgage
-        self.mort_payment = int(p * (i * (1 + i) ** n) / ((1 + i) ** n - 1))
-        return self.mort_payment
-
-    @property
-    def cost_per_sqft_calc(self):
-        try:
-            self.cost_per_sqft = int(
-                mk_int(self.curr_value) / mk_int(self.sqft))
-        except ZeroDivisionError:
-            self.cost_per_sqft = 0
-        return self.cost_per_sqft
-
-    @property
-    def resign_calc(self):
-        if int(self.resign_fee) > 80:
-            self.resign_fee = int(self.resign_fee)
-            return self.resign_fee
-        else:
-            return self.resign_fee
-
-    @property
-    def tenant_place_calc(self):
-        if int(self.tenant_placement_fee) > 300:
-            self.tenant_placement_fee = int(self.tenant_placement_fee)
-            return self.tenant_placement_fee
-        else:
-            return self.tenant_placement_fee
-
-    @property
-    def maint_calc(self):
-        if int(self.maintenance) > 300:
-            self.maintenance = int(self.maintenance)
-            return self.maintenance
-        else:
-            return self.maintenance
-
-    @property
-    def rtv_calc(self):
-        getcontext().prec = 2
-        try:
-            self.rtv = float(Decimal(mk_int(self.rent)) /
-                             Decimal(mk_int(self.curr_value)))
-        except ZeroDivisionError:
-            self.rtv = 0.00
-        self.rtv = self.rtv + 0
-        return self.rtv
-
-    @property
-    def prop_mgmt_calc(self):
-        self.prop_management_fee = int(.09 * self.rent)
-        return self.prop_management_fee
-
-    @property
-    def closing_costs_calc(self):
-        self.closing_costs = int(.03 * self.curr_value)
-        return self.closing_costs

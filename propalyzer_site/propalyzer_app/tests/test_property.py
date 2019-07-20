@@ -1,5 +1,5 @@
 from django.test import TestCase
-from ..property import PropSetup
+from ..context_data import ContextData
 from ..secret import Secret
 import requests
 
@@ -8,7 +8,7 @@ ZWSID = Secret.ZWSID
 
 class PropertyModelTest(TestCase):
     def setUp(self):
-        self.prop = PropSetup('3465-N-Main-St-Soquel-CA-95073')
+        self.prop = ContextData()
         self.prop.create_test_obj()
 
     def test_property_attributes_should_be_persisted(self):

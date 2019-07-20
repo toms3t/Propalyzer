@@ -1,0 +1,108 @@
+# Python Django
+# Test a Django project on multiple versions of Python.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/python
+pool:
+  vmImage: 'Ubuntu 16.04'
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: 3.6
+    architecture: 'x64'
+
+- task: DownloadSecureFile@1
+  name: secret
+  displayName: 'Download secret.py file'
+  inputs:
+    secureFile: 'secret.py'
+
+- task: DownloadSecureFile@1
+  name: settings
+  displayName: 'Download settings.py file'
+  inputs:
+    secureFile: 'settings.py'
+
+- task: DownloadSecureFile@1
+  name: startup
+  displayName: 'Download startup.sh file'
+  inputs:
+    secureFile: 'startup.sh'
+
+- task: DownloadSecureFile@1
+  name: wsgi
+  displayName: 'Download wsgi.py file'
+  inputs:
+    secureFile: 'wsgi.py'
+
+- task: DownloadSecureFile@1
+  name: req_docker
+  displayName: 'Download requirements file'
+  inputs:
+    secureFile: 'requirements_docker.txt'
+
+- task: DownloadSecureFile@1
+  name: dockerfile
+  displayName: 'Download Dockerfile'
+  inputs:
+    secureFile: 'Dockerfile'
+
+- task: PythonScript@0
+  displayName: 'Export project path'
+  inputs:
+    scriptSource: 'inline'
+    script: |
+      """Search all subdirectories for `manage.py`."""
+      from glob import iglob
+      from os import path
+      # Python >= 3.5
+      manage_py = next(iglob(path.join('**', 'manage.py'), recursive=True), None)
+      if not manage_py:
+          raise SystemExit('Could not find a Django project')
+      project_location = path.dirname(path.abspath(manage_py))
+      print('Found Django project in', project_location)
+      print('##vso[task.setvariable variable=projectRoot]{}'.format(project_location))
+
+- script: |
+    cp $(secret.secureFilePath) /home/vsts/work/1/s/secret.py
+    cp $(settings.secureFilePath) /home/vsts/work/1/s/settings.py
+    cp $(startup.secureFilePath) /home/vsts/work/1/s/startup.sh
+    cp $(wsgi.secureFilePath) /home/vsts/work/1/s/wsgi.py
+    cp $(req_docker.secureFilePath) /home/vsts/work/1/s/requirements_docker.txt
+    cp $(dockerfile.secureFilePath) /home/vsts/work/1/s/Dockerfile
+  displayName: 'Copy files to build agent'
+
+- task: ShellScript@2
+  inputs:
+    scriptPath: filecopy.sh
+    cwd: '/'
+
+- script: |
+    python -m pip install --upgrade pip setuptools wheel django
+    pip install -r requirements_docker.txt
+    pip install unittest-xml-reporting
+  displayName: 'Install prerequisites'
+
+- script: |
+    pushd '$(projectRoot)'
+    python manage.py test --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner --no-input
+  condition: succeededOrFailed()
+  displayName: 'Run tests'
+
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
+  inputs:
+    testResultsFiles: "**/TEST-*.xml"
+    testRunTitle: 'Python $(PYTHON_VERSION)'
+
+- task: Docker@2
+  displayName: Login to Azure Container Registry
+  inputs:
+    command: login
+    containerRegistry: MyContainerRegistry
+
+- task: Docker@2
+  displayName: Build and Push to ACR
+  inputs:
+    command: buildAndPush
+    repository: prop_dev_repo

@@ -11,4 +11,6 @@ pytz==2017.2
 requests==2.21.0
 urllib3==1.24.1
 usaddress==0.5.10
+gunicorn==19.9.0
+dj-static==0.0.6
 xhtml2pdf==0.2.3
