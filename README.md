@@ -2,7 +2,7 @@
 
 [![Build Status](https://tomset.visualstudio.com/Propalyzer/_apis/build/status/toms3t.Propalyzer?branchName=master)](https://tomset.visualstudio.com/Propalyzer/_build/latest?definitionId=7&branchName=master)
 
-Production site can be found at http://propalyzer.info to try functionality
+Try it!   http://propalyzer.info
 
 **Time to get up and running = less than 10 minutes**
 
