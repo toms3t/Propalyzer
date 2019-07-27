@@ -86,7 +86,7 @@ class GreatSchools:
                 LOG.debug('Greatschools --- No exact match - {}'.format(url))
                 self.error = 'NoExactMatch'
 
-            if not self.error:
+            if not self.error and str(school_data) == '<Response [200]>':
                 school_xml = school_data.text
 
                 tree = ET.fromstring(school_xml)
