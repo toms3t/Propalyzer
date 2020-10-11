@@ -1,186 +1,189 @@
 </td></tr>{% extends "app/layout.html" %}
 
 {% block content %}
-<h2>Property Information for: <b>{{ address }}</b></h2>
-<p><i>Information as of: {{ pub_date }} (Pacific Time)</i></p>
-<p>Check out this property on <a href="{{ listing_url }}">Zillow</a> for the latest details</p>
 
-<div class="row">
-    <div class="col-md-4">
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h2 class="panel-title">General</h2>
-            </div>
-            <div class="panel-body">
-                <table class="table table-bordered">
-                    <tbody>
-                        <tr><th scope="row">Square Feet</th><td>{{ sqft }}</td></tr>
-                        <tr><th scope="row">Bedrooms/Bathrooms</th><td>{{ beds }}/{{ baths }}</td></tr>
-                        <tr><th scope="row">Year Built</th><td>{{ year_built }}</td></tr>
-                        <tr><th scope="row">County</th><td>{{ county }}</td></tr>
-                        <tr><th scope="row">Area Livability* (100 is best)</th><td>{{ livability }}</td></tr>
-                        <tr><th scope="row">Area Crime*</th><td>{{ crime }}</td></tr>
-                        <tr><th scope="row">Area Cost Of Living*</th><td>{{ cost_of_living }}</td></tr>
-                        <tr><th scope="row">Area Schools*</th><td>{{ schools }}</td></tr>
-                        <tr><th scope="row">Area Employment*</th><td>{{ employment }}</td></tr>
-                        <tr><th scope="row">Area Housing*</th><td>{{ housing }}</td></tr>
-                        <tr><th scope="row">Area Weather*</th><td>{{ weather }}</td></tr>
-                        <tr class="warning"><th scope="row">Cost Per SQFT</th><td>{{ cost_per_sqft }}</td></tr>
-                        <tr><th scope="row">Interest Rate</th><td>{{ interest_rate }}</td></tr>
-                        <tr><th scope="row">Mortgage Amount</th><td>{{ total_mortgage }}</td></tr>
-                    </tbody>
-                </table>
-                <p><b>*</b> <i>information obtained from areavibes.com</i></p>
-            </div>
-        </div>
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h2 class="panel-title"> School Information* </h2>
-            </div>
-            <div class="panel-body">
-                <table class="table table-bordered">
-                    <tbody>
-                        <tr><th scope="row">School Name</th><td> Rating </td></tr>
-                        <tr><th scope="row">{{ elem_school }}</th><td> {{ elem_school_score }}</td></tr>
-                        <tr><th scope="row">{{ mid_school }}</th><td> {{ mid_school_score }}</td></tr>
-                        <tr><th scope="row">{{ high_school }}</th><td> {{ high_school_score }}</td></tr>
-                    </tbody>
-                </table>
-                <p><b>*</b> <i>School information pulled from <a href="http://greatschools.org">greatschools.org </a></i></p>
-                <p><b>*</b> <i>Rating is based on a scale of 1 - 10 (10 = best) </i></p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h2 class="panel-title">Operating Income</h2>
-            </div>
-            <div class="panel-body">
-                <table class="table table-bordered">
-                    <tbody>
-                        <tr><th scope="row">Rent Zestimate*</th><td>{{ rent }}</td></tr>
-                        <tr><th scope="row">Vacancy (8% of rent)</th><td>{{ vacancy }}</td></tr>
-                        <tr class="warning"><th scope="row">Operating Income</th><td>{{ oper_income }}</td></tr>
-                    </tbody>
-                </table>
-                <p><b>*</b> <i>Zestimate trademarked by Zillow </i></p>
-            </div>
-        </div>
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h2 class="panel-title">Operating Expenses</h2>
-            </div>
-            <div class="panel-body">
-                <table class="table table-bordered">
-                    <tbody>
-                        <tr><th scope="row">Taxes*</th><td>{{ taxes }}</td></tr>
-                        <tr><th scope="row">Insurance**</th><td>{{ insurance }}</td></tr>
-                        <tr><th scope="row">HOA</th><td>{{ hoa }}</td></tr>
-                        <tr><th scope="row">Property Management***</th><td>{{ prop_management_fee }}</td></tr>
-                        <tr><th scope="row">Tenant Placement</th><td>{{ tenant_placement_fee }}</td></tr>
-                        <tr><th scope="row">Lease Resign Fee</th><td>{{ resign_fee }}</td></tr>
-                        <tr><th scope="row">Maintenance****</th><td>{{ maintenance }}</td></tr>
-                        <tr><th scope="row">Utilities</th><td>{{ utilities }}</td></tr>
-                        <tr class="warning"><th scope="row">Operating Expenses</th><td>{{ oper_exp }}</td></tr>
-                    </tbody>
-                </table>
-                <p><b>*</b> <i>Set at $125/month, please obtain actual estimate</i></p>
-                <p><b>**</b> <i>Set at $83/month, please obtain actual estimate</i></p>
-                <p><b>***</b> <i>Estimated at 9% of rent</i></p>
-                <p><b>****</b> <i>Set at $66/month, will vary based on property</i></p>
-            </div>
-        </div>
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h2 class="panel-title">Cash Flow</h2>
-            </div>
-            <div class="panel-body">
-                <table class="table table-bordered">
-                    <tbody>
-                        <tr><th scope="row">Net Operating Income</th><td>{{ net_oper_income }}</td></tr>
-                        <tr><th scope="row">Monthly Mortgage Payment</th><td>{{ mort_payment }}</td></tr>
-                        <tr class="warning"><th scope="row">Monthly Cash Flow</th><td>{{ cash_flow }}</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h2 class="panel-title">Investment Ratios/Metrics</h2>
-            </div>
-            <div class="panel-body">
-                <table class="table table-bordered">
-                    <tbody>
-                        <tr><th scope="row">Operating Expense Ratio</th><td>{{ oper_exp_ratio }} (Typical 25-35%)</td></tr>
-                        <tr><th scope="row">Debt Coverage Ratio</th><td>{{ debt_coverage_ratio }}</td></tr>
-                        <tr><th scope="row">Capitalization Rate</th><td>{{ cap_rate }}</td></tr>
-                        <tr><th scope="row">Rent-to-Value Ratio</th><td>{{ rtv }}</td></tr>
-                        <tr class="warning"><th scope="row">Cash on Cash Return</th><td>{{ cash_on_cash }}</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h2 class="panel-title">Initial Cash Invested</h2>
-            </div>
-            <div class="panel-body">
-                <table class="table table-bordered">
-                    <tbody>
-                        <tr class="warning"><th scope="row">Zestimate* (current mkt value)</th><td>{{ curr_value }}</td></tr>
-                        <tr><th scope="row">Down Payment (%)</th><td>{{ down_payment_percentage }}</td></tr>
-                        <tr><th scope="row">Down Payment ($)</th><td>{{ down_payment }}</td></tr>
-                        <tr><th scope="row">Initial Improvements</th><td>{{ initial_improvements }}</td></tr>
-                        <tr><th scope="row">Closing Costs</th><td>{{ closing_costs }}</td></tr>
-                        <tr class="warning"><th scope="row">Initial Cash Invested</th><td>{{ init_cash_invest }}</td></tr>
-                    </tbody>
-                </table>
-                <p><b>*</b> <i>Zestimate trademarked by Zillow</i></p>
-            </div>
-        </div>
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h2 class="panel-title">Notes</h2>
-            </div>
-            <div class="panel-body">
-                <div class="form-group">
-                    <label for="comment"></label>
-                    <textarea class="form-control" rows="10" id="comment">{{ notes }}</textarea>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="bg-transparent text-light px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-5">Property Information for: <b>{{ address }}</b></h1>
+    <p class="lead"><i>Information as of: {{ pub_date }} (Pacific Time)</i></p>
+    <p class="lead">Check out this property on <a href="{{ listing_url }}">Zillow</a> for the latest details</p>
 </div>
-<div class="panel panel-info">
+
+<div class="bg-light text-dark px-3 py-3 pt-md-5 pb-md-4 mx-auto">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-info shadow-lg">
                 <div class="panel-heading">
-                    <h2 class="panel-title"> Last 5 Natural Disasters in {{ county }}* </h2>
+                    <h2 class="panel-title">General</h2>
                 </div>
                 <div class="panel-body">
                     <table class="table table-bordered">
                         <tbody>
-                            <tr><th scope="row">Disaster Type</th><th> Date </th><th> County </th><th> Details </th></tr>
-                            <tr><td scope="row">{{ disaster1_type }}</td><td> {{ disaster1_date }}</td><td> {{ disaster1_county }} </td><td> {{ disaster1_title }} </td></tr>
-                            <tr><td scope="row">{{ disaster2_type }}</td><td> {{ disaster2_date }}</td><td> {{ disaster2_county }} </td><td> {{ disaster2_title }} </td></tr>
-                            <tr><td scope="row">{{ disaster3_type }}</td><td> {{ disaster3_date }}</td><td> {{ disaster3_county }} </td><td> {{ disaster3_title }} </td></tr>
-                            <tr><td scope="row">{{ disaster4_type }}</td><td> {{ disaster4_date }}</td><td> {{ disaster4_county }} </td><td> {{ disaster4_title }} </td></tr>
-                            <tr><td scope="row">{{ disaster5_type }}</td><td> {{ disaster5_date }}</td><td> {{ disaster5_county }} </td><td> {{ disaster5_title }} </td></tr>
+                            <tr><th scope="row">Square Feet</th><td>{{ sqft }}</td></tr>
+                            <tr><th scope="row">Bedrooms/Bathrooms</th><td>{{ beds }}/{{ baths }}</td></tr>
+                            <tr><th scope="row">Year Built</th><td>{{ year_built }}</td></tr>
+                            <tr><th scope="row">County</th><td>{{ county }}</td></tr>
+                            <tr><th scope="row">Area Livability* (100 is best)</th><td>{{ livability }}</td></tr>
+                            <tr><th scope="row">Area Crime*</th><td>{{ crime }}</td></tr>
+                            <tr><th scope="row">Area Cost Of Living*</th><td>{{ cost_of_living }}</td></tr>
+                            <tr><th scope="row">Area Schools*</th><td>{{ schools }}</td></tr>
+                            <tr><th scope="row">Area Employment*</th><td>{{ employment }}</td></tr>
+                            <tr><th scope="row">Area Housing*</th><td>{{ housing }}</td></tr>
+                            <tr><th scope="row">Area Weather*</th><td>{{ weather }}</td></tr>
+                            <tr class="list-group-item-warning"><th scope="row">Cost Per SQFT</th><td>{{ cost_per_sqft }}</td></tr>
+                            <tr><th scope="row">Interest Rate</th><td>{{ interest_rate }}</td></tr>
+                            <tr><th scope="row">Mortgage Amount</th><td>{{ total_mortgage }}</td></tr>
                         </tbody>
                     </table>
-                    <p><b>*</b> <i>Disaster information pulled from <a href="https://www.fema.gov/">fema.gov </a></i></p>
-
+                    <p><b>*</b> <i>information obtained from areavibes.com</i></p>
                 </div>
+            </div>
+            <div class="panel panel-info shadow-lg">
+                <div class="panel-heading">
+                    <h2 class="panel-title"> School Information* </h2>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr><th scope="row">School Name</th><td> Rating </td></tr>
+                            <tr><th scope="row">{{ elem_school }}</th><td> {{ elem_school_score }}</td></tr>
+                            <tr><th scope="row">{{ mid_school }}</th><td> {{ mid_school_score }}</td></tr>
+                            <tr><th scope="row">{{ high_school }}</th><td> {{ high_school_score }}</td></tr>
+                        </tbody>
+                    </table>
+                    <p><b>*</b> <i>School information pulled from <a href="http://greatschools.org">greatschools.org </a></i></p>
+                    <p><b>*</b> <i>Rating is based on a scale of 1 - 10 (10 = best) </i></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-info shadow-lg">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Operating Income</h2>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr><th scope="row">Rent Zestimate*</th><td>{{ rent }}</td></tr>
+                            <tr><th scope="row">Vacancy (8% of rent)</th><td>{{ vacancy }}</td></tr>
+                            <tr class="list-group-item-warning"><th scope="row">Operating Income</th><td>{{ oper_income }}</td></tr>
+                        </tbody>
+                    </table>
+                    <p><b>*</b> <i>Zestimate trademarked by Zillow </i></p>
+                </div>
+            </div>
+            <div class="panel panel-info shadow-lg">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Operating Expenses</h2>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr><th scope="row">Taxes*</th><td>{{ taxes }}</td></tr>
+                            <tr><th scope="row">Insurance**</th><td>{{ insurance }}</td></tr>
+                            <tr><th scope="row">HOA</th><td>{{ hoa }}</td></tr>
+                            <tr><th scope="row">Property Management***</th><td>{{ prop_management_fee }}</td></tr>
+                            <tr><th scope="row">Tenant Placement</th><td>{{ tenant_placement_fee }}</td></tr>
+                            <tr><th scope="row">Lease Resign Fee</th><td>{{ resign_fee }}</td></tr>
+                            <tr><th scope="row">Maintenance****</th><td>{{ maintenance }}</td></tr>
+                            <tr><th scope="row">Utilities</th><td>{{ utilities }}</td></tr>
+                            <tr class="list-group-item-warning"><th scope="row">Operating Expenses</th><td>{{ oper_exp }}</td></tr>
+                        </tbody>
+                    </table>
+                    <p><b>*</b> <i>Set at $125/month, please obtain actual estimate</i></p>
+                    <p><b>**</b> <i>Set at $83/month, please obtain actual estimate</i></p>
+                    <p><b>***</b> <i>Estimated at 9% of rent</i></p>
+                    <p><b>****</b> <i>Set at $66/month, will vary based on property</i></p>
+                </div>
+            </div>
+            <div class="panel panel-info shadow-lg">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Cash Flow</h2>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr><th scope="row">Net Operating Income</th><td>{{ net_oper_income }}</td></tr>
+                            <tr><th scope="row">Monthly Mortgage Payment</th><td>{{ mort_payment }}</td></tr>
+                            <tr class="list-group-item-warning"><th scope="row">Monthly Cash Flow</th><td>{{ cash_flow }}</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-info shadow-lg">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Investment Ratios/Metrics</h2>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr><th scope="row">Operating Expense Ratio</th><td>{{ oper_exp_ratio }} (Typical 25-35%)</td></tr>
+                            <tr><th scope="row">Debt Coverage Ratio</th><td>{{ debt_coverage_ratio }}</td></tr>
+                            <tr><th scope="row">Capitalization Rate</th><td>{{ cap_rate }}</td></tr>
+                            <tr><th scope="row">Rent-to-Value Ratio</th><td>{{ rtv }}</td></tr>
+                            <tr class="list-group-item-warning"><th scope="row">Cash on Cash Return</th><td>{{ cash_on_cash }}</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel panel-info shadow-lg">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Initial Cash Invested</h2>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr class="list-group-item-warning"><th scope="row">Zestimate* (current mkt value)</th><td>{{ curr_value }}</td></tr>
+                            <tr><th scope="row">Down Payment (%)</th><td>{{ down_payment_percentage }}</td></tr>
+                            <tr><th scope="row">Down Payment ($)</th><td>{{ down_payment }}</td></tr>
+                            <tr><th scope="row">Initial Improvements</th><td>{{ initial_improvements }}</td></tr>
+                            <tr><th scope="row">Closing Costs</th><td>{{ closing_costs }}</td></tr>
+                            <tr class="list-group-item-warning"><th scope="row">Initial Cash Invested</th><td>{{ init_cash_invest }}</td></tr>
+                        </tbody>
+                    </table>
+                    <p><b>*</b> <i>Zestimate trademarked by Zillow</i></p>
+                </div>
+            </div>
+            <div class="panel panel-info shadow-lg">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Notes</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="comment"></label>
+                        <textarea class="form-control" rows="10" id="comment">{{ notes }}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-info shadow-lg">
+        <div class="panel-heading">
+            <h2 class="panel-title"> Last 5 Natural Disasters in {{ county }}* </h2>
+        </div>
+        <div class="panel-body">
+            <table class="table table-bordered">
+                <tbody>
+                <tr><th scope="row">Disaster Type</th><th> Date </th><th> County </th><th> Details </th></tr>
+                <tr><td scope="row">{{ disaster1_type }}</td><td> {{ disaster1_date }}</td><td> {{ disaster1_county }} </td><td> {{ disaster1_title }} </td></tr>
+                <tr><td scope="row">{{ disaster2_type }}</td><td> {{ disaster2_date }}</td><td> {{ disaster2_county }} </td><td> {{ disaster2_title }} </td></tr>
+                <tr><td scope="row">{{ disaster3_type }}</td><td> {{ disaster3_date }}</td><td> {{ disaster3_county }} </td><td> {{ disaster3_title }} </td></tr>
+                <tr><td scope="row">{{ disaster4_type }}</td><td> {{ disaster4_date }}</td><td> {{ disaster4_county }} </td><td> {{ disaster4_title }} </td></tr>
+                <tr><td scope="row">{{ disaster5_type }}</td><td> {{ disaster5_date }}</td><td> {{ disaster5_county }} </td><td> {{ disaster5_title }} </td></tr>
+                </tbody>
+            </table>
+            <p><b>*</b> <i>Disaster information pulled from <a href="https://www.fema.gov/">fema.gov </a></i></p>
+        </div>
+    </div>
+    <a class="btn btn-outline-primary btn-lg" href="{% url 'edit' %}">EDIT VALUES</a>
+    <a class="btn btn-primary btn-lg" href="{% url 'pdf' %}">PDF</a>
+    <br>
+    <br>
+
+    <a href="http://zillow.com">
+    <img src="http://www.zillow.com/widgets/GetVersionedResource.htm?path=/static/logos/Zillowlogo_200x50.gif" width="200" height="50" alt="Zillow Real Estate Search" id="yui_3_18_1_1_1506979974705_333">
+    </a>
 </div>
-<a class="btn btn-success btn-lg" href="{% url 'edit' %}">EDIT VALUES</a>
-    <a class="btn btn-success btn-lg" href="{% url 'pdf' %}">PDF</a>
-<br>
-<br>
-<br>
-<br>
-<br>
-<a href="http://zillow.com">
-<img src="http://www.zillow.com/widgets/GetVersionedResource.htm?path=/static/logos/Zillowlogo_200x50.gif" width="200" height="50" alt="Zillow Real Estate Search" id="yui_3_18_1_1_1506979974705_333">
-</a>
+
 {% endblock %}

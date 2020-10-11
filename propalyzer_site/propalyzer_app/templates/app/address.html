@@ -2,41 +2,68 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<div class="row">
-	 <div class="col-md-5">
 
-		<h2>Start Here...</h2>
-		<p> Enter the residential property address to get the following details:
-		<ul> 
-			<li> Zestimate* </li>
-			<li> Year Built* </li>
-			<li> Square Feet* </li>
-			<li> Rent Zestimate* </li>
-		    <li> School information </li>
-			<li> County* </li>
-			<li> Area Crime </li>
-		    <li> Financial/Investment Metrics </li>
-			<li> Area Natural Disaster Info </li>
-	     </ul><br>
-		 <p> Coming Soon </p>
-		 <ul>
-			 <li> Property Tax information </li>
-			 <li> Area Economic Info </li>
-
-		</ul>
-		 <br>
-		<p>  </p>
-		   <form method="POST">
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+  <h1 class="display-4">Start Here...</h1>
+  <p class="lead">Enter the residential property address to get the following details:</p>
+</div>
+<div class="bg-light text-dark px-5 py-3 pt-md-5 pb-md-4">
+	<div class="row">
+		<div class="col-lg-2 col-md-1 col"></div>
+		<div class="col-md-3 col-sm-12 bordered">
+			<ul>
+				<li><strong>Zestimate*</strong></li>
+				<li><strong>Rent Zestimate*</strong></li>
+				<li><strong>Area Crime</strong></li>
+			</ul>
+		</div>
+		<div class="col-md-3 col-sm-12">
+			<ul>
+				<li><strong>Year Built*</strong></li>
+				<li><strong>School information</strong></li>
+				<li><strong>Financial/Investment Metrics</strong></li>
+			</ul>
+		</div>
+		<div class="col-md-3 col-sm-12">
+			<ul>
+				<li><strong>Square Feet*</strong></li>
+				<li><strong>County*</strong></li>
+				<li><strong>Area Natural Disaster Info</strong></li>
+			</ul>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-12">
+			<h6> (*) from Zillow.com </h6>
+		</div>
+	</div>
+	<hr>
+	<div class="row align-content-center text-center">
+		<div class="col-2"></div>
+		<div class="col-md-8">
+			<form method="POST">
 			{% csrf_token %}
 			{{ form|crispy }}
 			<br>
 			<?button type="submit" style="width:150px;height:50px;color:green;font-size:30px"?><?/button?>
-			<input type='submit' value='SUBMIT' class='btn-lg btn-primary' />
-		</form>
-		 <br><br>
-		 <p> (*) from Zillow.com </p>
+			<input type='submit' value='SUBMIT' class='btn-lg btn-lg btn-outline-primary' />
+		</form><br>
+		</div>
 	</div>
- 
+	<hr>
+	<div class="row">
+		<div class="col-12">
+			<p><b>Coming Soon</b></p>
+			<ul>
+				<li class="buleted"> Property Tax information </li>
+				<li class="buleted"> Area Economic Info </li>
+			</ul>
+		</div>
+
+	</div>
+
 </div>
+
+
 {% endblock %}
 
