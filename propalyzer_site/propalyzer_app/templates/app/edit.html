@@ -3,7 +3,7 @@
 
 {% block content %}   
 
-<div class="text-light px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+<div class="bg-info text-light px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
     <h1 class="display-5">Edit Property Details</h1>
     <p class="lead">DISCLAIMER: Some of the values below were pulled from Zillow.com. The information from these sites may, at times, be inaccurate. <br>Please validate all information below before seriously considering an investment property.</p>
     <p class="lead"> * indicates required fields</p>
@@ -14,7 +14,7 @@
 		<form method="post">
 			{% csrf_token %}
 			<b>{{ form|crispy }}</b>
-			<button type="submit" class="btn-outline-primary">Submit</button>
+			<button type="submit" class="btn-outline-info">Submit</button>
 		</form>
 	</div>
 </div>

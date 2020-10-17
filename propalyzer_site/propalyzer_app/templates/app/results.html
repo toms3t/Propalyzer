@@ -2,10 +2,10 @@
 
 {% block content %}
 
-<div class="bg-transparent text-light px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+<div class="bg-info text-light px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
     <h1 class="display-5">Property Information for: <b>{{ address }}</b></h1>
     <p class="lead"><i>Information as of: {{ pub_date }} (Pacific Time)</i></p>
-    <p class="lead">Check out this property on <a href="{{ listing_url }}">Zillow</a> for the latest details</p>
+    <p class="lead">Check out this property on <a class="text-dark" href="{{ listing_url }}">Zillow</a> for the latest details</p>
 </div>
 
 <div class="bg-light text-dark px-3 py-3 pt-md-5 pb-md-4 mx-auto">
@@ -50,7 +50,7 @@
                             <tr><th scope="row">{{ high_school }}</th><td> {{ high_school_score }}</td></tr>
                         </tbody>
                     </table>
-                    <p><b>*</b> <i>School information pulled from <a href="http://greatschools.org">greatschools.org </a></i></p>
+                    <p><b>*</b> <i>School information pulled from <a class="text-info" href="http://greatschools.org">greatschools.org </a></i></p>
                     <p><b>*</b> <i>Rating is based on a scale of 1 - 10 (10 = best) </i></p>
                 </div>
             </div>
@@ -173,11 +173,11 @@
                 <tr><td scope="row">{{ disaster5_type }}</td><td> {{ disaster5_date }}</td><td> {{ disaster5_county }} </td><td> {{ disaster5_title }} </td></tr>
                 </tbody>
             </table>
-            <p><b>*</b> <i>Disaster information pulled from <a href="https://www.fema.gov/">fema.gov </a></i></p>
+            <p><b>*</b> <i>Disaster information pulled from <a class="text-info" href="https://www.fema.gov/">fema.gov </a></i></p>
         </div>
     </div>
-    <a class="btn btn-outline-primary btn-lg" href="{% url 'edit' %}">EDIT VALUES</a>
-    <a class="btn btn-primary btn-lg" href="{% url 'pdf' %}">PDF</a>
+    <a class="btn btn-outline-info btn-lg" href="{% url 'edit' %}">EDIT VALUES</a>
+    <a class="btn btn-info btn-lg" href="{% url 'pdf' %}">PDF</a>
     <br>
     <br>
 
