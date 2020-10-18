@@ -1,0 +1,27 @@
+html,
+body {
+  height: 100%;
+  background-color: #333;
+    color: white;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.nav-masthead .link + .link {
+    margin-left: 1rem;
+}
+.nav-masthead .link {
+    padding: .35rem 0;
+    font-weight: 700;
+    color: rgba(255, 255, 255, .5);
+    background-color: transparent;
+    border-bottom: .25rem solid transparent;
+}
+
+.nav-masthead .link:hover {
+    border-bottom: .25rem solid;
+    border-bottom-color: #005cbf;
+    color: #005cbf;
+}
