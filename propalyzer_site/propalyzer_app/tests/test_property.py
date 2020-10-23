@@ -126,9 +126,9 @@ class PropertyModelTest(TestCase):
                          self.prop.mort_payment, self.prop.cash_flow)
 
     def test_fema_response(self):
-        url1 = 'https://www.fema.gov/api/open/v1/DisasterDeclarationsSummaries?'
-        url2 = '$filter=state eq TN&$select=state, incidentType, declaredCountyArea, title, '
-        url3 = 'incidentEndDate&$orderby=incidentEndDate'
+        url1 = "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?"
+        url2 = "$filter=state eq 'VA'&$select=state,incidentType,"
+        url3 = "declaredCountyArea,title,fyDeclared"
         url = url1+url2+url3
         resp = str(requests.get(url))
         self.assertEqual(resp, '<Response [200]>')
