@@ -99,4 +99,3 @@ steps:
   inputs:
     command: buildAndPush
     repository: prop_dev
-    containerRegistry: $(dockerRegistryServiceConnection)
