@@ -3,7 +3,7 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/python
 pool:
-  vmImage: 'Ubuntu 16.04'
+  vmImage: 'Ubuntu 18.04'
 
 steps:
 - task: UsePythonVersion@0
@@ -41,12 +41,6 @@ steps:
   inputs:
     secureFile: 'requirements_docker.txt'
 
-- task: DownloadSecureFile@1
-  name: dockerfile
-  displayName: 'Download Dockerfile'
-  inputs:
-    secureFile: 'Dockerfile'
-
 - task: PythonScript@0
   displayName: 'Export project path'
   inputs:
@@ -69,7 +63,6 @@ steps:
     cp $(startup.secureFilePath) /home/vsts/work/1/s/startup.sh
     cp $(wsgi.secureFilePath) /home/vsts/work/1/s/wsgi.py
     cp $(req_docker.secureFilePath) /home/vsts/work/1/s/requirements_docker.txt
-    cp $(dockerfile.secureFilePath) /home/vsts/work/1/s/Dockerfile
   displayName: 'Copy files to build agent'
 
 - task: ShellScript@2
@@ -106,3 +99,4 @@ steps:
   inputs:
     command: buildAndPush
     repository: prop_dev
+    containerRegistry: $(dockerRegistryServiceConnection)
