@@ -46,7 +46,7 @@ steps:
   inputs:
     scriptSource: 'inline'
     script: |
-      """Search all subdirectories for `manage.py`."""
+      """Search alll subdirectories for `manage.py`."""
       from glob import iglob
       from os import path
       # Python >= 3.5
