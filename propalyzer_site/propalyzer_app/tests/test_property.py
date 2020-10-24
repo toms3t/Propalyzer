@@ -132,3 +132,8 @@ class PropertyModelTest(TestCase):
         url = url1+url2+url3
         resp = str(requests.get(url))
         self.assertEqual(resp, '<Response [200]>')
+
+    def test_areavibes(self):
+        url = 'http://www.areavibes.com/kenmore-wa/livability/?addr=7822+NE+147th+st.'
+        resp = str(requests.get(url))
+        self.assertEqual(resp, '<Response [200]>')

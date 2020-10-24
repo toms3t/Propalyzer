@@ -88,8 +88,8 @@ class PropSetup:
             'cost_of_living': '',
             'housing': '',
             'schools': '',
-            'weather': '',
-            'employment': ''
+            'employment': '',
+            'user_ratings': ''
         }
         self.street_address = ''
         self.city = ''
@@ -320,12 +320,12 @@ class PropSetup:
             - schools
             - Employment
             - Housing
-            - Weather
+            - User Ratings
         """
         url = self.set_areavibes_url()
         r = requests.get(url)
         soup = BeautifulSoup(r.content, 'html.parser')
-        info_block = soup.find_all('nav', class_='category-menu')
+        info_block = soup.find_all('nav', class_='category-menu-new')
         try:
             result_string = info_block[0].get_text()
         except IndexError:
@@ -338,18 +338,10 @@ class PropSetup:
         employment = ''
         housing = ''
         schools = ''
-        weather = ''
+        user_ratings = ''
 
         try:
-            parsed = re.search(
-                'Livability(.*?)'
-                'Amenities(.*?)'
-                'Cost of Living(.*?)'
-                'Crime(.*?)'
-                'Employment(.*?)'
-                'Housing(.*?)'
-                'Schools(.*?)'
-                'Weather(.*?)$', result_string)
+            parsed = re.search('Livability(.*?)Amenities(.*?)Cost of Living(.*?)Crime(.*?)Employment(.*?)Housing(.*?)Schools(.*?)User Ratings(.*?)$', result_string)
         except AttributeError:
             livability = 'Unknown'
             cost_of_living = 'Unknown'
@@ -357,7 +349,7 @@ class PropSetup:
             employment = 'Unknown'
             housing = 'Unknown'
             schools = 'Unknown'
-            weather = 'Unknown'
+            user_ratings = 'Unknown'
         if parsed:
             try:
                 livability = parsed.group(1)
@@ -384,9 +376,9 @@ class PropSetup:
             except IndexError:
                 schools = 'Unknown'
             try:
-                weather = parsed.group(8)
+                user_ratings = parsed.group(8)
             except IndexError:
-                weather = 'Unknown'
+                user_ratings = 'Unknown'
         self.areavibes_dict = {
             'livability': livability,
             'crime': crime,
@@ -394,7 +386,7 @@ class PropSetup:
             'schools': schools,
             'employment': employment,
             'housing': housing,
-            'weather': weather
+            'user_ratings': user_ratings
         }
 
     def set_disaster_info(self):
