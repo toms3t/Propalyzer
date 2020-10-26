@@ -6,41 +6,39 @@
     <title>{{ title }} - Propalyzer </title>
     {% load staticfiles %}
     <link rel="stylesheet" type="text/css" href="{% static 'app/content/bootstrap.min.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'app/content/site.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'app/content/style.css' %}" />
+
     <script src="{% static 'app/scripts/modernizr-2.6.2.js' %}"></script>
 </head>
 
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-              
-                <a href="/propalyzer" class="navbar-brand">Propalyzer</a>
-
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a href="/propalyzer/">Home</a></li>
-                    <li><a href="/propalyzer/disclaimer">Disclaimer</a></li>
-                </ul>
-
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+      <navbar class="masthead mb-auto navbar-fixed-top shadow-lg">
+        <div class="inner">
+            <div class="row">
+                <h3 class="masthead-brand pl-4 pr-3">Propalyzer</h3>
+                <nav class="nav nav-masthead justify-content-center nav-right">
+                <a class="link" href="/propalyzer/">Home</a>
+                <a class="link" href="/propalyzer/disclaimer">Disclaimer</a>
+          </nav>
             </div>
         </div>
+      </navbar>
+
+        <div class="body-content pricing-header px-3 py-3 pt-md-5 pb-md-4">
+            {% block content %}{% endblock %}
+        </div>
+
+
+      <footer class="mastfoot mt-auto text-center">
+        <div class="inner">
+            © Zillow, Inc., 2006-2016. Use is subject to <strong></strong><a href="https://www.zillow.com/howto/api/APITerms.htm">Terms of Use</a></strong><br>
+            <a href="https://www.zillow.com/zestimate/">What's a Zestimate?</a>
+        </div>
+      </footer>
     </div>
 
-    <div class="container body-content">
-{% block content %}{% endblock %}
-        <hr/>
-        <footer>
-            <p> © Zillow, Inc., 2006-2016. Use is subject to <a href="https://www.zillow.com/howto/api/APITerms.htm">Terms of Use</a><br><a href="https://www.zillow.com/zestimate/">What's a Zestimate?</a></p>
-        </footer>
-    </div>
+
 
     <script src="{% static 'app/scripts/jquery-1.10.2.js' %}"></script>
     <script src="{% static 'app/scripts/bootstrap.js' %}"></script>

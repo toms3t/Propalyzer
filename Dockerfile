@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:18.04
 
 COPY requirements_docker.txt /
 
@@ -10,7 +10,7 @@ RUN apt-get --assume-yes install python3-pip
 
 RUN apt-get --assume-yes install git-all
 
-RUN pip3 install  --trusted-host pypi.python.org -r requirements_docker.txt
+RUN pip3 install --trusted-host pypi.python.org -r requirements_docker.txt
 
 RUN git clone https://github.com/toms3t/Propalyzer.git
 
@@ -36,6 +36,6 @@ RUN python3 manage.py makemigrations propalyzer_app
 
 RUN python3 manage.py migrate
 
-RUN python3 manage.py collectstatic
+RUN python3 manage.py collectstatic --noinput
 
 CMD ["./startup.sh"]

@@ -6,7 +6,7 @@ django-crispy-forms==1.6.1
 future==0.16.0
 idna==2.6
 probableparsing==0.0.1
-python-crfsuite==0.9.5
+python-crfsuite==0.9.6
 pytz==2017.2
 requests==2.21.0
 urllib3==1.24.1

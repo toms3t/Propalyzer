@@ -79,7 +79,7 @@ class ContextData:
             'cost_of_living': '',
             'housing': '',
             'schools': '',
-            'weather': '',
+            'user_ratings': '',
             'employment': ''
         }
         self.street_address = ''
@@ -271,7 +271,7 @@ class ContextData:
             'schools': self.areavibes_dict['schools'],
             'employment': self.areavibes_dict['employment'],
             'housing': self.areavibes_dict['housing'],
-            'weather': self.areavibes_dict['weather'],
+            'user_ratings': self.areavibes_dict['user_ratings'],
             'disaster1_type': self.disaster_dict['1'][0],
             'disaster1_date': self.disaster_dict['1'][1],
             'disaster1_county': self.disaster_dict['1'][2],
