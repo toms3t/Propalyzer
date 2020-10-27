@@ -16,7 +16,7 @@ def mk_int(s):
         return s
 
 
-class ContextData:
+class ContextData(property):
     """
     Class to create property objects and execute the Zillow API call business logic.
     """
@@ -261,6 +261,7 @@ class ContextData:
             'high_school_score': self.schools['high_school_score'],
             'year_built': self.year_built,
             'county': self.county,
+            'state': self.state.upper(),
             'nat_disasters': 'Unknown',
             'listing_url': self.listing_url,
             'beds': self.beds,
@@ -272,31 +273,26 @@ class ContextData:
             'employment': self.areavibes_dict['employment'],
             'housing': self.areavibes_dict['housing'],
             'user_ratings': self.areavibes_dict['user_ratings'],
-            'disaster1_type': self.disaster_dict['1'][0],
-            'disaster1_date': self.disaster_dict['1'][1],
-            'disaster1_county': self.disaster_dict['1'][2],
-            'disaster1_url': self.disaster_dict['1'][4],
-            'disaster1_title': self.disaster_dict['1'][5],
-            'disaster2_type': self.disaster_dict['2'][0],
-            'disaster2_date': self.disaster_dict['2'][1],
-            'disaster2_county': self.disaster_dict['2'][2],
-            'disaster2_url': self.disaster_dict['2'][4],
-            'disaster2_title': self.disaster_dict['2'][5],
-            'disaster3_type': self.disaster_dict['3'][0],
-            'disaster3_date': self.disaster_dict['3'][1],
-            'disaster3_county': self.disaster_dict['3'][2],
-            'disaster3_url': self.disaster_dict['3'][4],
-            'disaster3_title': self.disaster_dict['3'][5],
-            'disaster4_type': self.disaster_dict['4'][0],
-            'disaster4_date': self.disaster_dict['4'][1],
-            'disaster4_county': self.disaster_dict['4'][2],
-            'disaster4_url': self.disaster_dict['4'][4],
-            'disaster4_title': self.disaster_dict['4'][5],
-            'disaster5_type': self.disaster_dict['5'][0],
-            'disaster5_date': self.disaster_dict['5'][1],
-            'disaster5_county': self.disaster_dict['5'][2],
-            'disaster5_url': self.disaster_dict['5'][4],
-            'disaster5_title': self.disaster_dict['5'][5],
+            'disaster1_year': self.disaster_dict[self.last_five_years[0]][0],
+            'disaster1_title': self.disaster_dict[self.last_five_years[0]][1],
+            'disaster1_county': self.disaster_dict[self.last_five_years[0]][2],
+            'disaster1_state': self.disaster_dict[self.last_five_years[0]][3],
+            'disaster2_year': self.disaster_dict[self.last_five_years[1]][0],
+            'disaster2_title': self.disaster_dict[self.last_five_years[1]][1],
+            'disaster2_county': self.disaster_dict[self.last_five_years[1]][2],
+            'disaster2_state': self.disaster_dict[self.last_five_years[1]][3],
+            'disaster3_year': self.disaster_dict[self.last_five_years[2]][0],
+            'disaster3_title': self.disaster_dict[self.last_five_years[2]][1],
+            'disaster3_county': self.disaster_dict[self.last_five_years[2]][2],
+            'disaster3_state': self.disaster_dict[self.last_five_years[2]][3],
+            'disaster4_year': self.disaster_dict[self.last_five_years[3]][0],
+            'disaster4_title': self.disaster_dict[self.last_five_years[3]][1],
+            'disaster4_county': self.disaster_dict[self.last_five_years[3]][2],
+            'disaster4_state': self.disaster_dict[self.last_five_years[3]][3],
+            'disaster5_year': self.disaster_dict[self.last_five_years[4]][0],
+            'disaster5_title': self.disaster_dict[self.last_five_years[4]][1],
+            'disaster5_county': self.disaster_dict[self.last_five_years[4]][2],
+            'disaster5_state': self.disaster_dict[self.last_five_years[4]][3]
         }
 
     @property
