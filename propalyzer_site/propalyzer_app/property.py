@@ -423,7 +423,6 @@ class PropSetup:
         for url in urls:
             resp = requests.get(url)
             resp_json = resp.json()
-            print(resp_json)
             try:
                 random_pick_disaster = random.choice(resp_json['DisasterDeclarationsSummaries'])
                 local_disasters.append(random_pick_disaster)
@@ -440,10 +439,6 @@ class PropSetup:
                     disaster['state'],
                     disaster['designatedArea']
                 ]
-                try:
-                    print(disaster_dict[disaster['fyDeclared']])
-                except:
-                    pass
 
             for i in range(5):
                 if not disaster_dict.get(self.last_five_years[i]):
@@ -451,7 +446,6 @@ class PropSetup:
 
 
         self.disaster_dict = disaster_dict
-        print(self.disaster_dict)
 
     @property
     def __str__(self):
