@@ -36,12 +36,6 @@ steps:
   inputs:
     secureFile: 'wsgi.py'
 
-- task: DownloadSecureFile@1
-  name: req_docker
-  displayName: 'Download requirements file'
-  inputs:
-    secureFile: 'requirements_docker.txt'
-
 - task: PythonScript@0
   displayName: 'Export project path'
   inputs:
@@ -63,7 +57,6 @@ steps:
     cp $(settings.secureFilePath) /home/vsts/work/1/s/settings.py
     cp $(startup.secureFilePath) /home/vsts/work/1/s/startup.sh
     cp $(wsgi.secureFilePath) /home/vsts/work/1/s/wsgi.py
-    cp $(req_docker.secureFilePath) /home/vsts/work/1/s/requirements_docker.txt
   displayName: 'Copy files to build agent'
 
 - task: ShellScript@2
