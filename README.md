@@ -1,6 +1,6 @@
 # Propalyzer
 
-[![Build Status](https://tomset.visualstudio.com/Propalyzer/_apis/build/status/toms3t.Propalyzer?branchName=master)](https://tomset.visualstudio.com/Propalyzer/_build/latest?definitionId=7&branchName=master)
+[![Build Status](https://dev.azure.com/tomset/Propalyzer/_apis/build/status/toms3t.Propalyzer%20(1)?branchName=master)](https://tomset.visualstudio.com/Propalyzer/_build/latest?definitionId=7&branchName=master)
 
 Try it!   http://propalyzer.info
 
