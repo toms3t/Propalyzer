@@ -160,20 +160,20 @@
     </div>
     <div class="panel panel-info shadow-lg">
         <div class="panel-heading">
-            <h2 class="panel-title"> Last 5 Natural Disasters in {{ county }}* </h2>
+            <h2 class="panel-title"> Last 5 Years of Natural Disasters in {{ county }}, {{ state }}* </h2>
         </div>
         <div class="panel-body">
             <table class="table table-bordered">
                 <tbody>
-                <tr><th scope="row">Disaster Type</th><th> Date </th><th> County </th><th> Details </th></tr>
-                <tr><td scope="row">{{ disaster1_type }}</td><td> {{ disaster1_date }}</td><td> {{ disaster1_county }} </td><td> {{ disaster1_title }} </td></tr>
-                <tr><td scope="row">{{ disaster2_type }}</td><td> {{ disaster2_date }}</td><td> {{ disaster2_county }} </td><td> {{ disaster2_title }} </td></tr>
-                <tr><td scope="row">{{ disaster3_type }}</td><td> {{ disaster3_date }}</td><td> {{ disaster3_county }} </td><td> {{ disaster3_title }} </td></tr>
-                <tr><td scope="row">{{ disaster4_type }}</td><td> {{ disaster4_date }}</td><td> {{ disaster4_county }} </td><td> {{ disaster4_title }} </td></tr>
-                <tr><td scope="row">{{ disaster5_type }}</td><td> {{ disaster5_date }}</td><td> {{ disaster5_county }} </td><td> {{ disaster5_title }} </td></tr>
+                <tr><th scope="row">Year</th><th> Type </th><th> State </th><th> County </th></tr>
+                <tr><td scope="row">{{ disaster1_year }}</td><td> {{ disaster1_title }}</td><td> {{ disaster1_county }} </td><td> {{ disaster1_state }} </td></tr>
+                <tr><td scope="row">{{ disaster2_year }}</td><td> {{ disaster2_title }}</td><td> {{ disaster2_county }} </td><td> {{ disaster2_state }} </td></tr>
+                <tr><td scope="row">{{ disaster3_year }}</td><td> {{ disaster3_title }}</td><td> {{ disaster3_county }} </td><td> {{ disaster3_state }} </td></tr>
+                <tr><td scope="row">{{ disaster4_year }}</td><td> {{ disaster4_title }}</td><td> {{ disaster4_county }} </td><td> {{ disaster4_state }} </td></tr>
+                <tr><td scope="row">{{ disaster5_year }}</td><td> {{ disaster5_title }}</td><td> {{ disaster5_county }} </td><td> {{ disaster5_state }} </td></tr>
                 </tbody>
             </table>
-            <p><b>*</b> <i>Disaster information pulled from <a class="text-info" href="https://www.fema.gov/">fema.gov </a></i></p>
+            <p><b>*</b> <i>One random disaster was pulled for each year. For more detailed information, go to <a class="text-info" href="https://www.fema.gov/">fema.gov </a></i></p>
         </div>
     </div>
     <a class="btn btn-outline-info btn-lg" href="{% url 'edit' %}">EDIT VALUES</a>

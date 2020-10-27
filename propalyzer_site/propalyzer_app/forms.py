@@ -57,6 +57,8 @@ class PropertyForm(forms.Form):
         label='Resign Fee', help_text='Enter annual amount', required=False)
     county = forms.CharField(label='County', max_length=150,
                              required=False, help_text='Pulled from Zillow.com')
+    state = forms.CharField(label='State', max_length=150,
+                             required=False, help_text='Pulled from Zillow.com')
     year_built = forms.IntegerField(
         label='Year Built', help_text='Pulled from Zillow.com')
     notes = forms.CharField(

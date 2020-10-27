@@ -1,6 +1,8 @@
 import re
 import xml.etree.cElementTree as ET
 import requests
+import datetime
+import random
 from bs4 import BeautifulSoup
 import usaddress
 from .secret import Secret
@@ -395,7 +397,14 @@ class PropSetup:
         the county of the property being researched. The dictionary includes disaster type, date, county, state, url,
         and fema id for each disaster.
         """
+        def _set_last_five_years():
+            today = datetime.date.today()
+            cur_year = int(today.year)
+            self.last_five_years = [str(cur_year-i) for i in range(5)]
+
+        _set_last_five_years()
         local_disasters = []
+        urls = []
         disaster_dict = {}
         if 'County' in self.county:
             county_pattern = re.search('^(.*?) County', self.county)
@@ -405,52 +414,36 @@ class PropSetup:
                 county = self.county
         else:
             county = self.county
-        url1 = 'https://www.fema.gov/api/open/v1/DisasterDeclarationsSummaries?'
-        url2 = "$filter=state eq '{}'&$select=state, incidentType, declaredCountyArea, title, ".format(
-            self.state.upper())
-        url3 = 'incidentEndDate&$orderby=incidentEndDate'
-        url = url1+url2+url3
-        resp = requests.get(url)
-        resp_json = resp.json()
-        for dis in resp_json['DisasterDeclarationsSummaries']:
-            if county in dis['declaredCountyArea']:
-                local_disasters.append(dis)
-        last_5_disasters = local_disasters[-5:]
-        c = 1
-        if not last_5_disasters:
-            disaster_dict[1] = ['No Records Found',
-                                'NA', 'NA', 'NA', 'NA', 'NA']
-            disaster_dict[2] = ['No Records Found',
-                                'NA', 'NA', 'NA', 'NA', 'NA']
-            disaster_dict[3] = ['No Records Found',
-                                'NA', 'NA', 'NA', 'NA', 'NA']
-            disaster_dict[4] = ['No Records Found',
-                                'NA', 'NA', 'NA', 'NA', 'NA']
-            disaster_dict[5] = ['No Records Found',
-                                'NA', 'NA', 'NA', 'NA', 'NA']
+        for year in self.last_five_years:
+            url1 = 'https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?'
+            url2 = "$filter=substringof('{}',designatedArea) and state eq '{}' and fyDeclared eq '{}'".format(
+                county, self.state.upper(), year)
+            url = url1+url2
+            urls.append(url)
+        for url in urls:
+            resp = requests.get(url)
+            resp_json = resp.json()
+            try:
+                random_pick_disaster = random.choice(resp_json['DisasterDeclarationsSummaries'])
+                local_disasters.append(random_pick_disaster)
+            except IndexError:
+                continue
+        if not local_disasters:
+            for i in range(5):
+                disaster_dict[self.last_five_years[i]] = [self.last_five_years[i],'Unknown', 'Unknown', 'Unknown']
         else:
-            for disaster in last_5_disasters[::-1]:
-                disaster_dict[c] = [
-                    disaster['incidentType'],
-                    disaster['incidentEndDate'][:10],
-                    disaster['declaredCountyArea'],
+            for disaster in local_disasters:
+                disaster_dict[str(disaster['fyDeclared'])] = [
+                    disaster['fyDeclared'],
+                    disaster['declarationTitle'],
                     disaster['state'],
-                    url1[:-1]+'/'+disaster['id'],
-                    disaster['title']
+                    disaster['designatedArea']
                 ]
-                c += 1
-            if not disaster_dict[2]:
-                disaster_dict[2] = ['No Records Found',
-                                    'NA', 'NA', 'NA', 'NA', 'NA']
-            if not disaster_dict[3]:
-                disaster_dict[3] = ['No Records Found',
-                                    'NA', 'NA', 'NA', 'NA', 'NA']
-            if not disaster_dict[4]:
-                disaster_dict[4] = ['No Records Found',
-                                    'NA', 'NA', 'NA', 'NA', 'NA']
-            if not disaster_dict[5]:
-                disaster_dict[5] = ['No Records Found',
-                                    'NA', 'NA', 'NA', 'NA', 'NA']
+
+            for i in range(5):
+                if not disaster_dict.get(self.last_five_years[i]):
+                    disaster_dict[self.last_five_years[i]] = [self.last_five_years[i],'No Disasters Reported', 'N/A', 'N/A']
+
 
         self.disaster_dict = disaster_dict
 
