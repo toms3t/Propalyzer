@@ -56,6 +56,7 @@ local_settings.py
 secret.py
 Secret.py
 propalyzer_site/propalyzer_app/migrations
+staticfiles/
 
 # Flask stuff:
 instance/
@@ -96,3 +97,4 @@ ENV/
 *.swp
 *.sqlite3
 *.DS_Store
+.vscode
