@@ -92,4 +92,4 @@ steps:
   displayName: Build and Push to ACR
   inputs:
     command: buildAndPush
-    repository: prop_prod
+    repository: prop_dev
