@@ -61,7 +61,7 @@ def edit(request):
 
         prop_list = ['sqft', 'curr_value', 'rent', 'down_payment_percentage', 'interest_rate', 'closing_costs',
                      'initial_improvements', 'hoa', 'insurance', 'taxes', 'utilities', 'maintenance',
-                     'prop_management_fee', 'tenant_placement_fee', 'resign_fee', 'county', 'state',
+                     'prop_management_fee', 'tenant_placement_fee', 'resign_fee', 'county',
                      'year_built', 'notes']
         for key in prop_list:
             prop[key] = form.data[key]
