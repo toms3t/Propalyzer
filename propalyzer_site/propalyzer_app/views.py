@@ -24,6 +24,7 @@ def address(request):
         prop = PropSetup(address_str)
         prop.get_info()
         prop.prop_management_fee = int(prop.rent*.09)
+        prop.closing_costs = int(prop.curr_value*.03)
         if prop.error:
             return TemplateResponse(request, 'app/addressnotfound.html')
 
