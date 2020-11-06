@@ -23,6 +23,8 @@ def address(request):
         address_str = str(request.POST['text_input'])
         prop = PropSetup(address_str)
         prop.get_info()
+        prop.prop_management_fee = int(prop.rent*.09)
+        prop.closing_costs = int(prop.curr_value*.03)
         if prop.error:
             return TemplateResponse(request, 'app/addressnotfound.html')
 
@@ -61,8 +63,9 @@ def edit(request):
 
         prop_list = ['sqft', 'curr_value', 'rent', 'down_payment_percentage', 'interest_rate', 'closing_costs',
                      'initial_improvements', 'hoa', 'insurance', 'taxes', 'utilities', 'maintenance',
-                     'prop_management_fee', 'tenant_placement_fee', 'resign_fee', 'county', 'state',
+                     'prop_management_fee', 'tenant_placement_fee', 'resign_fee', 'county',
                      'year_built', 'notes']
+        
         for key in prop_list:
             prop[key] = form.data[key]
 

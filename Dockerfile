@@ -12,7 +12,7 @@ RUN apt-get --assume-yes install git-all
 
 RUN pip3 install --trusted-host pypi.python.org -r requirements_docker.txt
 
-RUN git clone https://github.com/toms3t/Propalyzer.git
+RUN git clone -b dev https://github.com/toms3t/Propalyzer.git
 
 COPY secret.py /Propalyzer/propalyzer_site/propalyzer_app/
 
