@@ -7,7 +7,6 @@ LOG = logging.getLogger(__name__)
 
 
 class GreatSchools:
-    DAILY_API_CALL_COUNT = 0
 
     """
     Class to create and execute the GreatSchools API call logic with the goal of retrieving the elementary,
@@ -74,9 +73,6 @@ class GreatSchools:
 
             try:
                 school_data = requests.get(url)
-                GreatSchools.DAILY_API_CALL_COUNT += 1
-                LOG.debug(
-                    'Greatschools API CALL COUNT --- {}'.format(GreatSchools.DAILY_API_CALL_COUNT))
             except:
                 LOG.debug(
                     'Greatschools ConnectionError --- Tried URL - {}'.format(url))

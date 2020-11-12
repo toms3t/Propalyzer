@@ -25,6 +25,7 @@ def address(request):
         prop.get_info()
         prop.prop_management_fee = int(prop.rent*.09)
         prop.closing_costs = int(prop.curr_value*.03)
+        prop.taxes = int(prop.taxes)
         if prop.error:
             return TemplateResponse(request, 'app/addressnotfound.html')
 
@@ -36,9 +37,12 @@ def address(request):
         # Loggers
         LOG.debug('prop.address --- {}'.format(prop.address))
         LOG.debug('prop.address_dict --- {}'.format(prop.address_dict))
-        LOG.debug('prop.url --- {}'.format(prop.url))
+        LOG.debug('prop.url --- {}'.format(prop.zillow_url))
         LOG.debug('prop.zillow_dict --- {}'.format(prop.zillow_dict))
-        LOG.debug('areavibes_dict--- {}'.format(prop.areavibes_dict))
+        LOG.debug('prop.areavibes_dict--- {}'.format(prop.areavibes_dict))
+        LOG.debug('prop.disaster_dict--- {}'.format(prop.disaster_dict))
+        LOG.debug('prop.taxes--- {}'.format(prop.taxes))
+
 
         request.session['prop'] = prop.dict_from_class()
         return redirect('edit')

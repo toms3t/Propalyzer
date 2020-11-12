@@ -40,9 +40,9 @@ class PropertyForm(forms.Form):
     hoa = forms.IntegerField(
         label='HOA', help_text='Enter annual amount', required=False)
     insurance = forms.CharField(
-        label='Insurance', max_length=150, help_text='Defaults at $1000 If modifying, enter annual amount')
+        label='Insurance', max_length=150, help_text='Defaults at $1000. If modifying, enter annual amount')
     taxes = forms.IntegerField(
-        label='Taxes', help_text='Defaults to $1500. If modifying, enter annual amount')
+        label='Taxes', help_text="Pulls latest tax bill from Zillow's Public Records API. If modifying, enter annual amount")
     utilities = forms.IntegerField(
         label='Utility Costs',
         help_text='If you will pay utility costs instead of the tenant -- enter monthly amount', required=False)
