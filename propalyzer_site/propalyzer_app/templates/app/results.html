@@ -3,10 +3,10 @@
 {% block content %}
 
 <div class="bg-info text-light px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-    <h1 class="display-5">Property Information For Address: </h1>
-    <p style="font-size:25px"><i><b>{{ address }}</b></i></p>
-    <p style="font-size:15px"><i>Information as of: {{ pub_date }} (Pacific Time)</i></p>
-    <p style="font-size:15px">See more details for "{{ address }}" on <a class="text-dark" href="{{ listing_url }}">Zillow</a></p>
+    <h1 class="display-5"><u>Property Information For Address: </u></h1>
+    <p style="font-size:65px"><i><b>{{ address }}</b></i></p>
+    <p style="font-size:25px"><i>Information as of: {{ pub_date }} (Pacific Time)</i></p>
+    <p style="font-size:25px">See more details for "{{ address }}" on <a class="text-dark" href="{{ listing_url }}">Zillow</a></p>
 </div>
 
 <div class="bg-light text-dark px-3 py-3 pt-md-5 pb-md-4 mx-auto">
@@ -23,19 +23,22 @@
                             <tr><th scope="row">Bedrooms/Bathrooms</th><td>{{ beds }}/{{ baths }}&nbsp;<img src="http://zillow.mediaroom.com/image/Zillow_Wordmark_Blue_RGB.jpg" width="60" height="15"</tr></td></tr>
                             <tr><th scope="row">Year Built</th><td>{{ year_built }}&nbsp;<img src="http://zillow.mediaroom.com/image/Zillow_Wordmark_Blue_RGB.jpg" width="60" height="15"</tr></td></tr>
                             <tr><th scope="row">County</th><td>{{ county }}&nbsp;<img src="http://zillow.mediaroom.com/image/Zillow_Wordmark_Blue_RGB.jpg" width="60" height="15"</tr></td></tr>
-                            <tr><th scope="row">Area Livability* (100 is best)</th><td>{{ livability }}</td></tr>
-                            <tr><th scope="row">Area Crime*</th><td>{{ crime }}</td></tr>
-                            <tr><th scope="row">Area Cost Of Living*</th><td>{{ cost_of_living }}</td></tr>
-                            <tr><th scope="row">Area Schools*</th><td>{{ schools }}</td></tr>
-                            <tr><th scope="row">Area Employment*</th><td>{{ employment }}</td></tr>
-                            <tr><th scope="row">Area Housing*</th><td>{{ housing }}</td></tr>
-                            <tr><th scope="row">Area User Ratings*</th><td>{{ user_ratings }}</td></tr>
+                            <tr><th scope="row">Annual Property Tax*</th><td>{{ tax }}&nbsp;<img src="http://zillow.mediaroom.com/image/Zillow_Wordmark_Blue_RGB.jpg" width="60" height="15"</tr></td></tr>
+                            <tr><th scope="row">Latest Tax Assessment Year*</th><td>{{ tax_year }}&nbsp;<img src="http://zillow.mediaroom.com/image/Zillow_Wordmark_Blue_RGB.jpg" width="60" height="15"</tr></td></tr>
+                            <tr><th scope="row">Area Livability** (100 is best)</th><td>{{ livability }}</td></tr>
+                            <tr><th scope="row">Area Crime**</th><td>{{ crime }}</td></tr>
+                            <tr><th scope="row">Area Cost Of Living**</th><td>{{ cost_of_living }}</td></tr>
+                            <tr><th scope="row">Area Schools**</th><td>{{ schools }}</td></tr>
+                            <tr><th scope="row">Area Employment**</th><td>{{ employment }}</td></tr>
+                            <tr><th scope="row">Area Housing**</th><td>{{ housing }}</td></tr>
+                            <tr><th scope="row">Area User Ratings**</th><td>{{ user_ratings }}</td></tr>
                             <tr class="list-group-item-warning"><th scope="row">Cost Per SQFT</th><td>{{ cost_per_sqft }}</td></tr>
                             <tr><th scope="row">Interest Rate</th><td>{{ interest_rate }}</td></tr>
                             <tr><th scope="row">Mortgage Amount</th><td>{{ total_mortgage }}</td></tr>
                         </tbody>
                     </table>
-                    <p><b>*</b> <i>information obtained from areavibes.com</i></p>
+                    <p><b>*</b> <i>If tax year is 0, tax values were not found and tax amount defaults to $2000</i></p>
+                    <p><b>**</b> <i>information obtained from areavibes.com</i></p>
                 </div>
             </div>
             <div class="panel panel-info shadow-lg">
@@ -59,45 +62,44 @@
         <div class="col-md-4">
             <div class="panel panel-info shadow-lg">
                 <div class="panel-heading">
-                    <h2 class="panel-title">Operating Income</h2>
+                    <h2 class="panel-title">Monthly Income</h2>
                 </div>
                 <div class="panel-body">
                     <table class="table table-bordered">
                         <tbody>
-                            <tr><th scope="row">Rent Zestimate*</th><td>{{ rent }}&nbsp;<img src="http://zillow.mediaroom.com/image/Zillow_Wordmark_Blue_RGB.jpg" width="60" height="15"</tr></td></tr>
+                            <tr><th scope="row">Rent Estimate</th><td>{{ rent }}&nbsp;<img src="http://zillow.mediaroom.com/image/Zillow_Wordmark_Blue_RGB.jpg" width="60" height="15"</tr></td></tr>
                             <tr><th scope="row">Vacancy (8% of rent)</th><td>{{ vacancy }}</td></tr>
                             <tr class="list-group-item-warning"><th scope="row">Operating Income</th><td>{{ oper_income }}</td></tr>
                         </tbody>
                     </table>
-                    <p><b>*</b> <i>Zestimate trademarked by Zillow </i></p>
                 </div>
             </div>
             <div class="panel panel-info shadow-lg">
                 <div class="panel-heading">
-                    <h2 class="panel-title">Operating Expenses</h2>
+                    <h2 class="panel-title">Monthly Expenses</h2>
                 </div>
                 <div class="panel-body">
                     <table class="table table-bordered">
                         <tbody>
-                            <tr><th scope="row">Taxes</th><td>{{ taxes }} &nbsp;<img src="http://zillow.mediaroom.com/image/Zillow_Wordmark_Blue_RGB.jpg" width="60" height="15"</tr></td>
-                            <tr><th scope="row">Insurance**</th><td>{{ insurance }}</td></tr>
+                            <tr><th scope="row">Taxes</th><td>{{ month_taxes }} &nbsp;<img src="http://zillow.mediaroom.com/image/Zillow_Wordmark_Blue_RGB.jpg" width="60" height="15"</tr></td>
+                            <tr><th scope="row">Insurance*</th><td>{{ insurance }}</td></tr>
                             <tr><th scope="row">HOA</th><td>{{ hoa }}</td></tr>
-                            <tr><th scope="row">Property Management***</th><td>{{ prop_management_fee }}</td></tr>
+                            <tr><th scope="row">Property Management**</th><td>{{ prop_management_fee }}</td></tr>
                             <tr><th scope="row">Tenant Placement</th><td>{{ tenant_placement_fee }}</td></tr>
                             <tr><th scope="row">Lease Resign Fee</th><td>{{ resign_fee }}</td></tr>
-                            <tr><th scope="row">Maintenance****</th><td>{{ maintenance }}</td></tr>
+                            <tr><th scope="row">Maintenance***</th><td>{{ maintenance }}</td></tr>
                             <tr><th scope="row">Utilities</th><td>{{ utilities }}</td></tr>
                             <tr class="list-group-item-warning"><th scope="row">Operating Expenses</th><td>{{ oper_exp }}</td></tr>
                         </tbody>
                     </table>
-                    <p><b>**</b> <i>Set at $83/month, please obtain actual estimate</i></p>
-                    <p><b>***</b> <i>Estimated at 9% of rent</i></p>
-                    <p><b>****</b> <i>Defaults to $66/month, please obtain actual estimate</i></p>
+                    <p><b>*</b> <i>Set at $83/month, please obtain actual estimate</i></p>
+                    <p><b>**</b> <i>Estimated at 9% of rent</i></p>
+                    <p><b>***</b> <i>Defaults to $66/month, please obtain actual estimate</i></p>
                 </div>
             </div>
             <div class="panel panel-info shadow-lg">
                 <div class="panel-heading">
-                    <h2 class="panel-title">Cash Flow</h2>
+                    <h2 class="panel-title">Monthly Cash Flow</h2>
                 </div>
                 <div class="panel-body">
                     <table class="table table-bordered">
@@ -134,7 +136,7 @@
                 <div class="panel-body">
                     <table class="table table-bordered">
                         <tbody>
-                            <tr class="list-group-item-warning"><th scope="row">Zestimate (current mkt value)</th><td>{{ curr_value }}&nbsp;<img src="http://zillow.mediaroom.com/image/Zillow_Wordmark_Blue_RGB.jpg" width="60" height="15"</tr></td></tr>
+                            <tr class="list-group-item-warning"><th scope="row">Current Market Value</th><td>{{ curr_value }}&nbsp;<img src="http://zillow.mediaroom.com/image/Zillow_Wordmark_Blue_RGB.jpg" width="60" height="15"</tr></td></tr>
                             <tr><th scope="row">Down Payment (%)</th><td>{{ down_payment_percentage }}</td></tr>
                             <tr><th scope="row">Down Payment ($)</th><td>{{ down_payment }}</td></tr>
                             <tr><th scope="row">Initial Improvements</th><td>{{ initial_improvements }}</td></tr>

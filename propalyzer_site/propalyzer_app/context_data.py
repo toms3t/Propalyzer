@@ -104,7 +104,7 @@ class ContextData(property):
         self.county = ''
         self.listing_details = ''
         self.xml_info = ''
-        self.url = ''
+        self.zillow_url = ''
         self.error = ''
         self.lat = ''
         self.long = ''
@@ -187,6 +187,7 @@ class ContextData(property):
         self.maintenance = 800
         self.tenant_placement_fee = 500
         self.taxes = 2000
+        self.tax_year = 0
         self.utilities = 30
         self.insurance = 1000
         self.prop_management_fee = 234
@@ -220,7 +221,9 @@ class ContextData(property):
             self.__dict__[key] = data[key]
         return {
             'address': self.address,
-            'taxes': '$' + str(int(int(self.taxes) / 12)),
+            'tax': '$' + str(int(self.taxes)),
+            'month_taxes': '$' + str(int(int(self.taxes) / 12)),
+            'tax_year': self.tax_year,
             'hoa': '$' + str(int(int(self.hoa) / 12)),
             'rent': '$' + str(self.rent),
             'vacancy': '$' + str(self.vacancy_calc),

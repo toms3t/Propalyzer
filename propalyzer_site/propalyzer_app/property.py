@@ -1,5 +1,6 @@
 import re
 import xml.etree.cElementTree as ET
+import json
 import requests
 import datetime
 import random
@@ -11,6 +12,12 @@ from .county import County
 
 
 ZWSID = Secret.ZWSID
+
+# Attempts to pull the public records API access token from the secret.py file. If not found, property taxes will default to $2000
+try:
+    PUB_RECORD_TOKEN = Secret.PUB_RECORD_TOKEN
+except AttributeError:
+    PUB_RECORD_TOKEN = None
 
 
 def mk_int(s):
@@ -81,7 +88,8 @@ class PropSetup:
             'lastSoldDate': '',
             'localRealEstate': '',
             'address/latitude': '',
-            'address/longitude': ''
+            'address/longitude': '',
+            'zpid': ''
         }
 
         self.areavibes_dict = {
@@ -94,6 +102,7 @@ class PropSetup:
             'user_ratings': ''
         }
         self.street_address = ''
+        self.zpid = ''
         self.city = ''
         self.state = ''
         self.zip_code = 0
@@ -115,7 +124,9 @@ class PropSetup:
         self.county = ''
         self.listing_details = ''
         self.xml_info = ''
-        self.url = ''
+        self.json_info = ''
+        self.zillow_url = ''
+        self.pub_record_url = ''
         self.error = ''
         self.lat = ''
         self.long = ''
@@ -163,7 +174,8 @@ class PropSetup:
         self.initial_improvements = 0
         self.insurance = 1000
         self.maintenance = 800
-        self.taxes = 1500
+        self.taxes = 2000
+        self.tax_year = 0
         self.hoa = 0
         self.utilities = 0
         self.interest_rate = 4.75
@@ -175,13 +187,16 @@ class PropSetup:
     def get_info(self):
         self.set_address()
         self.set_zillow_url()
+        self.get_zillow_data()
         self.set_xml_data()
+        self.set_pub_record_url()
+        self.get_pub_record_info()
         self.set_areavibes_info()
         self.set_disaster_info()
         self.schools = GreatSchools(
             self.address, self.city, self.state, self.zip_code, self.county)
         self.schools.set_greatschool_urls()
-        if self.schools.api_key and self.schools.DAILY_API_CALL_COUNT <= 2950:
+        if self.schools.api_key:
             for url in self.schools.urls:
                 self.schools.get_greatschool_xml(url)
 
@@ -236,18 +251,24 @@ class PropSetup:
 
     def set_zillow_url(self):
         """
-        Function builds the Zillow API url, makes the request, and stores the xml_info for later use.
-        :return: Sets self.error if issues arise during API calls
+        Function builds the Zillow API url.
+        :return: None
         """
-        self.url = 'http://www.zillow.com/webservice/GetDeepSearchResults.htm?'
-        self.url += 'zws-id={ZWSID}&address={street}&citystatezip={city}%2C+{state}+{zip}&' \
+        self.zillow_url = 'http://www.zillow.com/webservice/GetDeepSearchResults.htm?'
+        self.zillow_url += 'zws-id={ZWSID}&address={street}&citystatezip={city}%2C+{state}+{zip}&' \
                     'rentzestimate=true'.format(ZWSID=ZWSID,
                                                 street=self.street_address,
                                                 city=self.city,
                                                 state=self.state,
                                                 zip=self.zip_code)
+    
+    def get_zillow_data(self):
+        """
+        Function calls the Zillow API using the self.zillow_url variable and stores the XML response for later use.
+        :return: Sets self.xml_info with Zillow data and self.error if issues arise during API calls
+        """
         try:
-            prop_data = requests.get(self.url)
+            prop_data = requests.get(self.zillow_url)
         except:
             self.error = 'ConnectionError'
             return
@@ -256,6 +277,7 @@ class PropSetup:
             self.error = 'AddressNotFound'
 
         self.xml_info = prop_data.text
+     
 
     def set_xml_data(self):
         """
@@ -272,6 +294,7 @@ class PropSetup:
                     self.zillow_dict[tag] = elem.text
 
         self.listing_url = self.zillow_dict['homedetails']
+        self.zpid = self.zillow_dict['zpid']
         self.county_code = self.zillow_dict['FIPScounty']
         self.sqft = self.zillow_dict['finishedSqFt']
         self.lot_sqft = mk_int(self.zillow_dict['lotSizeSqFt'])
@@ -293,6 +316,33 @@ class PropSetup:
         self.county = County.county_finder(self.county_code)
         self.lat = self.zillow_dict['address/latitude']
         self.long = self.zillow_dict['address/longitude']
+
+    def set_pub_record_url(self):
+        """
+        Function builds the Zillow Public Record API url.
+        :return: None
+        """
+        self.pub_record_url = 'https://api.bridgedataoutput.com/api/v2/pub/assessments?'
+        self.pub_record_url += 'access_token={}&zpid={}&sortBy=year'.format(PUB_RECORD_TOKEN, self.zpid)
+
+    def get_pub_record_info(self):
+        """
+        Function calls the Zillow Public Records API using the self.pub_record_url variable and stores the JSON response for later use.
+        :return: Sets self.taxes and self.tax_year and self.error if issues arise during API calls
+        """
+        if not PUB_RECORD_TOKEN:
+            return
+        try:
+            prop_pub_record_data = requests.get(self.pub_record_url)
+        except:
+            self.error = 'ConnectionError'
+            return
+
+        self.json_info = prop_pub_record_data.text
+        json_load = json.loads(self.json_info)
+        self.taxes = json_load['bundle'][0]['taxAmount']
+        self.tax_year = json_load['bundle'][0]['taxYear']
+        
 
     def set_areavibes_url(self):
         """
