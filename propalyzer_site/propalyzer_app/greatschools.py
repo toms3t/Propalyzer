@@ -19,18 +19,18 @@ class GreatSchools:
         self.state = state
         self.zip_code = zip_code
         self.county = county
-        self.elem_url = ''
-        self.mid_url = ''
-        self.high_url = ''
+        self.elem_url = ""
+        self.mid_url = ""
+        self.high_url = ""
         self.urls = []
         self.api_key = True
-        self.error = ''
-        self.elem_school = ''
-        self.elem_school_score = ''
-        self.mid_school = ''
-        self.mid_school_score = ''
-        self.high_school = ''
-        self.high_school_score = ''
+        self.error = ""
+        self.elem_school = ""
+        self.elem_school_score = ""
+        self.mid_school = ""
+        self.mid_school_score = ""
+        self.high_school = ""
+        self.high_school_score = ""
 
     def set_greatschool_urls(self):
         """
@@ -38,20 +38,22 @@ class GreatSchools:
         :return: Sets self.error if issues arise during API calls
         """
         if Secret.GSCHOOL_API_KEY:
-            self.elem_url = 'https://api.greatschools.org/schools/nearby?'
-            self.elem_url += 'key={gs_key}&address={street}&city={city}&state={state}&zip={zip}&schoolType=public' \
-                '&radius=5&limit=2&levelCode={level}'.format(
+            self.elem_url = "https://api.greatschools.org/schools/nearby?"
+            self.elem_url += (
+                "key={gs_key}&address={street}&city={city}&state={state}&zip={zip}&schoolType=public"
+                "&radius=5&limit=2&levelCode={level}".format(
                     gs_key=Secret.GSCHOOL_API_KEY,
                     street=self.address_str,
                     city=self.city,
                     state=self.state,
                     zip=self.zip_code,
-                    level='elementary-schools')
-            self.mid_url = self.elem_url.replace(
-                'elementary-schools', 'middle-schools')
-            self.high_url = self.elem_url.replace(
-                'elementary-schools', 'high-schools')
+                    level="elementary-schools",
+                )
+            )
+            self.mid_url = self.elem_url.replace("elementary-schools", "middle-schools")
+            self.high_url = self.elem_url.replace("elementary-schools", "high-schools")
             self.urls = [self.elem_url, self.mid_url, self.high_url]
+            print(self.urls)
         else:
             self.api_key = False
 
@@ -66,30 +68,31 @@ class GreatSchools:
         """
         if self.api_key:
             dist = 20
-            school_name = ''
-            school_score = ''
+            school_name = ""
+            school_score = ""
             greatschools_dict = {}
-            school_data = ''
+            school_data = ""
 
             try:
                 school_data = requests.get(url)
             except:
-                LOG.debug(
-                    'Greatschools ConnectionError --- Tried URL - {}'.format(url))
-                self.error = 'ConnectionError'
+                LOG.debug("Greatschools ConnectionError --- Tried URL - {}".format(url))
+                self.error = "ConnectionError"
 
-            if 'no exact match' in school_data.text:
-                LOG.debug('Greatschools --- No exact match - {}'.format(url))
-                self.error = 'NoExactMatch'
+            if "no exact match" in school_data.text:
+                LOG.debug("Greatschools --- No exact match - {}".format(url))
+                self.error = "NoExactMatch"
 
-            if not self.error and str(school_data) == '<Response [200]>':
+            if not self.error and str(school_data) == "<Response [200]>":
                 school_xml = school_data.text
 
                 tree = ET.fromstring(school_xml)
-                for elem in tree.findall('school'):
+                for elem in tree.findall("school"):
                     try:
-                        greatschools_dict[elem.find('name').text] = (
-                            elem.find('distance').text, elem.find('gsRating').text)
+                        greatschools_dict[elem.find("name").text] = (
+                            elem.find("distance").text,
+                            elem.find("gsRating").text,
+                        )
                     except AttributeError:
                         continue
                 for school in sorted(greatschools_dict.items(), key=lambda x: x[1]):
@@ -107,9 +110,9 @@ class GreatSchools:
                     self.high_school = school_name
                     self.high_school_score = school_score
             else:
-                self.elem_school = 'Unknown'
-                self.elem_school_score = 'Unknown'
-                self.mid_school = 'Unknown'
-                self.mid_school_score = 'Unknown'
-                self.high_school = 'Unknown'
-                self.high_school_score = 'Unknown'
+                self.elem_school = "Unknown"
+                self.elem_school_score = "Unknown"
+                self.mid_school = "Unknown"
+                self.mid_school_score = "Unknown"
+                self.high_school = "Unknown"
+                self.high_school_score = "Unknown"

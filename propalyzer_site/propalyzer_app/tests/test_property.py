@@ -12,15 +12,12 @@ class PropertyModelTest(TestCase):
         self.prop.create_test_obj()
 
     def test_property_attributes_should_be_persisted(self):
-        self.assertEqual(
-            self.prop.address,
-            '3465-N-Main-St-Soquel-CA-95073'
-        )
+        self.assertEqual(self.prop.address, "3465-N-Main-St-Soquel-CA-95073")
         self.assertEqual(
             self.prop.listing_url,
-            'http://www.zillow.com/homedetails/3465-N-Main-St-Soquel-CA-95073/16128477_zpid/'
+            "http://www.zillow.com/homedetails/3465-N-Main-St-Soquel-CA-95073/16128477_zpid/",
         )
-        self.assertEqual(self.prop.neighborhood, 'Unknown')
+        self.assertEqual(self.prop.neighborhood, "Unknown")
         self.assertTrue(self.prop.pub_date)
         self.assertEqual(self.prop.curr_value, 699600)
         self.assertEqual(self.prop.value_low, 680101)
@@ -44,16 +41,15 @@ class PropertyModelTest(TestCase):
         self.assertEqual(self.prop.prop_management_fee, 234)
         self.assertEqual(self.prop.resign_fee, 300)
         self.assertEqual(self.prop.vacancy_rate, 0.08)
-        self.assertEqual(self.prop.notes, '')
-        self.assertEqual(self.prop.interest_rate, 4.75)
+        self.assertEqual(self.prop.notes, "")
+        self.assertEqual(self.prop.interest_rate, 7.4)
         self.assertEqual(self.prop.down_payment_percentage, 25.00)
-        self.assertEqual(self.prop.schools, '')
-        self.assertEqual(self.prop.school_scores, '')
-        self.assertEqual(self.prop.county, 'Santa Cruz County')
+        self.assertEqual(self.prop.schools, "")
+        self.assertEqual(self.prop.school_scores, "")
+        self.assertEqual(self.prop.county, "Santa Cruz County")
 
     def test_property_should_return_address_when_converted_to_string(self):
-        self.assertEqual(
-            self.prop.__str__, '3465-N-Main-St-Soquel-CA-95073')
+        self.assertEqual(self.prop.__str__, "3465-N-Main-St-Soquel-CA-95073")
 
     def test_vacancy_calc_should_return_vacancy(self):
         self.assertEqual(self.prop.vacancy, 208)
@@ -83,7 +79,7 @@ class PropertyModelTest(TestCase):
         self.assertEqual(self.prop.cash_flow, -1000)
 
     def test_oper_exp_ratio_calc_should_return_oper_exp_ratio(self):
-        self.assertEqual(self.prop.oper_exp_ratio, .27)
+        self.assertEqual(self.prop.oper_exp_ratio, 0.27)
 
     def test_debt_coverage_ratio_calc_should_return_none_if_no_mort_payment(self):
         if self.prop.mort_payment == 0:
@@ -92,7 +88,7 @@ class PropertyModelTest(TestCase):
             self.assertTrue(True)
 
     def test_debt_coverage_ratio_calc_should_return_debt_cover_ratio(self):
-        self.assertEqual(self.prop.debt_cover_ratio, .63)
+        self.assertEqual(self.prop.debt_cover_ratio, 0.63)
 
     def test_cap_rate_should_return_cap_rate(self):
         self.assertEqual(self.prop.cap_rate, 0.03)
@@ -113,27 +109,32 @@ class PropertyModelTest(TestCase):
         self.assertEqual(self.prop.closing_costs, 20988)
 
     def test_zillow_api_key(self):
-        resp = str(requests.get(
-            f'http://www.zillow.com/webservice/GetZestimate.htm?zws-id={ZWSID}&zpid=48749425'))
-        self.assertEqual(resp, '<Response [200]>')
+        resp = str(
+            requests.get(
+                f"http://www.zillow.com/webservice/GetZestimate.htm?zws-id={ZWSID}&zpid=48749425"
+            )
+        )
+        self.assertEqual(resp, "<Response [200]>")
 
     def test_net_oper_income(self):
-        self.assertEqual(self.prop.oper_income -
-                         self.prop.oper_exp, self.prop.net_oper_income)
+        self.assertEqual(
+            self.prop.oper_income - self.prop.oper_exp, self.prop.net_oper_income
+        )
 
     def test_cash_flow(self):
-        self.assertEqual(self.prop.net_oper_income -
-                         self.prop.mort_payment, self.prop.cash_flow)
+        self.assertEqual(
+            self.prop.net_oper_income - self.prop.mort_payment, self.prop.cash_flow
+        )
 
     def test_fema_response(self):
         url1 = "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?"
         url2 = "$filter=state eq 'VA'&$select=state,incidentType,"
         url3 = "declaredCountyArea,title,fyDeclared"
-        url = url1+url2+url3
+        url = url1 + url2 + url3
         resp = str(requests.get(url))
-        self.assertEqual(resp, '<Response [200]>')
+        self.assertEqual(resp, "<Response [200]>")
 
     def test_areavibes(self):
-        url = 'http://www.areavibes.com/kenmore-wa/livability/?addr=7822+NE+147th+st.'
+        url = "http://www.areavibes.com/kenmore-wa/livability/?addr=7822+NE+147th+st."
         resp = str(requests.get(url))
-        self.assertEqual(resp, '<Response [200]>')
+        self.assertEqual(resp, "<Response [200]>")

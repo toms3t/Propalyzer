@@ -12,12 +12,6 @@ from .county import County
 
 ZWSID = Secret.ZWSID
 
-# Attempts to pull the public records API access token from the secret.py file. If not found, property taxes will default to $2000
-try:
-    PUB_RECORD_TOKEN = Secret.PUB_RECORD_TOKEN
-except AttributeError:
-    PUB_RECORD_TOKEN = None
-
 
 def mk_int(s):
     """
@@ -70,27 +64,6 @@ class PropSetup:
             "ZipCode": "",
         }
 
-        self.zillow_dict = {
-            "homedetails": "",
-            "FIPScounty": "",
-            "finishedSqFt": "",
-            "lotSizeSqFt": "",
-            "bathrooms": "",
-            "bedrooms": "",
-            "zestimate/amount": "",
-            "zestimate/valuationRange/low": "",
-            "zestimate/valuationRange/high": "",
-            "rentzestimate/amount": "",
-            "rentzestimate/valuationRange/low": "",
-            "rentzestimate/valuationRange/high": "",
-            "yearBuilt": "",
-            "lastSoldDate": "",
-            "localRealEstate": "",
-            "address/latitude": "",
-            "address/longitude": "",
-            "zpid": "",
-        }
-
         self.areavibes_dict = {
             "crime": "",
             "livability": "",
@@ -106,7 +79,7 @@ class PropSetup:
         self.state = ""
         self.zip_code = 0
         self.listing_url = ""
-        self.county_code = 0
+        self.county_code_fips = 0
         self.sqft = 0
         self.lot_sqft = 0
         self.lot_acres = 0.0
@@ -166,7 +139,6 @@ class PropSetup:
         self.cap_rate = 0.0
         self.schools = ""
         self.school_scores = ""
-        self.county = ""
         self.disaster_dict = {}
         self.zestimate = 0
 
@@ -174,29 +146,26 @@ class PropSetup:
             self.prop_management_fee = int(0.09 * int(self.rent))
         except ValueError:
             self.prop_management_fee = 0
-        self.initial_market_value = self.curr_value
         self.initial_improvements = 0
         self.insurance = 1000
         self.maintenance = 800
-        self.taxes = 2000
+        self.taxes = 0
         self.tax_year = 0
         self.hoa = 0
         self.utilities = 0
-        self.interest_rate = 4.75
+        self.interest_rate = 7.4
         self.down_payment_percentage = 25
-        self.down_payment = int(self.curr_value) * (
-            self.down_payment_percentage / 100.0
-        )
-        self.closing_costs = int(0.03 * int(self.curr_value))
+        # self.down_payment = int(self.curr_value) * (
+        #     self.down_payment_percentage / 100.0
+        # )
+        # self.closing_costs = int(0.03 * int(self.curr_value))
 
     def get_info(self):
         self.set_address()
         self.set_zillow_url()
         self.get_zillow_data()
-        self.set_zillow_json_data()
         self.set_pub_record_url()
         self.get_pub_record_data()
-        self.set_pub_record_data()
         self.set_areavibes_info()
         self.set_disaster_info()
         self.schools = GreatSchools(
@@ -277,8 +246,8 @@ class PropSetup:
 
     def get_zillow_data(self):
         """
-        Function calls the Zillow API using the self.zillow_url variable and stores the JSON response for later use.
-        :return: Sets self.json_info with Zillow data and self.error if issues arise during API calls
+        Function calls the Zillow API using the self.zillow_url variable and builds the JSON file.
+        :return: Sets self.pub_json_info with Zillow data and self.error if issues arise during API calls
         """
         try:
             prop_data_zest = requests.get(self.zillow_url)
@@ -292,31 +261,10 @@ class PropSetup:
         else:
             self.error = "AddressNotFound"
 
-    def set_zillow_json_data(self):
-        """
-        Builds JSON file from the data obtained from Zillow API
-
-        :return:
-        """
-
         self.listing_url = self.zillow_json_info["zillowUrl"]
         self.zpid = self.zillow_json_info["zpid"]
-        # self.county_code = self.zillow_dict["FIPScounty"]
-        # self.sqft = self.zillow_dict["finishedSqFt"]
-        # self.lot_sqft = mk_int(self.zillow_dict["lotSizeSqFt"])
-        # self.baths = self.zillow_dict["bathrooms"]
-        # self.beds = mk_int(self.zillow_dict["bedrooms"])
-        # self.curr_value = mk_int(self.zillow_dict["zestimate/amount"])
-        # self.value_low = mk_int(self.zillow_dict["zestimate/valuationRange/low"])
-        # self.value_high = mk_int(self.zillow_dict["zestimate/valuationRange/high"])
         self.rent = mk_int(self.zillow_json_info["rentalZestimate"])
         self.zestimate = mk_int(self.zillow_json_info["zestimate"])
-        # self.rent_low = mk_int(self.zillow_dict["rentzestimate/valuationRange/low"])
-        # self.rent_high = mk_int(self.zillow_dict["rentzestimate/valuationRange/high"])
-        # self.year_built = mk_int(self.zillow_dict["yearBuilt"])
-        # self.last_sold_date = self.zillow_dict["lastSoldDate"]
-        # self.neighborhood = self.zillow_dict["localRealEstate"]
-        # self.county = County.county_finder(self.county_code)
         self.coordinates = self.zillow_json_info["Coordinates"]
 
     def set_pub_record_url(self):
@@ -330,35 +278,53 @@ class PropSetup:
         self.pub_record_url += f"access_token={ZWSID}&zpid={self.zpid}&sortBy=year"
         print(self.pub_record_url)
 
-    def get_pub_record_info(self):
+    def get_pub_record_data(self):
         """
         Function calls the Zillow Public Records API using the self.pub_record_url variable and stores the JSON response for later use.
         :return: Sets self.taxes and self.tax_year and self.error if issues arise during API calls
         """
-        if not PUB_RECORD_TOKEN:
-            return
         try:
             prop_pub_record_data = requests.get(self.pub_record_url)
         except:
             self.error = "ConnectionError"
             return
-
-        self.json_info = prop_pub_record_data.text
-        json_load = json.loads(self.json_info)
-        if json_load["bundle"]:
-            self.taxes = json_load["bundle"][0]["taxAmount"]
-            self.tax_year = json_load["bundle"][0]["taxYear"]
-            self.county = json_load["bundle"][0]["county"]
-            self.land_use = json_load["bundle"][0]["landUseDescription"]
-            self.lot_sqft = json_load["bundle"][0]["lotSizeSquareFeet"]
-            self.lot_acres = json_load["bundle"][0]["lotSizeAcres"]
-            self.year_built = json_load["bundle"][0]["building"][0]["yearBuilt"]
-            self.sewer = json_load["bundle"][0]["building"][0]["sewer"]
-            self.fullbaths = json_load["bundle"][0]["building"][0]["fullBaths"]
-            self.halfbaths = json_load["bundle"][0]["building"][0]["halfBaths"]
-            self.totalbaths = self.fullbaths + (self.halfbaths / 2)
-            self.beds = json_load["bundle"][0]["building"][0]["bedrooms"]
-            self.neighborhood = json_load["bundle"][0]["legal"]["lotDescription"]
+        pub_json_info = prop_pub_record_data.text
+        self.pub_json_info = json.loads(pub_json_info)
+        if self.pub_json_info["bundle"][0]:
+            for area in self.pub_json_info["bundle"][0]["areas"]:
+                if area["type"] == "Zillow Calculated Finished Area":
+                    self.sqft = area["areaSquareFeet"]
+            self.county_code_fips = self.pub_json_info["bundle"][0]["fips"]
+            if self.pub_json_info["bundle"][0]["county"]:
+                self.county = self.pub_json_info["bundle"][0]["county"]
+            else:
+                self.county = County.county_finder(self.county_code_fips)
+            self.taxes = (
+                2000
+                if not self.pub_json_info["bundle"][0]["taxAmount"]
+                else self.pub_json_info["bundle"][0]["taxAmount"]
+            )
+            self.tax_year = self.pub_json_info["bundle"][0]["taxYear"]
+            self.county = self.pub_json_info["bundle"][0]["county"]
+            self.land_use = self.pub_json_info["bundle"][0]["landUseDescription"]
+            self.lot_sqft = self.pub_json_info["bundle"][0]["lotSizeSquareFeet"]
+            self.lot_acres = self.pub_json_info["bundle"][0]["lotSizeAcres"]
+            self.year_built = self.pub_json_info["bundle"][0]["building"][0][
+                "yearBuilt"
+            ]
+            self.sewer = self.pub_json_info["bundle"][0]["building"][0]["sewer"]
+            self.fullbaths = self.pub_json_info["bundle"][0]["building"][0]["fullBaths"]
+            self.halfbaths = self.pub_json_info["bundle"][0]["building"][0]["halfBaths"]
+            if self.fullbaths:
+                self.totalbaths = self.fullbaths + (self.halfbaths / 2)
+            else:
+                self.totalbaths = self.pub_json_info["bundle"][0]["building"][0][
+                    "baths"
+                ]
+            self.beds = self.pub_json_info["bundle"][0]["building"][0]["bedrooms"]
+            self.neighborhood = self.pub_json_info["bundle"][0]["legal"][
+                "lotDescription"
+            ]
         else:
             self.error = "PubRecordsNotFound"
 
@@ -375,8 +341,8 @@ class PropSetup:
             self.address_dict["StreetNamePreDirectional"],
             self.address_dict["StreetName"],
             self.address_dict["StreetNamePostType"],
-            self.lat,
-            self.long,
+            self.coordinates[0],
+            self.coordinates[1],
         )
         areavibes_url = areavibes_url1 + areavibes_url2
         return areavibes_url
@@ -496,6 +462,7 @@ class PropSetup:
             url = url1 + url2
             urls.append(url)
         for url in urls:
+            print(url)
             resp = requests.get(url)
             resp_json = resp.json()
             try:
