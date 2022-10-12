@@ -72,6 +72,8 @@ class ContextData(property):
         self.lot_sqft = 0
         self.baths = 0
         self.beds = 0
+        self.sewer = ""
+        self.water = ""
         self.zestimate = 0
         self.value_low = 0
         self.value_high = 0
@@ -119,8 +121,6 @@ class ContextData(property):
         self.debt_cover_ratio = 0.0
         self.cash_on_cash_return = 0.0
         self.cap_rate = 0.0
-        self.schools = ""
-        self.school_scores = ""
         self.county = ""
         self.disaster_dict = {}
 
@@ -162,7 +162,7 @@ class ContextData(property):
         self.sqft = 1058
         self.lot_sqft = 20343
         self.beds = 2
-        self.baths = 1.5
+        self.totalbaths = 1.5
         self.year_built = 1950
         self.hoa = 100
         self.maintenance = 800
@@ -174,11 +174,11 @@ class ContextData(property):
         self.prop_management_fee = 234
         self.resign_fee = 300
         self.vacancy_rate = 0.08
+        self.sewer = ""
+        self.water = ""
         self.notes = ""
         self.interest_rate = 7.4
         self.down_payment_percentage = 25.00
-        self.schools = ""
-        self.school_scores = ""
         self.county = "Santa Cruz County"
         self.cost_per_sqft = self.cost_per_sqft_calc
         self.down_payment = self.down_payment_calc
@@ -226,6 +226,8 @@ class ContextData(property):
             "cost_per_sqft": "$" + str(self.cost_per_sqft_calc),
             "insurance": "$" + str(int(int(self.insurance) / 12)),
             "maintenance": "$" + str(int(int(self.maint_calc) / 12)),
+            "sewer": self.sewer,
+            "water": self.water,
             "prop_management_fee": "$" + str(self.prop_management_fee),
             "utilities": "$" + str(self.utilities),
             "tenant_placement_fee": "$" + str(int(int(self.tenant_place_calc) / 12)),
@@ -237,19 +239,13 @@ class ContextData(property):
             "oper_exp_ratio": "{0:.1f}".format(self.oper_exp_ratio_calc * 100) + "%",
             "debt_coverage_ratio": self.debt_coverage_ratio_calc,
             "cash_on_cash": "{0:.2f}%".format(self.cash_on_cash_calc * 100),
-            "elem_school": self.schools["elem_school"],
-            "elem_school_score": self.schools["elem_school_score"],
-            "mid_school": self.schools["mid_school"],
-            "mid_school_score": self.schools["mid_school_score"],
-            "high_school": self.schools["high_school"],
-            "high_school_score": self.schools["high_school_score"],
             "year_built": self.year_built,
             "county": self.county,
             "state": self.state.upper(),
             "nat_disasters": "Unknown",
             "listing_url": self.listing_url,
             "beds": self.beds,
-            "baths": self.baths,
+            "baths": self.totalbaths,
             "livability": self.areavibes_dict["livability"],
             "crime": self.areavibes_dict["crime"],
             "cost_of_living": self.areavibes_dict["cost_of_living"],

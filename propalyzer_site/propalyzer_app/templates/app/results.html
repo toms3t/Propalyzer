@@ -58,6 +58,18 @@
                                         height="15" </tr></td>
                             </tr>
                             <tr>
+                                <th scope="row">Sewer</th>
+                                <td>{{ sewer }}&nbsp;<img
+                                        src="http://zillow.mediaroom.com/image/Zillow_Wordmark_Blue_RGB.jpg" width="60"
+                                        height="15" </tr></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Water</th>
+                                <td>{{ water }}&nbsp;<img
+                                        src="http://zillow.mediaroom.com/image/Zillow_Wordmark_Blue_RGB.jpg" width="60"
+                                        height="15" </tr></td>
+                            </tr>
+                            <tr>
                                 <th scope="row">Area Livability** (100 is best)</th>
                                 <td>{{ livability }}</td>
                             </tr>
@@ -90,7 +102,7 @@
                                 <td>{{ cost_per_sqft }}</td>
                             </tr>
                             <tr>
-                                <th scope="row">Interest Rate</th>
+                                <th scope="row">Interest Rate***</th>
                                 <td>{{ interest_rate }}</td>
                             </tr>
                             <tr>
@@ -101,36 +113,7 @@
                     </table>
                     <p><b>*</b> <i>If tax year is 0, tax values were not found and tax amount defaults to $2000</i></p>
                     <p><b>**</b> <i>information obtained from areavibes.com</i></p>
-                </div>
-            </div>
-            <div class="panel panel-info shadow-lg">
-                <div class="panel-heading">
-                    <h2 class="panel-title"> School Information* </h2>
-                </div>
-                <div class="panel-body">
-                    <table class="table table-bordered">
-                        <tbody>
-                            <tr>
-                                <th scope="row">School Name</th>
-                                <td> Rating </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">{{ elem_school }}</th>
-                                <td> {{ elem_school_score }}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">{{ mid_school }}</th>
-                                <td> {{ mid_school_score }}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">{{ high_school }}</th>
-                                <td> {{ high_school_score }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p><b>*</b> <i>School information pulled from <a class="text-info"
-                                href="http://greatschools.org">greatschools.org </a></i></p>
-                    <p><b>*</b> <i>Rating is based on a scale of 1 - 10 (10 = best) </i></p>
+                    <p><b>***</b> <i>Interest Rate is not up-to-date, please check current rates</i></p>
                 </div>
             </div>
         </div>
@@ -276,7 +259,7 @@
                         <tbody>
                             <tr class="list-group-item-warning">
                                 <th scope="row">Current Market Value</th>
-                                <td>{{ zestimate }}&nbsp;<img
+                                <td>{{ curr_value }}&nbsp;<img
                                         src="http://zillow.mediaroom.com/image/Zillow_Wordmark_Blue_RGB.jpg" width="60"
                                         height="15" </tr></td>
                             </tr>
@@ -367,7 +350,7 @@
         </div>
     </div>
     <a class="btn btn-outline-info btn-lg" href="{% url 'edit' %}">EDIT VALUES</a>
-    <a class="btn btn-info btn-lg" href="{% url 'pdf' %}">PDF</a>
+    <!-- <a class="btn btn-info btn-lg" href="{% url 'pdf' %}">PDF</a> -->
     <br>
     <br>
 

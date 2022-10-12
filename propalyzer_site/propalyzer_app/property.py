@@ -6,7 +6,6 @@ import random
 from bs4 import BeautifulSoup
 import usaddress
 from .secret import Secret
-from .greatschools import GreatSchools
 from .county import County
 
 
@@ -127,6 +126,7 @@ class PropSetup:
         self.prop_management_fee = 0
         self.utilities = 0
         self.sewer = ""
+        self.water = ""
         self.tenant_placement_fee = 0
         self.resign_fee = 0
         self.notes = ""
@@ -137,8 +137,6 @@ class PropSetup:
         self.debt_cover_ratio = 0.0
         self.cash_on_cash_return = 0.0
         self.cap_rate = 0.0
-        self.schools = ""
-        self.school_scores = ""
         self.disaster_dict = {}
         self.zestimate = 0
 
@@ -155,10 +153,6 @@ class PropSetup:
         self.utilities = 0
         self.interest_rate = 7.4
         self.down_payment_percentage = 25
-        # self.down_payment = int(self.curr_value) * (
-        #     self.down_payment_percentage / 100.0
-        # )
-        # self.closing_costs = int(0.03 * int(self.curr_value))
 
     def get_info(self):
         self.set_address()
@@ -168,21 +162,6 @@ class PropSetup:
         self.get_pub_record_data()
         self.set_areavibes_info()
         self.set_disaster_info()
-        self.schools = GreatSchools(
-            self.address, self.city, self.state, self.zip_code, self.county
-        )
-        self.schools.set_greatschool_urls()
-        if self.schools.api_key:
-            for url in self.schools.urls:
-                self.schools.get_greatschool_xml(url)
-
-        else:
-            self.schools.elem_school = "Unknown"
-            self.schools.mid_school = "Unknown"
-            self.schools.high_school = "Unknown"
-        self.schools = dict(
-            (key, value) for (key, value) in self.schools.__dict__.items()
-        )
 
     def dict_from_class(self):
 
@@ -276,7 +255,6 @@ class PropSetup:
             f"https://api.bridgedataoutput.com/api/v2/pub/assessments?"
         )
         self.pub_record_url += f"access_token={ZWSID}&zpid={self.zpid}&sortBy=year"
-        print(self.pub_record_url)
 
     def get_pub_record_data(self):
         """
@@ -304,7 +282,10 @@ class PropSetup:
                 if not self.pub_json_info["bundle"][0]["taxAmount"]
                 else self.pub_json_info["bundle"][0]["taxAmount"]
             )
-            self.tax_year = self.pub_json_info["bundle"][0]["taxYear"]
+            if not self.pub_json_info["bundle"][0]["taxYear"]:
+                self.tax_year = "Not Found"
+            else:
+                self.tax_year = self.pub_json_info["bundle"][0]["taxYear"]
             self.county = self.pub_json_info["bundle"][0]["county"]
             self.land_use = self.pub_json_info["bundle"][0]["landUseDescription"]
             self.lot_sqft = self.pub_json_info["bundle"][0]["lotSizeSquareFeet"]
@@ -312,7 +293,14 @@ class PropSetup:
             self.year_built = self.pub_json_info["bundle"][0]["building"][0][
                 "yearBuilt"
             ]
-            self.sewer = self.pub_json_info["bundle"][0]["building"][0]["sewer"]
+            if not self.pub_json_info["bundle"][0]["building"][0]["sewer"]:
+                self.sewer = "Not Found"
+            else:
+                self.sewer = self.pub_json_info["bundle"][0]["building"][0]["sewer"]
+            if not self.pub_json_info["bundle"][0]["building"][0]["water"]:
+                self.water = "Not Found"
+            else:
+                self.water = self.pub_json_info["bundle"][0]["building"][0]["water"]
             self.fullbaths = self.pub_json_info["bundle"][0]["building"][0]["fullBaths"]
             self.halfbaths = self.pub_json_info["bundle"][0]["building"][0]["halfBaths"]
             if self.fullbaths:
@@ -355,7 +343,7 @@ class PropSetup:
             - Livability
             - Crime
             - Cost of Living
-            - schools
+            - Schools
             - Employment
             - Housing
             - User Ratings
@@ -462,7 +450,6 @@ class PropSetup:
             url = url1 + url2
             urls.append(url)
         for url in urls:
-            print(url)
             resp = requests.get(url)
             resp_json = resp.json()
             try:

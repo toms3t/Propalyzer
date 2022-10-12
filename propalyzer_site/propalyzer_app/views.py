@@ -99,7 +99,7 @@ def edit(request):
 
 def results(request):
     """
-    Renders the results page which displays property information (general, schools, and financial metrics)
+    Renders the results page which displays property information (general and financial metrics)
     :param: HTTP request
     :return: 'app/results.html' page
     """
