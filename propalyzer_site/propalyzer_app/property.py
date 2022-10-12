@@ -169,7 +169,7 @@ class PropSetup:
 
     def __convert_address(self):
         """
-        Function to take a string assumed to be a US address and parse it into the correct components.
+        Method to take a string assumed to be a US address and parse it into the correct components.
 
         :return: Uses self.error to notify requester if an error occurred.
         """
@@ -190,7 +190,7 @@ class PropSetup:
 
     def set_address(self):
         """
-        Main function call to convert a string to an US address and generates necessary parameters to be used later.
+        Method to convert a string to an US address and generates necessary parameters to be used later.
         :return:
         """
         self.__convert_address()
@@ -216,7 +216,7 @@ class PropSetup:
 
     def set_zillow_url(self):
         """
-        Function builds the Zillow API url.
+        Method builds the Zillow API url.
         :return: None
         """
         address = self.address.replace(" ", "%20")
@@ -225,7 +225,7 @@ class PropSetup:
 
     def get_zillow_data(self):
         """
-        Function calls the Zillow API using the self.zillow_url variable and builds the JSON file.
+        Method calls the Zillow API using the self.zillow_url variable and builds the JSON file.
         :return: Sets self.pub_json_info with Zillow data and self.error if issues arise during API calls
         """
         try:
@@ -248,7 +248,7 @@ class PropSetup:
 
     def set_pub_record_url(self):
         """
-        Function builds the Zillow Public Record API url.
+        Method builds the Zillow Public Record API url.
         :return: None
         """
         self.pub_record_url = (
@@ -256,10 +256,24 @@ class PropSetup:
         )
         self.pub_record_url += f"access_token={ZWSID}&zpid={self.zpid}&sortBy=year"
 
+    def get_property_tax_info(self):
+        """
+        Method iterates through tax assessment JSON and looks for tax information starting from the latest year first.
+        If not found, sets default tax amount to $2000 and tax year to "Unknown"
+        :return: Sets self.taxes and self.tax_year and self.error if issues arise during API calls
+        """
+        for record in self.pub_json_info["bundle"]:
+            if record["taxAmount"]:
+                self.taxes = record["taxAmount"]
+                self.tax_year = record["taxYear"]
+                return
+        self.taxes = 2000
+        self.tax_year = "Unknown"
+
     def get_pub_record_data(self):
         """
-        Function calls the Zillow Public Records API using the self.pub_record_url variable and stores the JSON response for later use.
-        :return: Sets self.taxes and self.tax_year and self.error if issues arise during API calls
+        Method calls the Zillow Public Records API using the self.pub_record_url variable and stores the JSON response for later use.
+        :return: Sets many property attributes
         """
         try:
             prop_pub_record_data = requests.get(self.pub_record_url)
@@ -277,15 +291,7 @@ class PropSetup:
                 self.county = self.pub_json_info["bundle"][0]["county"]
             else:
                 self.county = County.county_finder(self.county_code_fips)
-            self.taxes = (
-                2000
-                if not self.pub_json_info["bundle"][0]["taxAmount"]
-                else self.pub_json_info["bundle"][0]["taxAmount"]
-            )
-            if not self.pub_json_info["bundle"][0]["taxYear"]:
-                self.tax_year = "Not Found"
-            else:
-                self.tax_year = self.pub_json_info["bundle"][0]["taxYear"]
+            self.get_property_tax_info()
             self.county = self.pub_json_info["bundle"][0]["county"]
             self.land_use = self.pub_json_info["bundle"][0]["landUseDescription"]
             self.lot_sqft = self.pub_json_info["bundle"][0]["lotSizeSquareFeet"]
@@ -348,14 +354,6 @@ class PropSetup:
             - Housing
             - User Ratings
         """
-        url = self.set_areavibes_url()
-        r = requests.get(url)
-        soup = BeautifulSoup(r.content, "html.parser")
-        info_block = soup.find_all("nav", class_="category-menu-new")
-        try:
-            result_string = info_block[0].get_text()
-        except IndexError:
-            result_string = "Unknown"
 
         parsed = ""
         livability = ""
@@ -365,6 +363,15 @@ class PropSetup:
         housing = ""
         schools = ""
         user_ratings = ""
+
+        url = self.set_areavibes_url()
+        r = requests.get(url)
+        soup = BeautifulSoup(r.content, "html.parser")
+        info_block = soup.find_all("nav", class_="category-menu-new")
+        try:
+            result_string = info_block[0].get_text()
+        except IndexError:
+            result_string = "Unknown"
 
         try:
             parsed = re.search(
@@ -408,6 +415,17 @@ class PropSetup:
                 user_ratings = parsed.group(8)
             except IndexError:
                 user_ratings = "Unknown"
+        else:
+            self.areavibes_dict = {
+                "livability": "Unknown",
+                "crime": "Unknown",
+                "cost_of_living": "Unknown",
+                "schools": "Unknown",
+                "employment": "Unknown",
+                "housing": "Unknown",
+                "user_ratings": "Unknown",
+            }
+            return
         self.areavibes_dict = {
             "livability": livability,
             "crime": crime,

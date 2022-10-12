@@ -4,8 +4,8 @@
 {% block content %}
 
 <div class="pricing-header bg-info px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-  <h1 class="display-4">Start Here...</h1>
-  <p class="lead">Enter the residential property address to get the following details:</p>
+	<h1 class="display-4">Start Here...</h1>
+	<p class="lead">Enter the residential property address to get the following details:</p>
 </div>
 <div class="bg-light text-dark px-5 py-3 pt-md-5 pb-md-4">
 	<div class="row">
@@ -39,12 +39,13 @@
 		<div class="col-2"></div>
 		<div class="col-md-8">
 			<form method="POST">
-			{% csrf_token %}
-			{{ form|crispy }}
-			<br>
-			<?button type="submit" style="width:150px;height:50px;color:green;font-size:30px"?><?/button?>
-			<input type='submit' value='SUBMIT' class='btn-lg btn-lg btn-outline-info' />
-		</form><br>
+				{% csrf_token %}
+				{{ form|crispy }}
+				<br>
+				<?button type="submit" style="width:150px;height:50px;color:green;font-size:30px"?>
+				<?/button?>
+				<input type='submit' value='SUBMIT' class='btn-lg btn-lg btn-outline-info' /><br>
+				<strong>Results may take a minute to return, please be patient</strong </form><br>
 		</div>
 	</div>
 	<hr>
@@ -58,4 +59,3 @@
 
 
 {% endblock %}
-
