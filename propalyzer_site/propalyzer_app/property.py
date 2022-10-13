@@ -156,8 +156,13 @@ class PropSetup:
 
     def get_info(self):
         self.set_address()
+        if not self.state or not self.city:
+            self.error = "AddressNotFound"
+            return self.error
         self.set_zillow_url()
         self.get_zillow_data()
+        if self.error:
+            return self.error
         self.set_pub_record_url()
         self.get_pub_record_data()
         self.set_areavibes_info()
@@ -239,12 +244,14 @@ class PropSetup:
             self.zillow_json_info = j["bundle"][0]
         else:
             self.error = "AddressNotFound"
+            return
 
-        self.listing_url = self.zillow_json_info["zillowUrl"]
-        self.zpid = self.zillow_json_info["zpid"]
-        self.rent = mk_int(self.zillow_json_info["rentalZestimate"])
-        self.zestimate = mk_int(self.zillow_json_info["zestimate"])
-        self.coordinates = self.zillow_json_info["Coordinates"]
+        if not self.error:
+            self.listing_url = self.zillow_json_info["zillowUrl"]
+            self.zpid = self.zillow_json_info["zpid"]
+            self.rent = mk_int(self.zillow_json_info["rentalZestimate"])
+            self.zestimate = mk_int(self.zillow_json_info["zestimate"])
+            self.coordinates = self.zillow_json_info["Coordinates"]
 
     def set_pub_record_url(self):
         """

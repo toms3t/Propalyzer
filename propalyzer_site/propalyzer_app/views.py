@@ -23,16 +23,13 @@ def address(request):
         address_str = str(request.POST["text_input"])
         prop = PropSetup(address_str)
         prop.get_info()
+        if prop.error == "ConnectionError":
+            return TemplateResponse(request, "app/connection_error.html")
+        if prop.error == "AddressNotFound":
+            return TemplateResponse(request, "app/addressnotfound.html")
         prop.prop_management_fee = int(prop.rent * 0.09)
         prop.closing_costs = int(prop.zestimate * 0.03)
         prop.taxes = int(prop.taxes)
-        if prop.error:
-            return TemplateResponse(request, "app/addressnotfound.html")
-
-        if "ConnectionError" in prop.error:
-            return TemplateResponse(request, "app/connection_error.html")
-        if "AddressNotFound" in prop.error:
-            return TemplateResponse(request, "app/addressnotfound.html")
 
         # Loggers
         LOG.debug("prop.address --- {}".format(prop.address))
