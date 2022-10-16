@@ -29,4 +29,5 @@ typing-extensions==4.4.0
 urllib3==1.24.1
 usaddress==0.5.10
 webencodings==0.5.1
+whitenoise==6.2.0
 xhtml2pdf==0.2.3
