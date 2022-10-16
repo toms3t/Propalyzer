@@ -5,11 +5,11 @@ import datetime
 import random
 from bs4 import BeautifulSoup
 import usaddress
-from .secret import Secret
 from .county import County
+import os
 
 
-ZWSID = Secret.ZWSID
+ZWSID = os.environ["ZWSID"]
 
 
 def mk_int(s):
