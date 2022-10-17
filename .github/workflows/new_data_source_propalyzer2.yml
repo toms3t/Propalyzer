@@ -60,4 +60,4 @@ jobs:
         with:
           app-name: 'propalyzer2'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CB7D3414D5FC4281BF1E15756F0B62C2 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_8E658E616FA2432B8DDDBEE7FF4B690F }}
