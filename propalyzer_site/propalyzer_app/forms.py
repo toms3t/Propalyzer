@@ -41,9 +41,8 @@ class PropertyForm(forms.Form):
     hoa = forms.IntegerField(
         label="HOA", help_text="Enter annual amount", required=False
     )
-    insurance = forms.CharField(
+    insurance = forms.IntegerField(
         label="Insurance",
-        max_length=150,
         help_text="Defaults at $1000. If modifying, enter annual amount",
     )
     taxes = forms.IntegerField(
