@@ -1,5 +1,5 @@
 from django.utils import timezone
-from decimal import Decimal, getcontext
+from decimal import Decimal, InvalidOperation, getcontext
 
 
 def mk_int(s):
@@ -329,7 +329,7 @@ class ContextData(property):
             self.oper_exp_ratio = float(
                 Decimal(self.oper_exp) / Decimal(self.oper_income)
             )
-        except ZeroDivisionError:
+        except (ZeroDivisionError, InvalidOperation):
             self.oper_exp_ratio = 0.00
         self.oper_exp_ratio = self.oper_exp_ratio + 0
         return self.oper_exp_ratio
@@ -342,7 +342,7 @@ class ContextData(property):
                 self.debt_cover_ratio = float(
                     Decimal(self.net_oper_income) / Decimal(self.mort_payment)
                 )
-            except ZeroDivisionError:
+            except (ZeroDivisionError, InvalidOperation):
                 self.debt_cover_ratio = 0.00
             return self.debt_cover_ratio
         else:
@@ -358,7 +358,7 @@ class ContextData(property):
                     (self.net_oper_income * 12) / Decimal(self.initial_market_value)
                 )
             )
-        except ZeroDivisionError:
+        except (ZeroDivisionError, InvalidOperation):
             self.cap_rate = 0.00
         self.cap_rate = self.cap_rate + 0
         return self.cap_rate
@@ -370,7 +370,7 @@ class ContextData(property):
             self.cash_on_cash_return = float(
                 Decimal((self.cash_flow * 12) / Decimal(self.init_cash_invest))
             )
-        except ZeroDivisionError:
+        except (ZeroDivisionError, InvalidOperation):
             self.cash_on_cash_return = 0.00
         return self.cash_on_cash_return
 
@@ -399,7 +399,7 @@ class ContextData(property):
     def cost_per_sqft_calc(self):
         try:
             self.cost_per_sqft = int(mk_int(self.zestimate) / mk_int(self.sqft))
-        except ZeroDivisionError:
+        except (ZeroDivisionError, InvalidOperation):
             self.cost_per_sqft = 0
         return self.cost_per_sqft
 
@@ -434,7 +434,7 @@ class ContextData(property):
             self.rtv = float(
                 Decimal(mk_int(self.rent)) / Decimal(mk_int(self.zestimate))
             )
-        except ZeroDivisionError:
+        except (ZeroDivisionError, InvalidOperation):
             self.rtv = 0.00
         self.rtv = self.rtv + 0
         return self.rtv
