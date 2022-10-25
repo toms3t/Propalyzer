@@ -13,7 +13,7 @@ pathspec==0.10.1
 Pillow==8.0.0
 platformdirs==2.5.2
 probableparsing==0.0.1
-PyPDF2==1.26.0
+PyPDF2==1.27.5
 python-crfsuite==0.9.7
 pytz==2017.2
 reportlab==3.5.53
