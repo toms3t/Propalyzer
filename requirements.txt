@@ -19,7 +19,7 @@ pytz==2017.2
 reportlab==3.5.53
 requests==2.21.0
 six==1.15.0
-sqlparse==0.4.1
+sqlparse==0.4.2
 static3==0.7.0
 tomli==2.0.1
 typing-extensions==4.4.0
