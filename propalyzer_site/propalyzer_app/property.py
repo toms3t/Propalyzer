@@ -9,7 +9,10 @@ from .county import County
 import os
 
 
-ZWSID = os.environ["ZWSID"]
+try:
+    zillow_api_key = os.environ["zillow_api_key"]
+except KeyError:
+    zillow_api_key = None
 
 
 def mk_int(s):
@@ -139,6 +142,7 @@ class PropSetup:
         self.cap_rate = 0.0
         self.disaster_dict = {}
         self.zestimate = 0
+        self.zillow_api_key_valid = False
 
         try:
             self.prop_management_fee = int(0.09 * int(self.rent))
@@ -154,22 +158,58 @@ class PropSetup:
         self.interest_rate = 7.4
         self.down_payment_percentage = 25
 
-    def get_info(self):
-        self.set_address()
-        if not self.state or not self.city:
-            self.error = "AddressNotFound"
-            return self.error
-        self.set_zillow_url()
-        self.get_zillow_data()
-        if self.error:
-            return self.error
-        self.set_pub_record_url()
-        self.get_pub_record_data()
-        self.set_areavibes_info()
-        self.set_disaster_info()
+    def get_info(self, zillow_api_key_valid):
+        if not zillow_api_key_valid:
+            self.set_address()
+            self.county = "Santa Cruz County"
+            self.listing_url = "http://www.zillow.com/homedetails/346544-N-Main-St-Soquel-CA-95073/16128477_zpid/"
+            self.neighborhood = "Unknown"
+            self.zestimate = 677600
+            self.value_low = 680101
+            self.value_high = 751691
+            self.initial_market_value = 677600
+            self.initial_improvements = 5000
+            self.rent = 2633
+            self.rent_low = 2106
+            self.rent_high = 2990
+            self.sqft = 5000
+            self.lot_sqft = 20343
+            self.beds = 3
+            self.totalbaths = 2.5
+            self.year_built = 1910
+            self.hoa = 155
+            self.maintenance = 800
+            self.tenant_placement_fee = 500
+            self.taxes = 2000
+            self.tax_year = "Unknown"
+            self.utilities = 30
+            self.insurance = 1000
+            self.prop_management_fee = 234
+            self.resign_fee = 300
+            self.vacancy_rate = 0.08
+            self.sewer = "Unknown"
+            self.water = "Unknown"
+            self.notes = ""
+            self.interest_rate = 7.4
+            self.down_payment_percentage = 25.00
+            self.county = "Santa Cruz County"
+            self.set_disaster_info()
+        else:
+            self.zillow_api_key_valid = True
+            self.set_address()
+            if not self.state or not self.city:
+                self.error = "AddressNotFound"
+                return self.error
+            self.set_zillow_url()
+            self.get_zillow_data()
+            if self.error:
+                return self.error
+            self.set_pub_record_url()
+            self.get_pub_record_data()
+            self.set_areavibes_info()
+            self.set_disaster_info()
 
     def dict_from_class(self):
-
         return dict((key, value) for (key, value) in self.__dict__.items())
 
     def __convert_address(self):
@@ -225,7 +265,7 @@ class PropSetup:
         :return: None
         """
         address = self.address.replace(" ", "%20")
-        self.zillow_url = f"https://api.bridgedataoutput.com/api/v2/zestimates_v2/zestimates?access_token={ZWSID}"
+        self.zillow_url = f"https://api.bridgedataoutput.com/api/v2/zestimates_v2/zestimates?access_token={zillow_api_key}"
         self.zillow_url += f"&address={address}"
 
     def get_zillow_data(self):
@@ -261,7 +301,9 @@ class PropSetup:
         self.pub_record_url = (
             f"https://api.bridgedataoutput.com/api/v2/pub/assessments?"
         )
-        self.pub_record_url += f"access_token={ZWSID}&zpid={self.zpid}&sortBy=year"
+        self.pub_record_url += (
+            f"access_token={zillow_api_key}&zpid={self.zpid}&sortBy=year"
+        )
 
     def get_property_tax_info(self):
         """

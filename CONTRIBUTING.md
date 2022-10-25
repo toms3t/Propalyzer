@@ -1,5 +1,11 @@
 # Propalyzer
 
+[![Build Status](https://github.com/toms3t/Propalyzer/actions/workflows/new_data_source_propalyzer-new.yml/badge.svg)
+
+Try it!   http://propalyzer.info
+
+**Time to get up and running = less than 10 minutes**
+
 Web app that helps investors evaluate investment property opportunities. The user inputs a US residential property address and the app uses Zillow's API to pull property details. The app presents the property details to the user for inspection and the ability to edit. With the details finalized, the app will crunch the data and return information about the property including:
 - Operating Income
 - Operating Expenses
@@ -7,61 +13,49 @@ Web app that helps investors evaluate investment property opportunities. The use
 - Debt Coverage Ratio
 - Monthly Cash Flow
 - Scoring of area Livability, Crime, Cost of Living, Education, Employment, Housing, Weather relative to local and national averages
+- Local natural disaster information
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. Requesting a See deployment for notes on how to deploy the project on a live system.
 
 ### Prerequisites (MacOS and Linux Users)
 
-- Install Python 3.6.2
+- Install Python 3.8
 ```
 https://www.python.org/downloads/
-```
-- Obtain a Zillow account and Zillow API Key (ZWS-ID)
-```
-https://www.zillow.com/webservice/Registration.htm
 ```
 
 - Create and configure virtualenv 
 ```
-$ mkdir [directory name]
-$ pip install virtualenv
-$ cd [directory name]
-$ virtualenv -p /Library/Frameworks/Python.framework/Versions/3.6/bin/python3.6 env
+$ mkdir Propalyzer
+$ python3.8 -m pip install virtualenv
+$ cd Propalyzer
+$ python3.8 -m venv env
 ```
+
+- Configure a secret key environment variable in your Linux/Mac environment. Alternatively, you could just set a new value for "SECRET_KEY" in the settings.py file.
+```
+$ export SECRET_KEY='add_a_unique_string_of_characters'
+```
+
 - Git dialed in! 
 ```
 $ git init
-$ git config --global user.name "John Doe"
-$ git config --global user.email johndoe@example.com
+$ git config --global user.name "Your Name"
+$ git config --global user.email Your_email_address
 $ git clone https://github.com/toms3t/Propalyzer.git
 ```
-**The project includes two "secret.py" files - one for the API keys and the other for the settings.py secret key. 
-The secret.py files are included in the .gitignore file so don't worry about accidentally uploading your API keys**
-
-- Create a secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_app' folder and enter the following:
-```
-class Secret():
-  ZWSID = '[enter your Zillow key here without brackets]'
-## now save the file ##
-```
-- Create a second secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_site' folder and enter the following:
-```
-class Secret():
-  SECRET_KEY = '[enter a secret key here without brackets - any random string of characters will work!]'
-## now save the file ##
-```
+  
 - Install packages from requirements.txt file
 
 ```
-$ source env/bin/activate (run this from the directory you created to activate the virtual environment)
-$ pip install -r Propalyzer/requirements.txt
+$ source env/bin/activate (run this from the directory with 'env' folder)
+$ python -m pip install -r requirements.txt
 ```
 - Prep the SQLite database
 ```
 $ cd Propalyzer/propalyzer_site
-$ python manage.py makemigrations propalyzer_app
 $ python manage.py migrate
 ```
 - Create superuser
@@ -73,9 +67,7 @@ $ python manage.py createsuperuser
 ```
 $ python manage.py runserver
 ```
-Test that the site homepage appears when you browse to http://127.0.0.1:8000/propalyzer.
-
-Log in with your superuser credentials
+Test that the site homepage appears when you browse to http://127.0.0.1:8000.
 
 ### Prerequisites (Windows Users)
 
@@ -83,51 +75,35 @@ Log in with your superuser credentials
 ```
 https://conda.io/miniconda.html
 ```
-- Obtain a Zillow account and Zillow API Key (ZWS-ID)
-```
-https://www.zillow.com/webservice/Registration.htm
-```
 
 - Create and configure virtualenv (Use Windows PowerShell, Command Prompt, or a Terminal Emulator such as ConEmu)
 ```
 > Hit start and type "anaconda" to find the anaconda prompt -- launch the "anaconda prompt"
-> mkdir [directory name]
-> cd [directory name]
+> mkdir Propalyzer
+> cd Propalyzer
 > conda create --name [virtual environment name]
 > activate [virtual environment name]
 ```
+- Configure a secret key environment variable in your Windows environment (refer to this link - https://www3.ntu.edu.sg/home/ehchua/programming/howto/Environment_Variables.html)
+```
+Call it "SECRET_KEY"
+```
+
 - Git dialed in! 
 ```
 > git init
-> git config --global user.name "John Doe"
-> git config --global user.email johndoe@example.com
+> git config --global user.name "Your Name"
+> git config --global user.email Your_email_address
 > git clone https://github.com/toms3t/Propalyzer.git
 ```
 - Install packages from requirements.txt file
 
 ```
-> pip install -r Propalyzer/requirements.txt
+> python3.8 -m pip install -r Propalyzer/requirements.txt
 ```
-**The project includes two "secret.py" files - one for the API keys and the other for the settings.py secret key. 
-The secret.py files are included in the .gitignore file so don't worry about accidentally uploading your API keys**
-
-- Create a secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_app' folder and enter the following:
-```
-class Secret():
-  ZWSID = '[enter your Zillow key here without brackets]'
-## now save the file ##
-```
-- Create a second secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_site' folder and enter the following:
-```
-class Secret():
-  SECRET_KEY = '[enter a secret key here without brackets]'
-## now save the file ##
-```
-
 - Prep the SQLite database
 ```
 > cd Propalyzer/propalyzer_site
-> python manage.py makemigrations propalyzer_app
 > python manage.py migrate
 ```
 - Create superuser
@@ -139,13 +115,11 @@ class Secret():
 ```
 > python manage.py runserver
 ```
-Test that the site homepage appears when you browse to http://127.0.0.1:8000/propalyzer.
-
-Log in with your superuser credentials
+Test that the site homepage appears when you browse to http://127.0.0.1:8000.
 
 ## Deployment
 
-Not yet deployed in a live environment.
+http://propalyzer.info
 
 ## Built With
 
@@ -161,7 +135,7 @@ Not yet deployed in a live environment.
 
 ## Authors
 
-* **Tom Setliffe** - *Initial work* - [toms3t](https://github.com/toms3t)
+* **Tom Setliffe** - [toms3t](https://github.com/toms3t)
 
 See also the list of [contributors](https://github.com/toms3t/Propalyzer/graphs/contributors) who participated in this project.
 

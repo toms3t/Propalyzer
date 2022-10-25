@@ -137,10 +137,6 @@ class ContextData(property):
         self.utilities = 0
         self.interest_rate = 7.4
         self.down_payment_percentage = 25
-        # self.down_payment = int(self.zestimate) * (
-        #     self.down_payment_percentage / 100.0
-        # )
-        # self.closing_costs = int(0.03 * int(self.zestimate))
 
     def create_test_obj(self):
         """

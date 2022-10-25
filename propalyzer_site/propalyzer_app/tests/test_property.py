@@ -1,9 +1,9 @@
 from django.test import TestCase
 from ..context_data import ContextData
-from ..secret import Secret
 import requests
+import os
 
-ZWSID = Secret.ZWSID
+zillow_api_key = os.environ["zillow_api_key"]
 
 
 class PropertyModelTest(TestCase):
@@ -118,13 +118,13 @@ class PropertyModelTest(TestCase):
 
     def test_zestimate_api(self):
         resp = requests.get(
-            f"https://api.bridgedataoutput.com/api/v2/zestimates_v2/zestimates?access_token={ZWSID}"
+            f"https://api.bridgedataoutput.com/api/v2/zestimates_v2/zestimates?access_token={zillow_api_key}"
         )
         self.assertEqual(str(resp), "<Response [200]>")
 
     def test_pub_records_api(self):
         pub_record_url = f"https://api.bridgedataoutput.com/api/v2/pub/assessments?"
-        pub_record_url += f"access_token={ZWSID}&zpid=16128477&sortBy=year"
+        pub_record_url += f"access_token={zillow_api_key}&zpid=16128477&sortBy=year"
         resp = requests.get(pub_record_url)
         self.assertEqual(str(resp), "<Response [200]>")
 

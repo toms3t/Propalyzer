@@ -1,6 +1,6 @@
 # Propalyzer
 
-[![Build Status](https://dev.azure.com/tomset/Propalyzer/_apis/build/status/toms3t.Propalyzer%20(1)?branchName=master)](https://tomset.visualstudio.com/Propalyzer/_build/latest?definitionId=7&branchName=master)
+[![Build Status](https://github.com/toms3t/Propalyzer/actions/workflows/new_data_source_propalyzer-new.yml/badge.svg)
 
 Try it!   http://propalyzer.info
 
@@ -14,50 +14,37 @@ Web app that helps investors evaluate investment property opportunities. The use
 - Monthly Cash Flow
 - Scoring of area Livability, Crime, Cost of Living, Education, Employment, Housing, Weather relative to local and national averages
 - Local natural disaster information
-- Local school information
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. Requesting a See deployment for notes on how to deploy the project on a live system.
 
 ### Prerequisites (MacOS and Linux Users)
 
-- Install Python 3.6
+- Install Python 3.8
 ```
 https://www.python.org/downloads/
-```
-- Obtain a Zillow account and Zillow API Key (REQUIRED)
-```
-https://www.zillow.com/webservice/Registration.htm
-```
-- Obtain a GreatSchools API Key (NOT REQUIRED, BUT RECOMMENDED)
-```
-https://www.greatschools.org/api/request-api-key/
 ```
 
 - Create and configure virtualenv 
 ```
 $ mkdir Propalyzer
-$ python3.6 -m pip install virtualenv
+$ python3.8 -m pip install virtualenv
 $ cd Propalyzer
-$ python3.6 -m venv env
+$ python3.8 -m venv env
 ```
+
+- Configure a secret key environment variable in your Linux/Mac environment. Alternatively, you could just set a new value for "SECRET_KEY" in the settings.py file.
+```
+$ export SECRET_KEY='add_a_unique_string_of_characters'
+```
+
 - Git dialed in! 
 ```
 $ git init
 $ git config --global user.name "Your Name"
 $ git config --global user.email Your_email_address
 $ git clone https://github.com/toms3t/Propalyzer.git
-```
-**The project includes a secret.py file to store API keys on your machine.
-secret.py is referenced in the .gitignore file to prevent the secret.py file from being uploaded to GitHub by accident**
-
-- Create a secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_app' folder and enter the following:
-```
-class Secret():
-  ZWSID = '[enter your Zillow key here without brackets]'
-  GSCHOOL_API_KEY = '[enter your GreatSchools key here without brackets]'
-## now save the file ##
 ```
   
 - Install packages from requirements.txt file
@@ -69,7 +56,6 @@ $ python -m pip install -r requirements.txt
 - Prep the SQLite database
 ```
 $ cd Propalyzer/propalyzer_site
-$ python manage.py makemigrations propalyzer_app
 $ python manage.py migrate
 ```
 - Create superuser
@@ -83,21 +69,11 @@ $ python manage.py runserver
 ```
 Test that the site homepage appears when you browse to http://127.0.0.1:8000.
 
-Log in with your superuser credentials
-
 ### Prerequisites (Windows Users)
 
 - Install Miniconda
 ```
 https://conda.io/miniconda.html
-```
-- Obtain a Zillow account and Zillow API Key (REQUIRED)
-```
-https://www.zillow.com/webservice/Registration.htm
-```
-- Obtain a GreatSchools API Key (NOT REQUIRED BUT RECOMMENDED)
-```
-https://www.greatschools.org/api/request-api-key/
 ```
 
 - Create and configure virtualenv (Use Windows PowerShell, Command Prompt, or a Terminal Emulator such as ConEmu)
@@ -108,6 +84,11 @@ https://www.greatschools.org/api/request-api-key/
 > conda create --name [virtual environment name]
 > activate [virtual environment name]
 ```
+- Configure a secret key environment variable in your Windows environment (refer to this link - https://www3.ntu.edu.sg/home/ehchua/programming/howto/Environment_Variables.html)
+```
+Call it "SECRET_KEY"
+```
+
 - Git dialed in! 
 ```
 > git init
@@ -118,22 +99,11 @@ https://www.greatschools.org/api/request-api-key/
 - Install packages from requirements.txt file
 
 ```
-> python3.6 -m pip install -r Propalyzer/requirements.txt
-```
-**The project includes a "secret.py" file to store API keys on your machine.
-secret.py is referenced in the .gitignore file so don't worry about accidentally uploading your API keys**
-
-- Create a secret.py file in the 'Propalyzer/propalyzer_site/propalyzer_app' folder and enter the following:
-```
-class Secret():
-  ZWSID = '[enter your Zillow key here without brackets]'
-  GSCHOOL_API_KEY = '[enter your GreatSchools key here without brackets]'
-## now save the file ##
+> python3.8 -m pip install -r Propalyzer/requirements.txt
 ```
 - Prep the SQLite database
 ```
 > cd Propalyzer/propalyzer_site
-> python manage.py makemigrations propalyzer_app
 > python manage.py migrate
 ```
 - Create superuser
@@ -146,8 +116,6 @@ class Secret():
 > python manage.py runserver
 ```
 Test that the site homepage appears when you browse to http://127.0.0.1:8000.
-
-Log in with your superuser credentials
 
 ## Deployment
 

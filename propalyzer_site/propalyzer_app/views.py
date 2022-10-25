@@ -1,5 +1,7 @@
 from datetime import datetime
 import logging
+import os
+import requests
 from django.shortcuts import render, redirect
 from django.template.response import TemplateResponse
 from .pdf_render import Render
@@ -10,6 +12,23 @@ from .context_data import ContextData
 
 LOG = logging.getLogger(__name__)
 
+try:
+    zillow_api_key = os.environ["zillow_api_key"]
+except KeyError:
+    zillow_api_key = None
+
+
+def _validate_api_key():
+    """
+    Function to validate zillow API key. This determines whether actual data is returned from Zillow or if fictional data is shown on the app.
+    :return: Bool
+    """
+    pub_record_url = f"https://api.bridgedataoutput.com/api/v2/pub/assessments?"
+    pub_record_url += f"access_token={zillow_api_key}&zpid=16128477&sortBy=year"
+    resp = requests.get(pub_record_url)
+    if str(resp.status_code) == "200":
+        return True
+
 
 def address(request):
     """
@@ -19,9 +38,13 @@ def address(request):
     """
 
     if request.method == "POST":
-        address_str = str(request.POST["text_input"])
+        zillow_api_key_valid = _validate_api_key()
+        if not zillow_api_key_valid:
+            address_str = "346544 N Main St Soquel CA 95073"
+        else:
+            address_str = str(request.POST["text_input"])
         prop = PropSetup(address_str)
-        prop.get_info()
+        prop.get_info(zillow_api_key_valid)
         if prop.error == "ConnectionError":
             return TemplateResponse(request, "app/connection_error.html")
         if prop.error == "AddressNotFound":
@@ -29,14 +52,6 @@ def address(request):
         prop.prop_management_fee = int(prop.rent * 0.09)
         prop.closing_costs = int(prop.zestimate * 0.03)
         prop.taxes = int(prop.taxes)
-
-        # Loggers
-        LOG.debug("prop.address --- {}".format(prop.address))
-        LOG.debug("prop.address_dict --- {}".format(prop.address_dict))
-        LOG.debug("prop.url --- {}".format(prop.zillow_url))
-        LOG.debug("prop.areavibes_dict--- {}".format(prop.areavibes_dict))
-        LOG.debug("prop.disaster_dict--- {}".format(prop.disaster_dict))
-        LOG.debug("prop.taxes--- {}".format(prop.taxes))
 
         request.session["prop"] = prop.dict_from_class()
         return redirect("edit")
