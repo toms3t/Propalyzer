@@ -388,7 +388,10 @@ class ContextData(property):
         i = (float(self.interest_rate) / 100) / 12
         n = 360
         p = self.total_mortgage
-        self.mort_payment = int(p * (i * (1 + i) ** n) / ((1 + i) ** n - 1))
+        try:
+            self.mort_payment = int(p * (i * (1 + i) ** n) / ((1 + i) ** n - 1))
+        except (ZeroDivisionError, InvalidOperation):
+            self.mort_payment = 0
         return self.mort_payment
 
     @property
