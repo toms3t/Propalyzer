@@ -30,9 +30,6 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Set temporary secret key
-        run: export SECRET_KEY='123'
-
       - name: Migrate Django Models
         run: |
           cd propalyzer_site/
