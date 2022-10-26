@@ -29,8 +29,16 @@ jobs:
       
       - name: Install dependencies
         run: pip install -r requirements.txt
-        
-      # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
+
+      - name: Migrate Django Models
+        run: |
+          cd propalyzer_site/
+          python manage.py migrate
+
+      - name: Run Django Tests
+        run: |
+          cd propalyzer_site/
+          python manage.py test -v 3 --exclude-tag=skip_for_deployment
       
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v2
@@ -61,3 +69,4 @@ jobs:
           app-name: 'propalyzer-new'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B225243A4B2943CA8C250B7F1054449E }}
+
