@@ -4,6 +4,7 @@ import requests
 import os
 
 zillow_api_key = os.environ["zillow_api_key"]
+SECRET_KEY = "123"  # Used only for test cases
 
 
 class PropertyModelTest(TestCase):
