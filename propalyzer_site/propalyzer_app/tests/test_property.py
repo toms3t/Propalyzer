@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 from ..context_data import ContextData
 import requests
 import os
@@ -119,12 +119,14 @@ class PropertyModelTest(TestCase):
             self.prop.net_oper_income - self.prop.mort_payment, self.prop.cash_flow
         )
 
+    @tag("skip_for_deployment")
     def test_zestimate_api(self):
         resp = requests.get(
             f"https://api.bridgedataoutput.com/api/v2/zestimates_v2/zestimates?access_token={zillow_api_key}"
         )
         self.assertEqual(str(resp), "<Response [200]>")
 
+    @tag("skip_for_deployment")
     def test_pub_records_api(self):
         pub_record_url = f"https://api.bridgedataoutput.com/api/v2/pub/assessments?"
         pub_record_url += f"access_token={zillow_api_key}&zpid=16128477&sortBy=year"
