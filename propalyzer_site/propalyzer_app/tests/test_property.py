@@ -3,7 +3,10 @@ from ..context_data import ContextData
 import requests
 import os
 
-zillow_api_key = os.environ["zillow_api_key"]
+try:
+    zillow_api_key = os.environ["zillow_api_key"]
+except KeyError:
+    zillow_api_key = None
 
 
 class PropertyModelTest(TestCase):
