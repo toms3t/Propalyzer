@@ -1,6 +1,6 @@
 # Propalyzer
 
-[![Build Status](https://github.com/toms3t/Propalyzer/actions/workflows/new_data_source_propalyzer-new.yml/badge.svg)
+![Build Status](https://github.com/toms3t/Propalyzer/actions/workflows/new_data_source_propalyzer-new.yml/badge.svg)
 
 Try it!   http://propalyzer.info
 
@@ -17,7 +17,8 @@ Web app that helps investors evaluate investment property opportunities. The use
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. Requesting a See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+YOU DON'T NEED AN API KEY! Without a Zillow API key, the app will use dummy data for a fake property to enable development of the app without the API key.
 
 ### Prerequisites (MacOS and Linux Users)
 
@@ -63,9 +64,9 @@ $ python manage.py migrate
 $ python manage.py createsuperuser
 ```
 
-- Run local webserver and test the home page
+- To run the local server, type the command below from the same directory as your "manage.py" file ("python manage.py runserver" is disabled to let Gunicorn handle static file collection)
 ```
-$ python manage.py runserver
+> gunicorn wsgi
 ```
 Test that the site homepage appears when you browse to http://127.0.0.1:8000.
 
@@ -110,10 +111,9 @@ Call it "SECRET_KEY"
 ```
 > python manage.py createsuperuser
 ```
-
-- Run local webserver and test the home page
+- To run the local server, type the command below from the same directory as your "manage.py" file ("python manage.py runserver" is disabled to let Gunicorn handle static file collection)
 ```
-> python manage.py runserver
+> gunicorn wsgi
 ```
 Test that the site homepage appears when you browse to http://127.0.0.1:8000.
 
