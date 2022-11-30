@@ -66,7 +66,7 @@ $ python manage.py createsuperuser
 
 - To run the local server, type the command below from the same directory as your "manage.py" file ("python manage.py runserver" is disabled to let Gunicorn handle static file collection)
 ```
-> gunicorn wsgi
+$ gunicorn wsgi
 ```
 Test that the site homepage appears when you browse to http://127.0.0.1:8000.
 
