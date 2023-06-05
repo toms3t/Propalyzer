@@ -4,11 +4,11 @@ import os
 import requests
 from django.shortcuts import render, redirect
 from django.template.response import TemplateResponse
-from .pdf_render import Render
+# from .pdf_render import Render
 from .forms import AddressForm
 from .forms import PropertyForm
 from .property import PropSetup
-from .context_data import ContextData
+from .context_data import ContextData, mk_int
 
 LOG = logging.getLogger(__name__)
 
@@ -40,8 +40,6 @@ def address(request):
     if request.method == "POST":
         zillow_api_key_valid = _validate_api_key()
         if not zillow_api_key_valid:
-            address_str = "346544 N Main St Soquel CA 95073"
-        else:
             address_str = str(request.POST["text_input"])
         prop = PropSetup(address_str)
         prop.get_info(zillow_api_key_valid)
@@ -97,6 +95,9 @@ def edit(request):
 
         for key in prop_list:
             prop[key] = form.data[key]
+        prop['down_payment'] = int(
+            (float(prop['down_payment_percentage']) * mk_int(prop['zestimate'])) / 100
+        )
 
         request.session["prop"] = prop
         if form.is_valid():
@@ -123,13 +124,13 @@ def results(request):
     return render(request, "app/results.html", context)
 
 
-def pdf(request):
-    prop_data = request.session.get("prop")
+# def pdf(request):
+#     prop_data = request.session.get("prop")
 
-    prop = ContextData()
-    context = prop.set_data(prop_data)
+#     prop = ContextData()
+#     context = prop.set_data(prop_data)
 
-    return Render.render("app/results.html", context)
+#     return Render.render("app/results.html", context)
 
 
 def disclaimer(request):

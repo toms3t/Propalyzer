@@ -107,7 +107,7 @@ class ContextData(property):
         self.closing_costs = 0
         self.initial_improvements = 0
         self.cost_per_sqft = 0
-        self.insurance = 0
+        self.insurance = 1000
         self.maintenance = 0
         self.prop_management_fee = 0
         self.utilities = 0
@@ -249,26 +249,26 @@ class ContextData(property):
             "employment": self.areavibes_dict["employment"],
             "housing": self.areavibes_dict["housing"],
             "user_ratings": self.areavibes_dict["user_ratings"],
-            "disaster1_year": self.disaster_dict[self.last_five_years[0]][0],
-            "disaster1_title": self.disaster_dict[self.last_five_years[0]][1],
-            "disaster1_county": self.disaster_dict[self.last_five_years[0]][2],
-            "disaster1_state": self.disaster_dict[self.last_five_years[0]][3],
-            "disaster2_year": self.disaster_dict[self.last_five_years[1]][0],
-            "disaster2_title": self.disaster_dict[self.last_five_years[1]][1],
-            "disaster2_county": self.disaster_dict[self.last_five_years[1]][2],
-            "disaster2_state": self.disaster_dict[self.last_five_years[1]][3],
-            "disaster3_year": self.disaster_dict[self.last_five_years[2]][0],
-            "disaster3_title": self.disaster_dict[self.last_five_years[2]][1],
-            "disaster3_county": self.disaster_dict[self.last_five_years[2]][2],
-            "disaster3_state": self.disaster_dict[self.last_five_years[2]][3],
-            "disaster4_year": self.disaster_dict[self.last_five_years[3]][0],
-            "disaster4_title": self.disaster_dict[self.last_five_years[3]][1],
-            "disaster4_county": self.disaster_dict[self.last_five_years[3]][2],
-            "disaster4_state": self.disaster_dict[self.last_five_years[3]][3],
-            "disaster5_year": self.disaster_dict[self.last_five_years[4]][0],
-            "disaster5_title": self.disaster_dict[self.last_five_years[4]][1],
-            "disaster5_county": self.disaster_dict[self.last_five_years[4]][2],
-            "disaster5_state": self.disaster_dict[self.last_five_years[4]][3],
+            # "disaster1_year": self.disaster_dict[self.last_five_years[0]][0],
+            # "disaster1_title": self.disaster_dict[self.last_five_years[0]][1],
+            # "disaster1_county": self.disaster_dict[self.last_five_years[0]][2],
+            # "disaster1_state": self.disaster_dict[self.last_five_years[0]][3],
+            # "disaster2_year": self.disaster_dict[self.last_five_years[1]][0],
+            # "disaster2_title": self.disaster_dict[self.last_five_years[1]][1],
+            # "disaster2_county": self.disaster_dict[self.last_five_years[1]][2],
+            # "disaster2_state": self.disaster_dict[self.last_five_years[1]][3],
+            # "disaster3_year": self.disaster_dict[self.last_five_years[2]][0],
+            # "disaster3_title": self.disaster_dict[self.last_five_years[2]][1],
+            # "disaster3_county": self.disaster_dict[self.last_five_years[2]][2],
+            # "disaster3_state": self.disaster_dict[self.last_five_years[2]][3],
+            # "disaster4_year": self.disaster_dict[self.last_five_years[3]][0],
+            # "disaster4_title": self.disaster_dict[self.last_five_years[3]][1],
+            # "disaster4_county": self.disaster_dict[self.last_five_years[3]][2],
+            # "disaster4_state": self.disaster_dict[self.last_five_years[3]][3],
+            # "disaster5_year": self.disaster_dict[self.last_five_years[4]][0],
+            # "disaster5_title": self.disaster_dict[self.last_five_years[4]][1],
+            # "disaster5_county": self.disaster_dict[self.last_five_years[4]][2],
+            # "disaster5_state": self.disaster_dict[self.last_five_years[4]][3],
         }
 
     @property

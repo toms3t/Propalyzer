@@ -1,10 +1,8 @@
 import re
 import json
 import requests
-import datetime
-import random
 from bs4 import BeautifulSoup
-import usaddress
+# import usaddress
 from .county import County
 import os
 
@@ -161,39 +159,38 @@ class PropSetup:
     def get_info(self, zillow_api_key_valid):
         if not zillow_api_key_valid:
             self.set_address()
-            self.county = "Santa Cruz County"
+            self.county = ""
             self.listing_url = "http://www.zillow.com/homedetails/346544-N-Main-St-Soquel-CA-95073/16128477_zpid/"
-            self.neighborhood = "Unknown"
-            self.zestimate = 677600
-            self.value_low = 680101
-            self.value_high = 751691
-            self.initial_market_value = 677600
-            self.initial_improvements = 5000
-            self.rent = 2633
-            self.rent_low = 2106
-            self.rent_high = 2990
-            self.sqft = 5000
-            self.lot_sqft = 20343
-            self.beds = 3
-            self.totalbaths = 2.5
-            self.year_built = 1910
-            self.hoa = 155
-            self.maintenance = 800
-            self.tenant_placement_fee = 500
+            self.neighborhood = ""
+            self.zestimate = 0
+            self.value_low = 0
+            self.value_high = 0
+            self.initial_market_value = 0
+            self.initial_improvements = 0
+            self.rent = 0
+            self.rent_low = 0
+            self.rent_high = 0
+            self.sqft = 0
+            self.lot_sqft = 0
+            self.beds = 0
+            self.totalbaths = 0
+            self.year_built = 0
+            self.hoa = 0
+            self.maintenance = 0
+            self.tenant_placement_fee = 0
             self.taxes = 2000
             self.tax_year = "Unknown"
-            self.utilities = 30
+            self.utilities = 0
             self.insurance = 1000
-            self.prop_management_fee = 234
-            self.resign_fee = 300
+            self.prop_management_fee = 0
+            self.resign_fee = 0
             self.vacancy_rate = 0.08
             self.sewer = "Unknown"
             self.water = "Unknown"
             self.notes = ""
-            self.interest_rate = 7.4
+            self.interest_rate = 7.5
             self.down_payment_percentage = 25.00
-            self.county = "Santa Cruz County"
-            self.set_disaster_info()
+            # self.set_disaster_info()
         else:
             self.zillow_api_key_valid = True
             self.set_address()
@@ -207,22 +204,22 @@ class PropSetup:
             self.set_pub_record_url()
             self.get_pub_record_data()
             self.set_areavibes_info()
-            self.set_disaster_info()
+            # self.set_disaster_info()
 
     def dict_from_class(self):
         return dict((key, value) for (key, value) in self.__dict__.items())
 
-    def __convert_address(self):
-        """
-        Method to take a string assumed to be a US address and parse it into the correct components.
+    # def __convert_address(self):
+    #     """
+    #     Method to take a string assumed to be a US address and parse it into the correct components.
 
-        :return: Uses self.error to notify requester if an error occurred.
-        """
+    #     :return: Uses self.error to notify requester if an error occurred.
+    #     """
 
-        address_parse = usaddress.tag(self.address)
-        if address_parse[1] != "Street Address":
-            self.error = "NotAStreetAddress"
-        self.__set_address_dict(address_parse[0])
+    #     address_parse = usaddress.tag(self.address)
+    #     if address_parse[1] != "Street Address":
+    #         self.error = "NotAStreetAddress"
+    #     self.__set_address_dict(address_parse[0])
 
     def __set_address_dict(self, add_dict):
         """
@@ -238,7 +235,7 @@ class PropSetup:
         Method to convert a string to an US address and generates necessary parameters to be used later.
         :return:
         """
-        self.__convert_address()
+        # self.__convert_address()
         self.street_address = (
             str(self.address_dict["AddressNumberPrefix"])
             + " "
@@ -485,74 +482,74 @@ class PropSetup:
             "user_ratings": user_ratings,
         }
 
-    def set_disaster_info(self):
-        """
-        Method that generates the self.disaster_dict dictionary which includes the last 5 disasters from fema.gov for
-        the county of the property being researched. The dictionary includes disaster type, date, county, state, url,
-        and fema id for each disaster.
-        """
+    # def set_disaster_info(self):
+    #     """
+    #     Method that generates the self.disaster_dict dictionary which includes the last 5 disasters from fema.gov for
+    #     the county of the property being researched. The dictionary includes disaster type, date, county, state, url,
+    #     and fema id for each disaster.
+    #     """
 
-        def _set_last_five_years():
-            today = datetime.date.today()
-            cur_year = int(today.year)
-            self.last_five_years = [str(cur_year - i) for i in range(5)]
+    #     def _set_last_five_years():
+    #         today = datetime.date.today()
+    #         cur_year = int(today.year)
+    #         self.last_five_years = [str(cur_year - i) for i in range(5)]
 
-        _set_last_five_years()
-        local_disasters = []
-        urls = []
-        disaster_dict = {}
-        if "County" in self.county:
-            county_pattern = re.search("^(.*?) County", self.county)
-            try:
-                county = county_pattern.group(1)
-            except AttributeError:
-                county = self.county
-        else:
-            county = self.county
-        for year in self.last_five_years:
-            url1 = "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?"
-            url2 = "$filter=substringof('{}',designatedArea) and state eq '{}' and fyDeclared eq '{}'".format(
-                county, self.state.upper(), year
-            )
-            url = url1 + url2
-            urls.append(url)
-        for url in urls:
-            resp = requests.get(url)
-            resp_json = resp.json()
-            try:
-                random_pick_disaster = random.choice(
-                    resp_json["DisasterDeclarationsSummaries"]
-                )
-                local_disasters.append(random_pick_disaster)
-            except IndexError:
-                continue
-        if not local_disasters:
-            for i in range(5):
-                disaster_dict[self.last_five_years[i]] = [
-                    self.last_five_years[i],
-                    "Unknown",
-                    "Unknown",
-                    "Unknown",
-                ]
-        else:
-            for disaster in local_disasters:
-                disaster_dict[str(disaster["fyDeclared"])] = [
-                    disaster["fyDeclared"],
-                    disaster["declarationTitle"],
-                    disaster["state"],
-                    disaster["designatedArea"],
-                ]
+    #     _set_last_five_years()
+    #     local_disasters = []
+    #     urls = []
+    #     disaster_dict = {}
+    #     if "County" in self.county:
+    #         county_pattern = re.search("^(.*?) County", self.county)
+    #         try:
+    #             county = county_pattern.group(1)
+    #         except AttributeError:
+    #             county = self.county
+    #     else:
+    #         county = self.county
+    #     for year in self.last_five_years:
+    #         url1 = "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?"
+    #         url2 = "$filter=substringof('{}',designatedArea) and state eq '{}' and fyDeclared eq '{}'".format(
+    #             county, self.state.upper(), year
+    #         )
+    #         url = url1 + url2
+    #         urls.append(url)
+    #     for url in urls:
+    #         resp = requests.get(url)
+    #         resp_json = resp.json()
+    #         try:
+    #             random_pick_disaster = random.choice(
+    #                 resp_json["DisasterDeclarationsSummaries"]
+    #             )
+    #             local_disasters.append(random_pick_disaster)
+    #         except IndexError:
+    #             continue
+    #     if not local_disasters:
+    #         for i in range(5):
+    #             disaster_dict[self.last_five_years[i]] = [
+    #                 self.last_five_years[i],
+    #                 "Unknown",
+    #                 "Unknown",
+    #                 "Unknown",
+    #             ]
+    #     else:
+    #         for disaster in local_disasters:
+    #             disaster_dict[str(disaster["fyDeclared"])] = [
+    #                 disaster["fyDeclared"],
+    #                 disaster["declarationTitle"],
+    #                 disaster["state"],
+    #                 disaster["designatedArea"],
+    #             ]
 
-            for i in range(5):
-                if not disaster_dict.get(self.last_five_years[i]):
-                    disaster_dict[self.last_five_years[i]] = [
-                        self.last_five_years[i],
-                        "No Disasters Reported",
-                        "N/A",
-                        "N/A",
-                    ]
+    #         for i in range(5):
+    #             if not disaster_dict.get(self.last_five_years[i]):
+    #                 disaster_dict[self.last_five_years[i]] = [
+    #                     self.last_five_years[i],
+    #                     "No Disasters Reported",
+    #                     "N/A",
+    #                     "N/A",
+    #                 ]
 
-        self.disaster_dict = disaster_dict
+    #     self.disaster_dict = disaster_dict
 
     @property
     def __str__(self):
