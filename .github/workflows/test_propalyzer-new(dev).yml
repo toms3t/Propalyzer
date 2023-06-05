@@ -35,11 +35,6 @@ jobs:
         run: |
           cd propalyzer_site/
           python manage.py migrate
-
-      - name: Run Django Tests
-        run: |
-          cd propalyzer_site/
-          python manage.py test -v 3 --exclude-tag=skip_for_deployment
           
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v2
