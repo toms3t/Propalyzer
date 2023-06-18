@@ -30,9 +30,9 @@ https://www.python.org/downloads/
 - Create and configure virtualenv 
 ```
 $ mkdir Propalyzer
-$ python3.8 -m pip install virtualenv
+$ python3.11 -m pip install virtualenv
 $ cd Propalyzer
-$ python3.8 -m venv env
+$ python3.11 -m venv env
 ```
 
 - Configure a secret key environment variable in your Linux/Mac environment. Alternatively, you could just set a new value for "SECRET_KEY" in the settings.py file.
@@ -52,16 +52,16 @@ $ git clone https://github.com/toms3t/Propalyzer.git
 
 ```
 $ source env/bin/activate (run this from the directory with 'env' folder)
-$ python -m pip install -r requirements.txt
+$ python3.11 -m pip install -r requirements.txt
 ```
 - Prep the SQLite database
 ```
 $ cd Propalyzer/propalyzer_site
-$ python manage.py migrate
+$ python3.11 manage.py migrate
 ```
 - Create superuser
 ```
-$ python manage.py createsuperuser
+$ python3.11 manage.py createsuperuser
 ```
 
 - To run the local server, type the command below from the same directory as your "manage.py" file ("python manage.py runserver" is disabled to let Gunicorn handle static file collection)
@@ -100,16 +100,16 @@ Call it "SECRET_KEY"
 - Install packages from requirements.txt file
 
 ```
-> python3.8 -m pip install -r Propalyzer/requirements.txt
+> python3.11 -m pip install -r Propalyzer/requirements.txt
 ```
 - Prep the SQLite database
 ```
 > cd Propalyzer/propalyzer_site
-> python manage.py migrate
+> python3.11 manage.py migrate
 ```
 - Create superuser
 ```
-> python manage.py createsuperuser
+> python3.11 manage.py createsuperuser
 ```
 - To run the local server, type the command below from the same directory as your "manage.py" file ("python manage.py runserver" is disabled to let Gunicorn handle static file collection)
 ```
